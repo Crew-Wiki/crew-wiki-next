@@ -1,5 +1,5 @@
 import type {NextConfig} from 'next';
-import URLS from '@/constants/urls';
+import URLS from '@constants/urls';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
