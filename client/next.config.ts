@@ -3,6 +3,11 @@ import {URLS} from '@constants/urls';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   redirects: async () => [
     {
       source: '/',
