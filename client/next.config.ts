@@ -1,12 +1,12 @@
 import type {NextConfig} from 'next';
-import URLS from '@constants/urls';
+import {URLS} from '@constants/urls';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   redirects: async () => [
     {
       source: '/',
-      destination: `${URLS.WIKI}/${URLS.DAEMOON}`,
+      destination: `${URLS.wiki}/${URLS.daemoon}`,
       permanent: false,
     },
   ],

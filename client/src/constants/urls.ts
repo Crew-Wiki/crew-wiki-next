@@ -1,12 +1,10 @@
-const URLS = {
-  MAIN: '/',
-  WIKI: '/wiki',
-  DOCS: ':title',
-  EDIT: '/edit',
-  POST: '/post',
-  DAEMOON: '대문',
-  LOGS: 'logs',
-  SPECIFIC_LOG: 'log/:logId',
+export const URLS = {
+  main: '/',
+  wiki: '/wiki',
+  docs: ':title',
+  edit: '/edit',
+  post: '/post',
+  daemoon: '대문',
+  logs: 'logs',
+  specificLog: 'log/:logId',
 };
-
-export default URLS;
