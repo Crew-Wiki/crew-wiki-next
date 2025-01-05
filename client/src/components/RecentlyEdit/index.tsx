@@ -1,21 +1,10 @@
+import {getRecentlyDocuments} from '@api/document';
 import {URLS} from '@constants/urls';
 import timeConverter from '@utils/TimeConverter';
 import Link from 'next/link';
-import {RecentlyDocument} from '@type/Document.type';
-import {http} from '@utils/http';
-import {ENDPOINT} from '@constants/endpoint';
-import {CACHE} from '@constants/cache';
-
-interface RecentlyDocumentsResponse {
-  documents: RecentlyDocument[];
-}
 
 const RecentlyEdit = async () => {
-  const {documents} = await http.get<RecentlyDocumentsResponse>({
-    endpoint: ENDPOINT.getRecentlyDocuments,
-    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getRecentlyDocuments]},
-  });
-
+  const documents = await getRecentlyDocuments();
   return (
     <aside className="max-[1024px]:hidden flex flex-col w-60 h-fit bg-white border-primary-100 border-solid border rounded-xl">
       <h2 className="flex justify-center items-center w-full h-12 font-pretendard font-bold text-lg border-b border-primary-100 text-grayscale-800">

@@ -1,4 +1,4 @@
-import {getDocumentByTitle} from '@api/getDocumentByTitle';
+import {getDocumentByTitle} from '@api/document';
 import DocumentContents from '@components/Document/DocumentContents';
 import DocumentFooter from '@components/Document/DocumentFooter';
 import DocumentHeader from '@components/Document/DocumentHeader';
