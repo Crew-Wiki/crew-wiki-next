@@ -2,6 +2,7 @@ import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {RecentlyDocument, WikiDocument} from '@type/Document.type';
 import {http} from '@utils/http';
+import {revalidateTag} from 'next/cache';
 
 export const getDocumentByTitle = async (title: string) => {
   const docs = await http.get<WikiDocument>({
@@ -32,4 +33,21 @@ export const getRecentlyDocuments = async () => {
   });
 
   return documents;
+};
+
+// 요청할 때 필요한 데이터
+export interface PostDocumentContent {
+  title: string;
+  contents: string;
+  writer: string;
+  documentBytes: number;
+}
+
+export const postDocument = async (document: PostDocumentContent) => {
+  const response = await http.post<WikiDocument>({
+    endpoint: ENDPOINT.postDocument,
+    body: document,
+  });
+
+  revalidateTag(CACHE.tag.getRecentlyDocuments);
 };
