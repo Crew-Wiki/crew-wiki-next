@@ -9,5 +9,6 @@ export const CACHE = {
     getDocumentLogs: 'get-document-logs',
     getSpecificDocumentLog: 'get-specific-document-log',
     getDocumentSearch: 'get-document-search',
+    getRandomDocument: 'get-random-document',
   },
 } as const;

@@ -14,8 +14,8 @@ export const getDocumentByTitle = async (title: string) => {
 
 export const getRandomDocument = async () => {
   const docs = await http.get<WikiDocument>({
-    endpoint: `${ENDPOINT.getDocumentByTitle}`,
-    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getDocumentByTitle]},
+    endpoint: ENDPOINT.getRandomDocument,
+    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getRandomDocument]},
   });
 
   return docs.title;

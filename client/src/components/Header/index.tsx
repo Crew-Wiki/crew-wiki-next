@@ -8,6 +8,7 @@ import SearchCircleSmall from '@app/image/search-circle.svg';
 import LogoImage from '@app/image/hangseong-white.png';
 import {twMerge} from 'tailwind-merge';
 import WikiInputField from '@components/WikiInput';
+import RandomButton from '@components/RandomButton';
 
 interface ScrollPosition {
   prev: number;
@@ -68,7 +69,7 @@ const WikiHeader = () => {
           </Link>
 
           <div className="flex items-center">
-            {/*<RandomButton className="mr-4 cursor-pointer" /> */}
+            <RandomButton />
             <WikiInputField className="w-80 hidden md:flex" handleSubmit={onSubmit} />
             <Image
               src={SearchCircleSmall}
