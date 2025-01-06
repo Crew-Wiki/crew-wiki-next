@@ -27,7 +27,7 @@ type CreateRequestInitProps = {
   next?: NextFetchRequestConfig;
 };
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const http = {
   get: async <T>({headers = {}, ...args}: HttpMethodArgs): Promise<T> => {
