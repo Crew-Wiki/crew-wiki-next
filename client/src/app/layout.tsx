@@ -29,7 +29,7 @@ export const metadata: Metadata = {
       'https://wootecowikibucket.s3.ap-northeast-2.amazonaws.com/%EB%8C%80%EB%AC%B8%EC%82%AC%EC%A7%84/%E1%84%83%E1%85%A2%E1%84%86%E1%85%AE%E1%86%AB.png',
   },
   icons: {
-    icon: [{rel: 'icon', url: './favicon.svg'}],
+    // icon: [{rel: 'icon', url: './favicon.ico'}],
     apple: './apple-touch-icon.png',
   },
 };
