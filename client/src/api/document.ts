@@ -1,3 +1,5 @@
+'use server';
+
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {RecentlyDocument, WikiDocument} from '@type/Document.type';
@@ -48,6 +50,18 @@ export const postDocument = async (document: PostDocumentContent) => {
     endpoint: ENDPOINT.postDocument,
     body: document,
   });
-
   revalidateTag(CACHE.tag.getRecentlyDocuments);
+
+  return response;
+};
+
+export const searchDocument = async (referQuery: string) => {
+  const titles = await http.get<string[]>({
+    endpoint: ENDPOINT.getDocumentSearch,
+    queryParams: {
+      keyWord: referQuery,
+    },
+  });
+
+  return titles;
 };
