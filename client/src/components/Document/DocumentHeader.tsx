@@ -12,7 +12,7 @@ const DocumentHeader = ({title}: DocumentHeaderProps) => {
     <header className="max-md:flex-col-reverse max-md:gap-4 flex justify-between w-full">
       <DocumentTitle title={title} />
       <nav className="flex gap-2 max-md:hidden">
-        <Link href={URLS.edit}>
+        <Link href={`${URLS.wiki}/${URLS.edit}`}>
           <Button style="tertiary" size="xs">
             편집하기
           </Button>
@@ -22,7 +22,7 @@ const DocumentHeader = ({title}: DocumentHeaderProps) => {
             편집로그
           </Button>
         </Link>
-        <Link href={URLS.post}>
+        <Link href={`${URLS.wiki}/${URLS.post}`}>
           <Button style="primary" size="xs">
             작성하기
           </Button>

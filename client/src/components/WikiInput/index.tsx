@@ -3,7 +3,7 @@
 import SearchCircle from '@app/image/search-circle-secondary.svg';
 import {URLS} from '@constants/urls';
 import {twMerge} from 'tailwind-merge';
-import useInput from '@hooks/useInput';
+import {useInput} from '@components/Input/useInput';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 
@@ -13,7 +13,7 @@ interface WikiInputProps {
 }
 
 const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
-  const [value, setValue] = useInput<string>('');
+  const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const router = useRouter();
 
   // const {titles} = useSearchDocumentByQuery(value);
@@ -21,7 +21,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
 
   const onSubmit = (event: React.FormEvent, search?: string) => {
     event.preventDefault();
-    if (value.trim() === '') return;
+    if (value?.trim() === '') return;
 
     if (search !== undefined) {
       router.push(`${URLS.wiki}/${search}`);
@@ -48,7 +48,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
         className="w-full outline-none font-pretendard text-base font-normal text-grayscale-800 placeholder:text-grayscale-lightText "
         placeholder="검색할 문서의 제목을 입력하세요."
         value={value}
-        onChange={setValue}
+        onChange={onChange}
       />
       <button>
         <Image className="cursor-pointer max-[768px]:hidden" src={SearchCircle} alt="search" />
