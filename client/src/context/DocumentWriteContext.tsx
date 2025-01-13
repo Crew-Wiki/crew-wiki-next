@@ -1,21 +1,30 @@
-import {postDocument} from '@api/document';
+'use client';
+
+import {postDocument, PostDocumentContent} from '@api/document';
 import {useInput} from '@components/Input/useInput';
-import {ErrorMessage} from '@type/Document.type';
-import {validateNicknameOnChange} from '@utils/validation/nickname';
+import {ErrorMessage, UploadImageMeta} from '@type/Document.type';
+import {EditorRef, EditorType} from '@type/Editor.type';
+import {getBytes} from '@utils/getBytes';
+import {validateWriterOnChange} from '@utils/validation/writer';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
-import {createContext, useContext, useState} from 'react';
+import {createContext, useContext, useRef, useState} from 'react';
+import {uploadImages} from '@api/images';
+import {useRouter} from 'next/navigation';
+import {URLS} from '@constants/urls';
 
 type DocumentWriteContextType = {
   title: string | undefined;
   onTitleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   titleErrorMessage: ErrorMessage;
   onTitleBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => Promise<void>;
-  nickname: string | undefined;
-  onNicknameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  nicknameErrorMessage: ErrorMessage;
+  writer: string | undefined;
+  onWriterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  writerErrorMessage: ErrorMessage;
   canSubmit: boolean;
   onSubmit: () => Promise<void>;
   isPending: boolean;
+  setImages: React.Dispatch<React.SetStateAction<UploadImageMeta[]>>;
+  editorRef: EditorRef;
 };
 
 const DocumentWriteContext = createContext<DocumentWriteContextType | null>(null);
@@ -39,19 +48,56 @@ export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren
   } = useInput({initialValue: '', validateOnChange: validateTitleOnChange, validateOnBlur: validateTitleOnBlur});
 
   const {
-    value: nickname,
-    onChange: onNicknameChange,
-    errorMessage: nicknameErrorMessage,
-  } = useInput({initialValue: '', validateOnChange: validateNicknameOnChange});
+    value: writer,
+    onChange: onWriterChange,
+    errorMessage: writerErrorMessage,
+  } = useInput({initialValue: '', validateOnChange: validateWriterOnChange});
 
-  const canSubmit = titleErrorMessage !== null && nicknameErrorMessage !== null;
+  const editorRef = useRef<EditorType | null>(null);
+  const [images, setImages] = useState<UploadImageMeta[]>([]);
 
+  const getContents = (): string => {
+    if (editorRef.current) {
+      const instance = editorRef.current?.getInstance();
+      const contents = instance.getMarkdown();
+      return contents;
+    }
+    return '';
+  };
+
+  const isError = titleErrorMessage !== null || writerErrorMessage !== null;
+  const isEmpty = title.trim() === '' || writer.trim() === '';
+
+  const canSubmit = !isError && !isEmpty;
   const [isPending, setIsPending] = useState(false);
+
+  const replaceLocalUrlToS3Url = (contents: string, imageMetaList: UploadImageMeta[]) => {
+    let newContents = contents;
+    imageMetaList.forEach(({objectURL, s3URL}) => {
+      newContents = newContents.replace(objectURL, s3URL);
+    });
+
+    return newContents;
+  };
+
+  const router = useRouter();
 
   const onSubmit = async () => {
     try {
       setIsPending(true);
-      // await postDocument()
+
+      const newMetaList = await uploadImages(title, images);
+      const linkReplacedContents = replaceLocalUrlToS3Url(getContents() ?? '', newMetaList);
+
+      const document: PostDocumentContent = {
+        title,
+        contents: linkReplacedContents,
+        writer,
+        documentBytes: getBytes(linkReplacedContents),
+      };
+
+      const newDocument = await postDocument(document);
+      router.push(`${URLS.wiki}/${newDocument.title}`);
     } catch (error) {
     } finally {
       setIsPending(false);
@@ -65,12 +111,14 @@ export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren
         onTitleChange,
         titleErrorMessage,
         onTitleBlur,
-        nickname,
-        onNicknameChange,
-        nicknameErrorMessage,
+        writer,
+        onWriterChange,
+        writerErrorMessage,
         canSubmit,
         onSubmit,
         isPending,
+        setImages,
+        editorRef,
       }}
     >
       {children}
