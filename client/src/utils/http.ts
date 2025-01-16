@@ -3,14 +3,10 @@ type Method = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 type HeadersType = [string, string][] | Record<string, string> | Headers;
 type ObjectQueryParams = Record<string, string | number | boolean>;
 
-type httpArgs = {
+type httpArgs = CreateRequestInitProps & {
   baseUrl?: string;
   endpoint: string;
-  headers?: HeadersType;
-  body?: BodyInit | object | null;
   queryParams?: ObjectQueryParams;
-  method: Method;
-  next?: NextFetchRequestConfig;
 };
 
 type HttpMethodArgs = Omit<httpArgs, 'method'>;
@@ -24,6 +20,7 @@ type CreateRequestInitProps = {
   body?: BodyInit | object | null;
   method: Method;
   headers?: HeadersType;
+  cache?: RequestCache;
   next?: NextFetchRequestConfig;
 };
 
@@ -68,10 +65,11 @@ const prepareRequest = ({baseUrl = API_BASE_URL, method, endpoint, headers, body
   return {url, requestInit};
 };
 
-const createRequestInit = ({method, headers, body, next}: CreateRequestInitProps) => {
+const createRequestInit = ({method, headers, body, next, cache}: CreateRequestInitProps) => {
   const requestInit: RequestInit = {
     credentials: 'include',
     method,
+    cache: cache ?? 'default',
     next,
   };
 
