@@ -3,11 +3,10 @@
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {RecentlyDocument, WikiDocument} from '@type/Document.type';
-import {http} from '@utils/http';
-import {revalidateTag} from 'next/cache';
+import {requestGet} from '@utils/http';
 
 export const getDocumentByTitle = async (title: string) => {
-  const docs = await http.get<WikiDocument>({
+  const docs = await requestGet<WikiDocument>({
     endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
     next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getDocumentByTitle]},
   });
@@ -16,7 +15,7 @@ export const getDocumentByTitle = async (title: string) => {
 };
 
 export const getRandomDocument = async () => {
-  const docs = await http.get<WikiDocument>({
+  const docs = await requestGet<WikiDocument>({
     endpoint: ENDPOINT.getRandomDocument,
     next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getRandomDocument]},
   });
@@ -29,7 +28,7 @@ interface RecentlyDocumentsResponse {
 }
 
 export const getRecentlyDocuments = async () => {
-  const {documents} = await http.get<RecentlyDocumentsResponse>({
+  const {documents} = await requestGet<RecentlyDocumentsResponse>({
     endpoint: ENDPOINT.getRecentlyDocuments,
     next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getRecentlyDocuments]},
   });
@@ -45,18 +44,8 @@ export interface PostDocumentContent {
   documentBytes: number;
 }
 
-export const postDocument = async (document: PostDocumentContent) => {
-  const response = await http.post<WikiDocument>({
-    endpoint: ENDPOINT.postDocument,
-    body: document,
-  });
-  revalidateTag(CACHE.tag.getRecentlyDocuments);
-
-  return response;
-};
-
 export const searchDocument = async (referQuery: string) => {
-  const titles = await http.get<string[]>({
+  const titles = await requestGet<string[]>({
     endpoint: ENDPOINT.getDocumentSearch,
     queryParams: {
       keyWord: referQuery,
