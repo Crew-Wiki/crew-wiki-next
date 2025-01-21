@@ -5,7 +5,6 @@ const Editor = dynamic(() => import('@toast-ui/react-editor').then(mod => mod.Ed
 
 import {type Editor as EditorType, EditorProps} from '@toast-ui/react-editor';
 import '@toast-ui/editor/toastui-editor.css';
-import {useEffect, useState} from 'react';
 import {UploadImageMeta} from '@type/Document.type';
 import {useDocumentWriteContextProvider} from '../../context/DocumentWriteContext';
 
