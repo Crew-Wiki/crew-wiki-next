@@ -1,8 +1,8 @@
 'use client';
 
-import {postDocument, PostDocumentContent} from '@api/document';
+import {type PostDocumentContent} from '@api/document';
 import {useInput} from '@components/Input/useInput';
-import {ErrorMessage, UploadImageMeta} from '@type/Document.type';
+import {ErrorMessage, UploadImageMeta, WikiDocument} from '@type/Document.type';
 import {EditorRef, EditorType} from '@type/Editor.type';
 import {getBytes} from '@utils/getBytes';
 import {validateWriterOnChange} from '@utils/validation/writer';
@@ -11,6 +11,7 @@ import {createContext, useContext, useRef, useState} from 'react';
 import {uploadImages} from '@api/images';
 import {useRouter} from 'next/navigation';
 import {URLS} from '@constants/urls';
+import {requestPost, requestPut} from '@utils/http';
 
 type DocumentWriteContextType = {
   title: string | undefined;
@@ -25,6 +26,7 @@ type DocumentWriteContextType = {
   isPending: boolean;
   setImages: React.Dispatch<React.SetStateAction<UploadImageMeta[]>>;
   editorRef: EditorRef;
+  initialContents?: string;
 };
 
 const DocumentWriteContext = createContext<DocumentWriteContextType | null>(null);
@@ -39,19 +41,32 @@ export const useDocumentWriteContextProvider = () => {
   return context;
 };
 
-export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren) => {
+type EditInitialData = {
+  mode: 'post' | 'edit';
+  title?: string;
+  writer?: string;
+  contents?: string;
+};
+
+type DocumentWriteContextProps = React.PropsWithChildren<EditInitialData>;
+
+export const DocumentWriteContextProvider = ({children, mode, ...initialData}: DocumentWriteContextProps) => {
   const {
     value: title,
     onChange: onTitleChange,
     errorMessage: titleErrorMessage,
     onBlur: onTitleBlur,
-  } = useInput({initialValue: '', validateOnChange: validateTitleOnChange, validateOnBlur: validateTitleOnBlur});
+  } = useInput({
+    initialValue: initialData.title,
+    validateOnChange: validateTitleOnChange,
+    validateOnBlur: validateTitleOnBlur,
+  });
 
   const {
     value: writer,
     onChange: onWriterChange,
     errorMessage: writerErrorMessage,
-  } = useInput({initialValue: '', validateOnChange: validateWriterOnChange});
+  } = useInput({initialValue: initialData.writer, validateOnChange: validateWriterOnChange});
 
   const editorRef = useRef<EditorType | null>(null);
   const [images, setImages] = useState<UploadImageMeta[]>([]);
@@ -64,6 +79,8 @@ export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren
     }
     return '';
   };
+
+  const initialContents = initialData.contents;
 
   const isError = titleErrorMessage !== null || writerErrorMessage !== null;
   const isEmpty = title.trim() === '' || writer.trim() === '';
@@ -82,6 +99,27 @@ export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren
 
   const router = useRouter();
 
+  const addNewDocumentAndRoute = async (document: PostDocumentContent) => {
+    const newDocument = await requestPost<WikiDocument>({
+      baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+      endpoint: '/api/post-document',
+      body: document,
+    });
+
+    router.push(`${URLS.wiki}/${newDocument.title}`);
+  };
+
+  const editDocumentAndRoute = async (document: PostDocumentContent) => {
+    await requestPut({
+      baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+      endpoint: '/api/put-document',
+      body: document,
+    });
+
+    router.push(`${URLS.wiki}/${document.title}`);
+    router.refresh();
+  };
+
   const onSubmit = async () => {
     try {
       setIsPending(true);
@@ -96,8 +134,11 @@ export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren
         documentBytes: getBytes(linkReplacedContents),
       };
 
-      const newDocument = await postDocument(document);
-      router.push(`${URLS.wiki}/${newDocument.title}`);
+      if (mode === 'post') {
+        addNewDocumentAndRoute(document);
+      } else {
+        editDocumentAndRoute(document);
+      }
     } catch (error) {
     } finally {
       setIsPending(false);
@@ -119,6 +160,7 @@ export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren
         isPending,
         setImages,
         editorRef,
+        initialContents,
       }}
     >
       {children}
