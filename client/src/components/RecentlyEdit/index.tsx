@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 const RecentlyEdit = async () => {
   const documents = await getRecentlyDocuments();
+
   return (
     <aside className="max-[1024px]:hidden flex flex-col w-60 h-fit bg-white border-primary-100 border-solid border rounded-xl">
       <h2 className="flex justify-center items-center w-full h-12 font-pretendard font-bold text-lg border-b border-primary-100 text-grayscale-800">
