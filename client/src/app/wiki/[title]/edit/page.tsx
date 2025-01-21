@@ -5,11 +5,9 @@ import {DocumentWriteContextProvider, useDocumentWriteContextProvider} from '../
 import TitleInputField from '@components/Write/TitleInputField';
 import TuiEditor from '@components/MarkdownEditor';
 import RelativeSearchTerms from '@components/Write/RelativeSearchTerms';
-import {useEffect, useState} from 'react';
-import {WikiDocument} from '@type/Document.type';
 import {useParams} from 'next/navigation';
-import {getDocumentByTitle} from '@api/document';
 import {useRelativeSearchTerms} from '@app/wiki/post/useRelativeSearchTerms';
+import {useGetDocumentByTitle} from '@hooks/fetch/useGetDocumentByTitle';
 
 const EditPage = () => {
   const {editorRef, initialContents} = useDocumentWriteContextProvider();
@@ -32,19 +30,7 @@ const EditPage = () => {
 
 const Page = () => {
   const {title} = useParams();
-
-  const [document, setDocument] = useState<WikiDocument>();
-
-  useEffect(() => {
-    const init = async () => {
-      if (typeof title === 'string') {
-        const data = await getDocumentByTitle(title);
-        setDocument(data);
-      }
-    };
-
-    init();
-  }, [title]);
+  const {document} = useGetDocumentByTitle(title as string);
 
   return (
     document && (

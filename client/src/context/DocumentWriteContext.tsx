@@ -2,16 +2,18 @@
 
 import {type PostDocumentContent} from '@api/document';
 import {useInput} from '@components/Input/useInput';
-import {ErrorMessage, UploadImageMeta, WikiDocument} from '@type/Document.type';
+import {ErrorMessage, UploadImageMeta} from '@type/Document.type';
 import {EditorRef, EditorType} from '@type/Editor.type';
 import {getBytes} from '@utils/getBytes';
 import {validateWriterOnChange} from '@utils/validation/writer';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
 import {createContext, useContext, useRef, useState} from 'react';
 import {uploadImages} from '@api/images';
-import {useRouter} from 'next/navigation';
-import {URLS} from '@constants/urls';
-import {requestPost, requestPut} from '@utils/http';
+
+import {usePostDocument} from '@hooks/mutation/usePostDocument';
+import {usePutDocument} from '@hooks/mutation/usePutDocument';
+import {replaceLocalUrlToS3Url} from '@utils/replaceLocalUrlToS3Url';
+import {getEditorContents} from '@utils/getEditorContents';
 
 type DocumentWriteContextType = {
   title: string | undefined;
@@ -71,77 +73,30 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
   const editorRef = useRef<EditorType | null>(null);
   const [images, setImages] = useState<UploadImageMeta[]>([]);
 
-  const getContents = (): string => {
-    if (editorRef.current) {
-      const instance = editorRef.current?.getInstance();
-      const contents = instance.getMarkdown();
-      return contents;
-    }
-    return '';
-  };
-
   const initialContents = initialData.contents;
 
   const isError = titleErrorMessage !== null || writerErrorMessage !== null;
   const isEmpty = title.trim() === '' || writer.trim() === '';
-
   const canSubmit = !isError && !isEmpty;
-  const [isPending, setIsPending] = useState(false);
 
-  const replaceLocalUrlToS3Url = (contents: string, imageMetaList: UploadImageMeta[]) => {
-    let newContents = contents;
-    imageMetaList.forEach(({objectURL, s3URL}) => {
-      newContents = newContents.replace(objectURL, s3URL);
-    });
-
-    return newContents;
-  };
-
-  const router = useRouter();
-
-  const addNewDocumentAndRoute = async (document: PostDocumentContent) => {
-    const newDocument = await requestPost<WikiDocument>({
-      baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-      endpoint: '/api/post-document',
-      body: document,
-    });
-
-    router.push(`${URLS.wiki}/${newDocument.title}`);
-  };
-
-  const editDocumentAndRoute = async (document: PostDocumentContent) => {
-    await requestPut({
-      baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-      endpoint: '/api/put-document',
-      body: document,
-    });
-
-    router.push(`${URLS.wiki}/${document.title}`);
-    router.refresh();
-  };
+  const {postDocument, isPostPending} = usePostDocument();
+  const {putDocument, isPutPending} = usePutDocument();
 
   const onSubmit = async () => {
-    try {
-      setIsPending(true);
+    const newMetaList = await uploadImages({albumName: title, uploadImageMetaList: images});
+    const linkReplacedContents = replaceLocalUrlToS3Url(getEditorContents(editorRef), newMetaList);
 
-      const newMetaList = await uploadImages(title, images);
-      const linkReplacedContents = replaceLocalUrlToS3Url(getContents() ?? '', newMetaList);
+    const document: PostDocumentContent = {
+      title,
+      contents: linkReplacedContents,
+      writer,
+      documentBytes: getBytes(linkReplacedContents),
+    };
 
-      const document: PostDocumentContent = {
-        title,
-        contents: linkReplacedContents,
-        writer,
-        documentBytes: getBytes(linkReplacedContents),
-      };
-
-      if (mode === 'post') {
-        addNewDocumentAndRoute(document);
-      } else {
-        editDocumentAndRoute(document);
-      }
-    } catch (error) {
-    } finally {
-      setIsPending(false);
+    if (mode === 'post') {
+      postDocument(document);
+    } else {
+      putDocument(document);
     }
   };
 
@@ -157,7 +112,7 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
         writerErrorMessage,
         canSubmit,
         onSubmit,
-        isPending,
+        isPending: isPostPending || isPutPending,
         setImages,
         editorRef,
         initialContents,
