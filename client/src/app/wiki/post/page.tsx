@@ -35,7 +35,7 @@ const PostPage = () => {
 
 const Page = () => {
   return (
-    <DocumentWriteContextProvider>
+    <DocumentWriteContextProvider mode="post">
       <PostPage />
     </DocumentWriteContextProvider>
   );

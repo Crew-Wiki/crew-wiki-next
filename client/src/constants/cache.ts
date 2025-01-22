@@ -4,11 +4,12 @@ export const CACHE = {
     revalidate: 30,
   },
   tag: {
-    getDocumentByTitle: 'get-document-by-title',
-    getRecentlyDocuments: 'get-recently-documents',
-    getDocumentLogs: 'get-document-logs',
-    getSpecificDocumentLog: 'get-specific-document-log',
-    getDocumentSearch: 'get-document-search',
-    getRandomDocument: 'get-random-document',
+    getDocuments: 'documents',
+    getDocumentByTitle: (title: string) => `title:${decodeURI(title)}`,
+    getRecentlyDocuments: 'recently',
+    getDocumentLogs: 'logs',
+    getSpecificDocumentLog: 'specificLog',
+    getDocumentSearch: 'search',
+    getRandomDocument: 'random',
   },
 } as const;

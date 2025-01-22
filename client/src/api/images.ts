@@ -25,9 +25,14 @@ const resizeFile = (file: File) =>
     Resizer.imageFileResizer(file, 640, 640, 'JPEG', 70, 0, uri => res(uri), 'file');
   });
 
-export async function uploadImages(albumName: string, uploadImageMetas: UploadImageMeta[]) {
-  const newMetas = await Promise.all(
-    uploadImageMetas.map(async imageMeta => {
+export type UploadImagesArgs = {
+  albumName: string;
+  uploadImageMetaList: UploadImageMeta[];
+};
+
+export async function uploadImages({albumName, uploadImageMetaList}: UploadImagesArgs) {
+  const newMetaList = await Promise.all(
+    uploadImageMetaList.map(async imageMeta => {
       const randomFileName = Math.random().toString(36).substr(2, 11);
       const resizedImage = (await resizeFile(imageMeta.file)) as File;
       const uploadImageKey = `${albumName}/${randomFileName}`;
@@ -47,5 +52,5 @@ export async function uploadImages(albumName: string, uploadImageMetas: UploadIm
     }),
   );
 
-  return newMetas;
+  return newMetaList;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import {postDocument, PostDocumentContent} from '@api/document';
+import {type PostDocumentContent} from '@api/document';
 import {useInput} from '@components/Input/useInput';
 import {ErrorMessage, UploadImageMeta} from '@type/Document.type';
 import {EditorRef, EditorType} from '@type/Editor.type';
@@ -9,8 +9,11 @@ import {validateWriterOnChange} from '@utils/validation/writer';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
 import {createContext, useContext, useRef, useState} from 'react';
 import {uploadImages} from '@api/images';
-import {useRouter} from 'next/navigation';
-import {URLS} from '@constants/urls';
+
+import {usePostDocument} from '@hooks/mutation/usePostDocument';
+import {usePutDocument} from '@hooks/mutation/usePutDocument';
+import {replaceLocalUrlToS3Url} from '@utils/replaceLocalUrlToS3Url';
+import {getEditorContents} from '@utils/getEditorContents';
 
 type DocumentWriteContextType = {
   title: string | undefined;
@@ -25,6 +28,7 @@ type DocumentWriteContextType = {
   isPending: boolean;
   setImages: React.Dispatch<React.SetStateAction<UploadImageMeta[]>>;
   editorRef: EditorRef;
+  initialContents?: string;
 };
 
 const DocumentWriteContext = createContext<DocumentWriteContextType | null>(null);
@@ -39,68 +43,60 @@ export const useDocumentWriteContextProvider = () => {
   return context;
 };
 
-export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren) => {
+type EditInitialData = {
+  mode: 'post' | 'edit';
+  title?: string;
+  writer?: string;
+  contents?: string;
+};
+
+type DocumentWriteContextProps = React.PropsWithChildren<EditInitialData>;
+
+export const DocumentWriteContextProvider = ({children, mode, ...initialData}: DocumentWriteContextProps) => {
   const {
     value: title,
     onChange: onTitleChange,
     errorMessage: titleErrorMessage,
     onBlur: onTitleBlur,
-  } = useInput({initialValue: '', validateOnChange: validateTitleOnChange, validateOnBlur: validateTitleOnBlur});
+  } = useInput({
+    initialValue: initialData.title,
+    validateOnChange: validateTitleOnChange,
+    validateOnBlur: validateTitleOnBlur,
+  });
 
   const {
     value: writer,
     onChange: onWriterChange,
     errorMessage: writerErrorMessage,
-  } = useInput({initialValue: '', validateOnChange: validateWriterOnChange});
+  } = useInput({initialValue: initialData.writer, validateOnChange: validateWriterOnChange});
 
   const editorRef = useRef<EditorType | null>(null);
   const [images, setImages] = useState<UploadImageMeta[]>([]);
 
-  const getContents = (): string => {
-    if (editorRef.current) {
-      const instance = editorRef.current?.getInstance();
-      const contents = instance.getMarkdown();
-      return contents;
-    }
-    return '';
-  };
+  const initialContents = initialData.contents;
 
   const isError = titleErrorMessage !== null || writerErrorMessage !== null;
   const isEmpty = title.trim() === '' || writer.trim() === '';
-
   const canSubmit = !isError && !isEmpty;
-  const [isPending, setIsPending] = useState(false);
 
-  const replaceLocalUrlToS3Url = (contents: string, imageMetaList: UploadImageMeta[]) => {
-    let newContents = contents;
-    imageMetaList.forEach(({objectURL, s3URL}) => {
-      newContents = newContents.replace(objectURL, s3URL);
-    });
-
-    return newContents;
-  };
-
-  const router = useRouter();
+  const {postDocument, isPostPending} = usePostDocument();
+  const {putDocument, isPutPending} = usePutDocument();
 
   const onSubmit = async () => {
-    try {
-      setIsPending(true);
+    const newMetaList = await uploadImages({albumName: title, uploadImageMetaList: images});
+    const linkReplacedContents = replaceLocalUrlToS3Url(getEditorContents(editorRef), newMetaList);
 
-      const newMetaList = await uploadImages(title, images);
-      const linkReplacedContents = replaceLocalUrlToS3Url(getContents() ?? '', newMetaList);
+    const document: PostDocumentContent = {
+      title,
+      contents: linkReplacedContents,
+      writer,
+      documentBytes: getBytes(linkReplacedContents),
+    };
 
-      const document: PostDocumentContent = {
-        title,
-        contents: linkReplacedContents,
-        writer,
-        documentBytes: getBytes(linkReplacedContents),
-      };
-
-      const newDocument = await postDocument(document);
-      router.push(`${URLS.wiki}/${newDocument.title}`);
-    } catch (error) {
-    } finally {
-      setIsPending(false);
+    if (mode === 'post') {
+      postDocument(document);
+    } else {
+      putDocument(document);
     }
   };
 
@@ -116,9 +112,10 @@ export const DocumentWriteContextProvider = ({children}: React.PropsWithChildren
         writerErrorMessage,
         canSubmit,
         onSubmit,
-        isPending,
+        isPending: isPostPending || isPutPending,
         setImages,
         editorRef,
+        initialContents,
       }}
     >
       {children}

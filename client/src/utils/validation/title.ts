@@ -1,6 +1,6 @@
+import {requestGet} from '@utils/http';
 import {ENDPOINT} from './../../constants/endpoint';
 import {ErrorInfo, WikiDocument} from '@type/Document.type';
-import {http} from '@utils/http';
 
 export const validateTitleOnChange = (title: string) => {
   const errorInfo: ErrorInfo = {
@@ -26,7 +26,7 @@ export const validateTitleOnBlur = async (title: string) => {
   };
 
   try {
-    await http.get<WikiDocument>({
+    await requestGet<WikiDocument>({
       endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
     });
     errorInfo.errorMessage = '이미 있는 문서입니다.';

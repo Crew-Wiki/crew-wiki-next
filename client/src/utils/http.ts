@@ -1,16 +1,14 @@
+'use server';
+
 type Method = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
 type HeadersType = [string, string][] | Record<string, string> | Headers;
 type ObjectQueryParams = Record<string, string | number | boolean>;
 
-type httpArgs = {
+type httpArgs = CreateRequestInitProps & {
   baseUrl?: string;
   endpoint: string;
-  headers?: HeadersType;
-  body?: BodyInit | object | null;
   queryParams?: ObjectQueryParams;
-  method: Method;
-  next?: NextFetchRequestConfig;
 };
 
 type HttpMethodArgs = Omit<httpArgs, 'method'>;
@@ -24,33 +22,35 @@ type CreateRequestInitProps = {
   body?: BodyInit | object | null;
   method: Method;
   headers?: HeadersType;
+  cache?: RequestCache;
   next?: NextFetchRequestConfig;
 };
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const http = {
-  get: async <T>({headers = {}, ...args}: HttpMethodArgs): Promise<T> => {
-    return await request<T>({
-      ...args,
-      method: 'GET',
-      headers,
-    });
-  },
-  post: async <T>({headers = {}, ...args}: HttpMethodArgs): Promise<T> => {
-    return await request<T>({
-      ...args,
-      method: 'POST',
-      headers,
-    });
-  },
-  put: async <T>({headers = {}, ...args}: HttpMethodArgs): Promise<T> => {
-    return await request<T>({
-      ...args,
-      method: 'PUT',
-      headers,
-    });
-  },
+export const requestGet = async <T>({headers = {}, ...args}: HttpMethodArgs): Promise<T> => {
+  return await request<T>({
+    ...args,
+    method: 'GET',
+    headers,
+    cache: args.cache ?? 'force-cache',
+  });
+};
+
+export const requestPost = async <T>({headers = {}, ...args}: HttpMethodArgs): Promise<T> => {
+  return await request<T>({
+    ...args,
+    method: 'POST',
+    headers,
+  });
+};
+
+export const requestPut = async <T>({headers = {}, ...args}: HttpMethodArgs): Promise<T> => {
+  return await request<T>({
+    ...args,
+    method: 'PUT',
+    headers,
+  });
 };
 
 const objectToQueryString = (params: ObjectQueryParams): string => {

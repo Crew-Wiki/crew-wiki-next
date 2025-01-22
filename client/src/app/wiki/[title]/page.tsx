@@ -1,10 +1,21 @@
-import {getDocumentByTitle} from '@api/document';
+import {getDocumentByTitle, getRecentlyDocuments} from '@api/document';
 import DocumentContents from '@components/Document/DocumentContents';
 import DocumentFooter from '@components/Document/DocumentFooter';
 import DocumentHeader from '@components/Document/DocumentHeader';
+import {CACHE} from '@constants/cache';
 
 interface Props {
   params: {title: string};
+}
+
+export const revalidate = CACHE.time.revalidate;
+
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const documents = await getRecentlyDocuments();
+
+  return documents.map(({title}) => ({title}));
 }
 
 // next.js v15부터 params를 받기 위해 await를 사용해야 함
