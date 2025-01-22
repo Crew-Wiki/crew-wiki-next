@@ -1,3 +1,5 @@
+'use server';
+
 import {PostDocumentContent} from '@api/document';
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
