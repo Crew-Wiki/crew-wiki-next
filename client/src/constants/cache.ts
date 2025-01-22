@@ -8,7 +8,7 @@ export const CACHE = {
     getDocumentByTitle: (title: string) => `title:${decodeURI(title)}`,
     getRecentlyDocuments: 'recently',
     getDocumentLogsByTitle: (title: string) => `logs:${decodeURI(title)}`,
-    getSpecificDocumentLog: 'specificLog',
+    getSpecificDocumentLog: (logId: number) => `specificLog:${logId}`,
     getDocumentSearch: 'search',
     getRandomDocument: 'random',
   },

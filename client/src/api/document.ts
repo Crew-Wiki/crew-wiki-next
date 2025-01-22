@@ -2,7 +2,7 @@
 
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
-import {RecentlyDocument, WikiDocument, WikiDocumentLogSummary} from '@type/Document.type';
+import {RecentlyDocument, WikiDocument, WikiDocumentLogDetail, WikiDocumentLogSummary} from '@type/Document.type';
 import {requestGet} from '@utils/http';
 
 export const getDocumentByTitle = async (title: string) => {
@@ -23,6 +23,15 @@ export const getDocumentLogsByTitle = async (title: string) => {
   return logs.sort((a: WikiDocumentLogSummary, b: WikiDocumentLogSummary) =>
     a.generateTime <= b.generateTime ? 1 : -1,
   );
+};
+
+export const getSpecificDocumentLog = async (logId: number) => {
+  const response = await requestGet<WikiDocumentLogDetail>({
+    endpoint: ENDPOINT.getSpecificDocumentLog(logId),
+    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getSpecificDocumentLog(logId)]},
+  });
+
+  return response;
 };
 
 export const getRandomDocument = async () => {
