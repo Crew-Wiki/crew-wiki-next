@@ -5,6 +5,6 @@ export const ENDPOINT = {
   getRandomDocument: '/document',
   getRecentlyDocuments: '/document/recent',
   getDocumentSearch: '/document/search',
-  getDocumentLogs: (title: string) => `document/${title}/log`,
-  getSpecificDocumentLog: (logId: number) => `document/log/${logId}`,
+  getDocumentLogsByTitle: (title: string) => `/document/${title}/log`,
+  getSpecificDocumentLog: (logId: number) => `/document/log/${logId}`,
 } as const;
