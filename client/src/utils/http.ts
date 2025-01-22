@@ -33,7 +33,7 @@ export const requestGet = async <T>({headers = {}, ...args}: HttpMethodArgs): Pr
     ...args,
     method: 'GET',
     headers,
-    cache: args.cache ?? 'no-cache',
+    cache: args.cache ?? 'force-cache',
   });
 };
 
