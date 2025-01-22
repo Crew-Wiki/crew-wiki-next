@@ -5,7 +5,7 @@ export const CACHE = {
   },
   tag: {
     getDocuments: 'documents',
-    getDocumentByTitle: 'title',
+    getDocumentByTitle: (title: string) => `title:${decodeURI(title)}`,
     getRecentlyDocuments: 'recently',
     getDocumentLogs: 'logs',
     getSpecificDocumentLog: 'specificLog',

@@ -8,7 +8,7 @@ import {requestGet} from '@utils/http';
 export const getDocumentByTitle = async (title: string) => {
   const docs = await requestGet<WikiDocument>({
     endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
-    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getDocumentByTitle]},
+    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getDocumentByTitle(title)]},
   });
 
   return docs;

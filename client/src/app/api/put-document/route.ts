@@ -20,7 +20,7 @@ const putDocument = async (document: PostDocumentContent) => {
   });
 
   revalidateTag(CACHE.tag.getRecentlyDocuments);
-  revalidateTag(CACHE.tag.getDocumentByTitle);
+  revalidateTag(CACHE.tag.getDocumentByTitle(document.title));
 
   return response;
 };
@@ -31,7 +31,7 @@ export const PUT = async (request: NextRequest) => {
   try {
     await putDocument(document);
 
-    return NextResponse.json({}, {status: 200});
+    return NextResponse.json(document, {status: 200});
   } catch (error) {
     return NextResponse.json({error}, {status: 500});
   }
