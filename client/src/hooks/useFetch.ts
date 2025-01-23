@@ -1,30 +1,35 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
-export const useFetch = <T>(fetchFunction: () => Promise<T>) => {
+type UseFetchOptions = {
+  enabled?: boolean;
+};
+
+export const useFetch = <T>(fetchFunction: () => Promise<T>, options?: UseFetchOptions) => {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetchFunction();
-        setData(response);
-        setErrorMessage(null);
-      } catch (error) {
-        if (error instanceof Error) {
-          setErrorMessage(error.message);
-        }
-      } finally {
-        setIsLoading(false);
+  const fetchData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetchFunction();
+      setData(response);
+      setErrorMessage(null);
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
       }
-    };
-
-    fetchData();
+    } finally {
+      setIsLoading(false);
+    }
   }, [fetchFunction]);
 
-  return {data, isLoading, errorMessage};
+  useEffect(() => {
+    if (options?.enabled === true) return;
+    fetchData();
+  }, [fetchData, fetchFunction, options?.enabled]);
+
+  return {data, isLoading, errorMessage, refetch: fetchData, setData};
 };
