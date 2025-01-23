@@ -4,7 +4,7 @@ import PostHeader from '@components/Write/PostHeader';
 import TitleInputField from '@components/Write/TitleInputField';
 import {DocumentWriteContextProvider, useDocumentWriteContextProvider} from '../../../context/DocumentWriteContext';
 import {usePostThrottle} from './usePostThrottle';
-import RelativeSearchTerms from '@components/Write/RelativeSearchTerms';
+import RelativeSearchTerms from '@components/SearchTerms/RelativeSearchTerms';
 
 import {useRelativeSearchTerms} from './useRelativeSearchTerms';
 import TuiEditor from '@components/MarkdownEditor';

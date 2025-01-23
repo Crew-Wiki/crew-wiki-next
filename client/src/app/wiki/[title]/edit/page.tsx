@@ -4,7 +4,7 @@ import PostHeader from '@components/Write/PostHeader';
 import {DocumentWriteContextProvider, useDocumentWriteContextProvider} from '../../../../context/DocumentWriteContext';
 import TitleInputField from '@components/Write/TitleInputField';
 import TuiEditor from '@components/MarkdownEditor';
-import RelativeSearchTerms from '@components/Write/RelativeSearchTerms';
+import RelativeSearchTerms from '@components/SearchTerms/RelativeSearchTerms';
 import {useParams} from 'next/navigation';
 import {useRelativeSearchTerms} from '@app/wiki/post/useRelativeSearchTerms';
 import {useGetDocumentByTitle} from '@hooks/fetch/useGetDocumentByTitle';

@@ -6,6 +6,8 @@ import {twMerge} from 'tailwind-merge';
 import {useInput} from '@components/Input/useInput';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
+import useSearchDocumentByQuery from '@hooks/fetch/useSearchDocumentByQuery';
+import RelativeSearchTerms from '@components/SearchTerms/RelativeSearchTerms';
 
 interface WikiInputProps {
   className?: string;
@@ -16,8 +18,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const router = useRouter();
 
-  // const {titles} = useSearchDocumentByQuery(value);
-  const titles = '';
+  const {titles} = useSearchDocumentByQuery(value);
 
   const onSubmit = (event: React.FormEvent, search?: string) => {
     event.preventDefault();
@@ -53,7 +54,13 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
       <button>
         <Image className="cursor-pointer max-[768px]:hidden" src={SearchCircle} alt="search" />
       </button>
-      {/* {value.trim() !== '' && <RelativeSearchTerms searchTerms={titles ?? []} onClick={onSubmit} />} */}
+      {value.trim() !== '' && (
+        <RelativeSearchTerms
+          showRelativeSearchTerms={titles.length > 0}
+          searchTerms={titles ?? []}
+          onClick={onSubmit}
+        />
+      )}
     </form>
   );
 };
