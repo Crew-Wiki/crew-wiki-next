@@ -7,7 +7,7 @@ import {motion} from 'framer-motion';
 import SearchCircleSmall from '@app/image/search-circle.svg';
 import LogoImage from '@app/image/hangseong-white.png';
 import {twMerge} from 'tailwind-merge';
-import WikiInputField from '@components/WikiInput';
+import WikiInputField from './WikiInputField';
 import RandomButton from '@components/RandomButton';
 
 interface ScrollPosition {
