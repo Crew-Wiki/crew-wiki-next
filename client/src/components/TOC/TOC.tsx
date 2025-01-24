@@ -1,11 +1,7 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { MouseEvent } from 'react';
-import { twMerge } from 'tailwind-merge';
+import {twMerge} from 'tailwind-merge';
 
 interface TOCProps {
-  headTags: Element[];
+  headTags: string[];
 }
 
 interface IToc {
@@ -26,7 +22,7 @@ function convertToTOCNumber(list: number[]) {
   let h2Count = 0;
   let h3Count = 0;
 
-  list.forEach((num) => {
+  list.forEach(num => {
     switch (num) {
       case 1:
         h1Count += 1;
@@ -52,25 +48,23 @@ function convertToTOCNumber(list: number[]) {
   return result;
 }
 
-const TOC = ({ headTags }: TOCProps) => {
+const getHTagOrder = (heading: string) => {
+  const match = heading.match(/^<h(\d)/)!;
+  return parseInt(match[1], 10);
+};
+
+const TOC = ({headTags}: TOCProps) => {
   const tocList: IToc[] = [];
 
-  const headTagsToNumber = headTags.map((heading) => parseInt(heading.tagName.substring(1), 10));
+  const headTagsToNumber = headTags.map(heading => getHTagOrder(heading));
+
   const tocNumber = convertToTOCNumber(headTagsToNumber);
 
-  headTags.forEach((heading) => {
-    const text = heading.textContent;
-    const level = parseInt(heading.tagName.substring(1), 10);
-    tocList.push({ text, level, index: '' });
+  headTags.forEach(heading => {
+    const text = heading.replace(/<[^>]*>/g, '').trim();
+    const level = getHTagOrder(heading);
+    tocList.push({text, level, index: ''});
   });
-
-  const moveHeadTag = (event: MouseEvent<HTMLLIElement | HTMLSpanElement>) => {
-    if (!(event.target instanceof HTMLElement)) {
-      return;
-    }
-    const index = Number(event.target.dataset.index);
-    headTags[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
 
   return (
     <aside
@@ -84,11 +78,10 @@ const TOC = ({ headTags }: TOCProps) => {
         {tocList.map((element, index) => (
           <li
             data-index={index}
-            onClick={(event) => moveHeadTag(event)}
             key={index}
             className={`font-normal text-sm text-grayscale-800 cursor-pointer ${LEVEL_DEPTH[element.level]}`}
           >
-            <span data-index={index} onClick={(event) => moveHeadTag(event)} className="text-primary-primary">
+            <span data-index={index} className="text-primary-primary">
               {tocNumber[index]}
             </span>
             {` ${element.text}`}
