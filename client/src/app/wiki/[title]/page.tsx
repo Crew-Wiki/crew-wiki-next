@@ -3,12 +3,9 @@ import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
-import {CACHE} from '@constants/cache';
 import type {TitleParams} from '@type/PageParams.type';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
-
-export const revalidate = CACHE.time.revalidate;
 
 export const dynamicParams = true;
 
