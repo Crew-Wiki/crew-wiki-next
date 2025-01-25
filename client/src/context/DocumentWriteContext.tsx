@@ -33,11 +33,11 @@ type DocumentWriteContextType = {
 
 const DocumentWriteContext = createContext<DocumentWriteContextType | null>(null);
 
-export const useDocumentWriteContextProvider = () => {
+export const useDocumentWriteContext = () => {
   const context = useContext(DocumentWriteContext);
 
   if (!context) {
-    throw new Error('useDocumentWriteContextProvider는 DocumentWriteContext내부에서 사용되어야 합니다.');
+    throw new Error('useDocumentWriteContext는 DocumentWriteContext내부에서 사용되어야 합니다.');
   }
 
   return context;

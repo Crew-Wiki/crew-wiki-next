@@ -6,7 +6,7 @@ const Editor = dynamic(() => import('@toast-ui/react-editor').then(mod => mod.Ed
 import {type Editor as EditorType, EditorProps} from '@toast-ui/react-editor';
 import '@toast-ui/editor/toastui-editor.css';
 import {UploadImageMeta} from '@type/Document.type';
-import {useDocumentWriteContextProvider} from '../../context/DocumentWriteContext';
+import {useDocumentWriteContext} from '@context/DocumentWriteContext';
 
 type HookCallback = (url: string, text?: string) => void;
 
@@ -24,7 +24,7 @@ const toolbar = [
 function TuiEditor({initialValue, ...editorProps}: Props) {
   const isDesktop = typeof window !== 'undefined' ? window.innerWidth >= 768 : false;
 
-  const {editorRef, setImages} = useDocumentWriteContextProvider();
+  const {editorRef, setImages} = useDocumentWriteContext();
 
   const setImageMeta = (file: File, callback: HookCallback) => {
     const objectURL = URL.createObjectURL(file);
