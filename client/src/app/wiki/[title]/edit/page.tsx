@@ -1,10 +1,10 @@
 'use client';
 
-import PostHeader from '@components/Write/PostHeader';
+import PostHeader from '@components/document/Write/PostHeader';
 import {DocumentWriteContextProvider, useDocumentWriteContext} from '@context/DocumentWriteContext';
-import TitleInputField from '@components/Write/TitleInputField';
-import TuiEditor from '@components/MarkdownEditor';
-import RelativeSearchTerms from '@components/SearchTerms/RelativeSearchTerms';
+import TitleInputField from '@components/document/Write/TitleInputField';
+import TuiEditor from '@components/document/MarkdownEditor';
+import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useParams} from 'next/navigation';
 import {useRelativeSearchTerms} from '@app/wiki/post/useRelativeSearchTerms';
 import {useGetDocumentByTitle} from '@hooks/fetch/useGetDocumentByTitle';

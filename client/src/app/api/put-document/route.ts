@@ -4,7 +4,7 @@ import {PostDocumentContent} from '@apis/document';
 
 import {WikiDocument} from '@type/Document.type';
 import {ENDPOINT} from '@constants/endpoint';
-import {requestPut} from '@utils/http';
+import {requestPut} from '@apis/http';
 import {NextRequest, NextResponse} from 'next/server';
 import {revalidateTag} from 'next/cache';
 import {CACHE} from '@constants/cache';

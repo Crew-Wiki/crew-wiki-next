@@ -2,7 +2,7 @@ import {addDataIdToToc} from '@utils/addDataIdToToc';
 import TOC from '../TOC/TOC';
 
 import './toastui-editor-viewer.css';
-import {AttachTocClickHandler} from '@components/TOC/AttachTocClickHandler';
+import {AttachTocClickHandler} from '@components/document/TOC/AttachTocClickHandler';
 
 interface DocumentContentsProps {
   contents: string;

@@ -8,7 +8,7 @@ import SearchCircleSmall from '@app/image/search-circle.svg';
 import LogoImage from '@app/image/hangseong-white.png';
 import {twMerge} from 'tailwind-merge';
 import WikiInputField from './WikiInputField';
-import RandomButton from '@components/RandomButton';
+import RandomButton from '@components/common/RandomButton';
 
 interface ScrollPosition {
   prev: number;

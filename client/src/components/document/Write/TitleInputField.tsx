@@ -1,6 +1,6 @@
 'use client';
 
-import Input from '@components/Input';
+import Input from '@components/common/Input';
 import {useDocumentWriteContext} from '@context/DocumentWriteContext';
 
 type TitleInputField = {

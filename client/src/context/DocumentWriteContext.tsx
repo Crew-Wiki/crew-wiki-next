@@ -1,7 +1,7 @@
 'use client';
 
 import {type PostDocumentContent} from '@apis/document';
-import {useInput} from '@components/Input/useInput';
+import {useInput} from '@components/common/Input/useInput';
 import {ErrorMessage, UploadImageMeta} from '@type/Document.type';
 import {EditorRef, EditorType} from '@type/Editor.type';
 import {getBytes} from '@utils/getBytes';

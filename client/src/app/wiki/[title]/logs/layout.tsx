@@ -1,6 +1,6 @@
 import {LogsHeader} from './LogsHeader';
-import DocumentFooter from '@components/Document/DocumentFooter';
-import {getDocumentByTitle} from '@api/document';
+import DocumentFooter from '@components/document/layout/DocumentFooter';
+import {getDocumentByTitle} from '@apis/document';
 
 type Props = React.PropsWithChildren & {
   params: {title: string};
