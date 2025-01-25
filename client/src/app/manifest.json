@@ -1,0 +1,15 @@
+{
+  "name": "크루위키",
+  "short_name": "Crew-Wiki",
+  "description": "우아한 테크코스 크루들의 정보를 담은 위키",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "192x192"
+    }
+  ]
+}

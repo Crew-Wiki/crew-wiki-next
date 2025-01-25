@@ -1,4 +1,4 @@
-import type {Metadata, Viewport, MetadataRoute} from 'next';
+import type {Metadata, Viewport} from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 
@@ -32,24 +32,6 @@ export const metadata: Metadata = {
     // icon: [{rel: 'icon', url: './favicon.ico'}],
     apple: './apple-touch-icon.png',
   },
-};
-
-export const manifest = (): MetadataRoute.Manifest => {
-  return {
-    name: '크루위키',
-    short_name: 'Crew-Wiki',
-    description: '우아한 테크코스 크루들의 정보를 담은 위키',
-    start_url: '.',
-    display: 'standalone',
-    theme_color: '#000000',
-    background_color: '#ffffff',
-    icons: [
-      {
-        src: './apple-touch-icon.png',
-        sizes: '192x192',
-      },
-    ],
-  };
 };
 
 export const viewport: Viewport = {
