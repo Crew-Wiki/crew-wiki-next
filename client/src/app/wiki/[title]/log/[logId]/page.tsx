@@ -2,6 +2,7 @@ import {getSpecificDocumentLog} from '@api/document';
 import DocumentContents from '@components/Document/DocumentContents';
 import DocumentFooter from '@components/Document/DocumentFooter';
 import DocumentHeader from '@components/Document/DocumentHeader';
+import MobileDocumentHeader from '@components/Document/MobileDocumentHeader';
 import type {LogParams} from '@type/PageParams.type';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
@@ -27,6 +28,7 @@ const Page = async ({params}: LogParams) => {
 
   return (
     <section className="flex flex-col items-center w-full gap-6">
+      <MobileDocumentHeader title={document.title} />
       <div className="flex flex-col gap-6 w-full h-fit bg-white border-primary-100 border-solid border rounded-xl p-8 max-[768px]:p-4 max-[768px]:gap-2 ">
         <DocumentHeader title={decodeURI(title)} />
         <DocumentContents contents={contents} />
