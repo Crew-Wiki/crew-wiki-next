@@ -3,11 +3,9 @@ import DocumentContents from '@components/Document/DocumentContents';
 import DocumentFooter from '@components/Document/DocumentFooter';
 import DocumentHeader from '@components/Document/DocumentHeader';
 import {CACHE} from '@constants/cache';
+import type {TitleParams} from '@type/PageParams.type';
 import markdownToHtml from '@utils/markdownToHtml';
-
-interface Props {
-  params: {title: string};
-}
+import {Metadata} from 'next';
 
 export const revalidate = CACHE.time.revalidate;
 
@@ -19,9 +17,23 @@ export async function generateStaticParams() {
   return documents.map(({title}) => ({title}));
 }
 
+export async function generateMetadata({params}: TitleParams): Promise<Metadata> {
+  const {title} = await params;
+  const documentTitle = decodeURI(title);
+
+  return {
+    title: documentTitle,
+    description: `${documentTitle}에 대한 정보(논란)를 확인하세요.`,
+    openGraph: {
+      title: `크루위키 ${documentTitle}의 문서`,
+      description: `${documentTitle}에 대한 정보(논란)를 확인하세요.`,
+    },
+  };
+}
+
 // next.js v15부터 params를 받기 위해 await를 사용해야 함
 // https://nextjs.org/docs/messages/sync-dynamic-apis
-const DocumentPage = async ({params}: Props) => {
+const DocumentPage = async ({params}: TitleParams) => {
   const {title} = await params;
   const docs = await getDocumentByTitle(title);
 
