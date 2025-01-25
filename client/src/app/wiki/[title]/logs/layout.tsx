@@ -1,10 +1,9 @@
 import {LogsHeader} from './LogsHeader';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import {getDocumentByTitle} from '@apis/document';
+import {TitleParams} from '@type/PageParams.type';
 
-type Props = React.PropsWithChildren & {
-  params: {title: string};
-};
+type Props = React.PropsWithChildren & TitleParams;
 
 const Layout = async ({children, params}: Props) => {
   const {title} = await params;
