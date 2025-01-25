@@ -1,11 +1,23 @@
+import type {TitleParams} from '@type/PageParams.type';
 import {LogContent} from './LogContent';
 import {getDocumentLogsByTitle} from '@api/document';
+import {Metadata} from 'next';
 
-interface Props {
-  params: {title: string};
+export async function generateMetadata({params}: TitleParams): Promise<Metadata> {
+  const {title} = await params;
+  const documentTitle = decodeURI(title);
+
+  return {
+    title: `${documentTitle} 편집로그`,
+    description: `${documentTitle} 문서의 편집로그입니다.`,
+    openGraph: {
+      title: `크루위키 ${documentTitle}문서의 편집로그`,
+      description: `${documentTitle}에 대한 정보(논란)를 확인하세요.`,
+    },
+  };
 }
 
-const Page = async ({params}: Props) => {
+const Page = async ({params}: TitleParams) => {
   const {title} = await params;
   const documentLogs = await getDocumentLogsByTitle(title);
 
