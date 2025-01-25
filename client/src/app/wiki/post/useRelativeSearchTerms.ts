@@ -1,6 +1,6 @@
 'use client';
 
-import {searchDocument} from '@api/document';
+import {searchDocument} from '@apis/document';
 import {EditorRef} from '@type/Editor.type';
 import {useEffect, useState} from 'react';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import {PostDocumentContent} from '@api/document';
+import {PostDocumentContent} from '@apis/document';
 import {URLS} from '@constants/urls';
 import useMutation from '@hooks/useMutation';
 import {WikiDocument} from '@type/Document.type';

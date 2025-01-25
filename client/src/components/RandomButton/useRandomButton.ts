@@ -1,4 +1,4 @@
-import {getRandomDocument} from '@api/document';
+import {getRandomDocument} from '@apis/document';
 import {URLS} from '@constants/urls';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';

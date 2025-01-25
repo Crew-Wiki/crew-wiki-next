@@ -1,6 +1,6 @@
 'use server';
 
-import {PostDocumentContent} from '@api/document';
+import {PostDocumentContent} from '@apis/document';
 
 import {WikiDocument} from '@type/Document.type';
 import {ENDPOINT} from '@constants/endpoint';

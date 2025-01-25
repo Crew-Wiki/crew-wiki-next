@@ -1,4 +1,4 @@
-import {getSpecificDocumentLog} from '@api/document';
+import {getSpecificDocumentLog} from '@apis/document';
 import DocumentContents from '@components/Document/DocumentContents';
 import DocumentFooter from '@components/Document/DocumentFooter';
 import DocumentHeader from '@components/Document/DocumentHeader';

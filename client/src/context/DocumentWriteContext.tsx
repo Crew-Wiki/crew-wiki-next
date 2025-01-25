@@ -1,6 +1,6 @@
 'use client';
 
-import {type PostDocumentContent} from '@api/document';
+import {type PostDocumentContent} from '@apis/document';
 import {useInput} from '@components/Input/useInput';
 import {ErrorMessage, UploadImageMeta} from '@type/Document.type';
 import {EditorRef, EditorType} from '@type/Editor.type';
@@ -8,7 +8,7 @@ import {getBytes} from '@utils/getBytes';
 import {validateWriterOnChange} from '@utils/validation/writer';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
 import {createContext, useContext, useRef, useState} from 'react';
-import {uploadImages} from '@api/images';
+import {uploadImages} from '@apis/images';
 
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
