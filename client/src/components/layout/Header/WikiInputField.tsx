@@ -3,11 +3,11 @@
 import SearchCircle from '@app/image/search-circle-secondary.svg';
 import {URLS} from '@constants/urls';
 import {twMerge} from 'tailwind-merge';
-import {useInput} from '@components/Input/useInput';
+import {useInput} from '@components/common/Input/useInput';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 import useSearchDocumentByQuery from '@hooks/fetch/useSearchDocumentByQuery';
-import RelativeSearchTerms from '@components/SearchTerms/RelativeSearchTerms';
+import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 
 interface WikiInputProps {
   className?: string;

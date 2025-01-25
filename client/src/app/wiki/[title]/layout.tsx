@@ -1,4 +1,4 @@
-import FloatingButton from '@components/FloatingButton';
+import FloatingButton from '@components/common/FloatingButton';
 
 const Layout = ({children}: React.PropsWithChildren) => {
   return (

@@ -1,14 +1,11 @@
-import {getDocumentByTitle, getRecentlyDocuments} from '@api/document';
-import DocumentContents from '@components/Document/DocumentContents';
-import DocumentFooter from '@components/Document/DocumentFooter';
-import DocumentHeader from '@components/Document/DocumentHeader';
-import MobileDocumentHeader from '@components/Document/MobileDocumentHeader';
-import {CACHE} from '@constants/cache';
+import {getDocumentByTitle, getRecentlyDocuments} from '@apis/document';
+import DocumentContents from '@components/document/layout/DocumentContents';
+import DocumentFooter from '@components/document/layout/DocumentFooter';
+import DocumentHeader from '@components/document/layout/DocumentHeader';
+import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
 import type {TitleParams} from '@type/PageParams.type';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
-
-export const revalidate = CACHE.time.revalidate;
 
 export const dynamicParams = true;
 

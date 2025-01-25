@@ -3,7 +3,7 @@
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {RecentlyDocument, WikiDocument, WikiDocumentLogDetail, WikiDocumentLogSummary} from '@type/Document.type';
-import {requestGet} from '@utils/http';
+import {requestGet} from '@apis/http';
 
 export const getDocumentByTitle = async (title: string) => {
   const docs = await requestGet<WikiDocument>({

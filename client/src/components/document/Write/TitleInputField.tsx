@@ -1,7 +1,7 @@
 'use client';
 
-import Input from '@components/Input';
-import {useDocumentWriteContextProvider} from '../../context/DocumentWriteContext';
+import Input from '@components/common/Input';
+import {useDocumentWriteContext} from '@context/DocumentWriteContext';
 
 type TitleInputField = {
   disabled?: boolean;
@@ -9,7 +9,7 @@ type TitleInputField = {
 
 const TitleInputField = ({disabled = false}: TitleInputField) => {
   const {title, titleErrorMessage, onTitleChange, onTitleBlur, writer, writerErrorMessage, onWriterChange} =
-    useDocumentWriteContextProvider();
+    useDocumentWriteContext();
 
   return (
     <div className="flex flex-col gap-2 w-full">

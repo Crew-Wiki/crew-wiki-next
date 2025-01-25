@@ -1,14 +1,14 @@
 'use client';
 
-import {type PostDocumentContent} from '@api/document';
-import {useInput} from '@components/Input/useInput';
+import {type PostDocumentContent} from '@apis/document';
+import {useInput} from '@components/common/Input/useInput';
 import {ErrorMessage, UploadImageMeta} from '@type/Document.type';
 import {EditorRef, EditorType} from '@type/Editor.type';
 import {getBytes} from '@utils/getBytes';
 import {validateWriterOnChange} from '@utils/validation/writer';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
 import {createContext, useContext, useRef, useState} from 'react';
-import {uploadImages} from '@api/images';
+import {uploadImages} from '@apis/images';
 
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
@@ -33,11 +33,11 @@ type DocumentWriteContextType = {
 
 const DocumentWriteContext = createContext<DocumentWriteContextType | null>(null);
 
-export const useDocumentWriteContextProvider = () => {
+export const useDocumentWriteContext = () => {
   const context = useContext(DocumentWriteContext);
 
   if (!context) {
-    throw new Error('useDocumentWriteContextProvider는 DocumentWriteContext내부에서 사용되어야 합니다.');
+    throw new Error('useDocumentWriteContext는 DocumentWriteContext내부에서 사용되어야 합니다.');
   }
 
   return context;

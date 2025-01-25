@@ -19,10 +19,11 @@
       }
     ],
     "paths": {
-      "@api/*": ["./src/api/*"],
+      "@apis/*": ["./src/apis/*"],
       "@app/*": ["./src/app/*"],
       "@components/*": ["./src/components/*"],
       "@constants/*": ["./src/constants/*"],
+      "@context/*": ["./src/context/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@type/*": ["./src/type/*"],
       "@utils/*": ["./src/utils/*"]

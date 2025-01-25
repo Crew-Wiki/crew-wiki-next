@@ -2,7 +2,7 @@
 
 import {useCallback, useEffect} from 'react';
 import useDebounce from '../useDebounce';
-import {searchDocument} from '@api/document';
+import {searchDocument} from '@apis/document';
 import {useFetch} from '@hooks/useFetch';
 
 const useSearchDocumentByQuery = (query: string) => {

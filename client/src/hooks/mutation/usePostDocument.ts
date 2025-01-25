@@ -1,10 +1,10 @@
 'use client';
 
-import {PostDocumentContent} from '@api/document';
+import {PostDocumentContent} from '@apis/document';
 import {URLS} from '@constants/urls';
 import useMutation from '@hooks/useMutation';
 import {WikiDocument} from '@type/Document.type';
-import {requestPost} from '@utils/http';
+import {requestPost} from '@apis/http';
 import {useRouter} from 'next/navigation';
 
 export const usePostDocument = () => {

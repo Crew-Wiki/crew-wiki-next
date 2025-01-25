@@ -1,5 +1,5 @@
-import WikiHeader from '@components/Header';
-import RecentlyEdit from '@components/RecentlyEdit';
+import WikiHeader from '@components/layout/Header/WikiHeader';
+import RecentlyEdit from '@components/layout/RecentlyEdit';
 
 const Layout = ({children}: React.PropsWithChildren) => {
   return (

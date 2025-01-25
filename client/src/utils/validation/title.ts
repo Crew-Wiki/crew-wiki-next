@@ -1,5 +1,5 @@
-import {requestGet} from '@utils/http';
-import {ENDPOINT} from './../../constants/endpoint';
+import {requestGet} from '@apis/http';
+import {ENDPOINT} from '@constants/endpoint';
 import {ErrorInfo, WikiDocument} from '@type/Document.type';
 
 export const validateTitleOnChange = (title: string) => {

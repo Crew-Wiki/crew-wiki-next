@@ -1,7 +1,7 @@
 import {URLS} from '@constants/urls';
-import DocumentTitle from './DocumentTitle';
-import Button from '@components/Button';
+import Button from '@components/common/Button';
 import Link from 'next/link';
+import DocumentTitle from './DocumentTitle';
 
 interface DocumentHeaderProps {
   title: string;

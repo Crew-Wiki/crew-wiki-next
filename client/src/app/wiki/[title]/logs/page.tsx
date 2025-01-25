@@ -1,6 +1,6 @@
 import type {TitleParams} from '@type/PageParams.type';
 import {LogContent} from './LogContent';
-import {getDocumentLogsByTitle} from '@api/document';
+import {getDocumentLogsByTitle} from '@apis/document';
 import {Metadata} from 'next';
 
 export async function generateMetadata({params}: TitleParams): Promise<Metadata> {

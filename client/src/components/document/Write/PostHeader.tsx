@@ -1,12 +1,12 @@
 'use client';
 
-import Button from '@components/Button';
-import DocumentTitle from '@components/Document/DocumentTitle';
+import Button from '@components/common/Button';
+import DocumentTitle from '@components/document/layout/DocumentTitle';
 import {useRouter} from 'next/navigation';
-import {useDocumentWriteContextProvider} from '../../context/DocumentWriteContext';
+import {useDocumentWriteContext} from '@context/DocumentWriteContext';
 
 const PostHeader = () => {
-  const {onSubmit, isPending, canSubmit} = useDocumentWriteContextProvider();
+  const {onSubmit, isPending, canSubmit} = useDocumentWriteContext();
   const router = useRouter();
 
   const goBack = () => {

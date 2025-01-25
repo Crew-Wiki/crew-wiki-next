@@ -1,16 +1,16 @@
 'use client';
 
-import PostHeader from '@components/Write/PostHeader';
-import TitleInputField from '@components/Write/TitleInputField';
-import {DocumentWriteContextProvider, useDocumentWriteContextProvider} from '../../../context/DocumentWriteContext';
+import PostHeader from '@components/document/Write/PostHeader';
+import TitleInputField from '@components/document/Write/TitleInputField';
+import {DocumentWriteContextProvider, useDocumentWriteContext} from '@context/DocumentWriteContext';
 import {usePostThrottle} from './usePostThrottle';
-import RelativeSearchTerms from '@components/SearchTerms/RelativeSearchTerms';
+import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 
 import {useRelativeSearchTerms} from './useRelativeSearchTerms';
-import TuiEditor from '@components/MarkdownEditor';
+import TuiEditor from '@components/document/MarkdownEditor';
 
 const PostPage = () => {
-  const {title, editorRef} = useDocumentWriteContextProvider();
+  const {title, editorRef} = useDocumentWriteContext();
   const initialValue = usePostThrottle({
     editorRef,
     title,

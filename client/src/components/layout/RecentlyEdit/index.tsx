@@ -1,4 +1,4 @@
-import {getRecentlyDocuments} from '@api/document';
+import {getRecentlyDocuments} from '@apis/document';
 import {URLS} from '@constants/urls';
 import timeConverter from '@utils/TimeConverter';
 import Link from 'next/link';

@@ -1,7 +1,7 @@
 'use client';
 
-import Button from '@components/Button';
-import DocumentTitle from '@components/Document/DocumentTitle';
+import Button from '@components/common/Button';
+import DocumentTitle from '@components/document/layout/DocumentTitle';
 import {URLS} from '@constants/urls';
 import {useParams, useRouter} from 'next/navigation';
 
