@@ -67,6 +67,7 @@ export interface PostDocumentContent {
 export const searchDocument = async (referQuery: string) => {
   const titles = await requestGet<string[]>({
     endpoint: ENDPOINT.getDocumentSearch,
+    cache: 'no-cache',
     queryParams: {
       keyWord: referQuery,
     },
