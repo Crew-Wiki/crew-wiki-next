@@ -1,3 +1,5 @@
+'use client';
+
 import {getRandomDocument} from '@apis/document';
 import {URLS} from '@constants/urls';
 import {useRouter} from 'next/navigation';
@@ -11,7 +13,7 @@ export const useRandomButton = () => {
     router.push(`${URLS.wiki}/${randomTitle}`);
   };
 
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768);
 
   useEffect(function addEventListenerForDetectWindowSize() {
     const handleResize = () => {
