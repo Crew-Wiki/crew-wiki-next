@@ -27,8 +27,9 @@ export const useFetch = <T>(fetchFunction: () => Promise<T>, options?: UseFetchO
   }, [fetchFunction]);
 
   useEffect(() => {
-    if (options?.enabled === true) return;
-    fetchData();
+    if (options?.enabled === true) {
+      fetchData();
+    }
   }, [fetchData, fetchFunction, options?.enabled]);
 
   return {data, isLoading, errorMessage, refetch: fetchData, setData};

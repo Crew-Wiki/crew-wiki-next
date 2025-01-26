@@ -4,7 +4,7 @@ import {useState} from 'react';
 type UseInputArgs = {
   initialValue?: string;
   validateOnChange?: (value: string) => ErrorInfo;
-  validateOnBlur?: (value: string) => ErrorInfo | Promise<ErrorInfo>;
+  validateOnBlur?: (value: string, list?: string[]) => ErrorInfo;
 };
 
 export function useInput({initialValue, validateOnChange, validateOnBlur}: UseInputArgs) {
@@ -29,11 +29,11 @@ export function useInput({initialValue, validateOnChange, validateOnBlur}: UseIn
     }
   };
 
-  const onBlur = async (event: React.FocusEvent<HTMLInputElement, Element>) => {
+  const onBlur = (event: React.FocusEvent<HTMLInputElement, Element>, list?: string[]) => {
     const {value} = event.target;
     if (typeof validateOnBlur === 'undefined') return;
 
-    const {errorMessage} = await validateOnBlur(value);
+    const {errorMessage} = validateOnBlur(value, list);
     setErrorMessage(errorMessage);
   };
 

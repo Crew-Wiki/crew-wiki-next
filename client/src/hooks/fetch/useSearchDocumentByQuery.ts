@@ -2,12 +2,25 @@
 
 import {useCallback, useEffect} from 'react';
 import useDebounce from '../useDebounce';
-import {searchDocument} from '@apis/document';
 import {useFetch} from '@hooks/useFetch';
+import {requestGet} from '@apis/http';
 
-const useSearchDocumentByQuery = (query: string) => {
-  const searchDocumentByQuery = useCallback(() => searchDocument(query), [query]);
-  const {data, refetch, setData} = useFetch(searchDocumentByQuery, {enabled: true});
+const getSearchDocument = async (query: string) => {
+  const response = await requestGet<string[]>({
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+    endpoint: `/api/get-search-document?referQuery=${query}`,
+  });
+
+  return response;
+};
+
+type UseSearchDocumentByQueryOptions = {
+  enabled?: boolean;
+};
+
+const useSearchDocumentByQuery = (query: string, options?: UseSearchDocumentByQueryOptions) => {
+  const searchDocumentByQuery = useCallback(() => getSearchDocument(query), [query]);
+  const {data, refetch} = useFetch(searchDocumentByQuery, {enabled: options?.enabled});
 
   const searchDocumentsIfValid = useCallback(() => {
     if (query.trim() !== '' && /^[가-힣()0-9]*$/.test(query)) refetch();
@@ -16,9 +29,8 @@ const useSearchDocumentByQuery = (query: string) => {
   const debouncedSearchDocuments = useDebounce(searchDocumentsIfValid, 200);
 
   useEffect(() => {
-    setData(null);
     debouncedSearchDocuments();
-  }, [debouncedSearchDocuments, query, setData]);
+  }, [debouncedSearchDocuments, query]);
 
   return {
     titles: data ?? [],

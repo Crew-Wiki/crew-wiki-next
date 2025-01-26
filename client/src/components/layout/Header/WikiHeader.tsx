@@ -55,7 +55,7 @@ const WikiHeader = () => {
     setVisibleSmallSearchBar(!isVisibleSmallSearchBar);
   };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = () => {
     setVisibleSmallSearchBar(false);
   };
 

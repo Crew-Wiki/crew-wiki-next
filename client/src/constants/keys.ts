@@ -1,5 +1,6 @@
 const SESSION_STORAGE = {
-  WRITE: 'write-document',
+  post: 'post',
+  edit: 'edit',
 };
 
 const KEYS = {

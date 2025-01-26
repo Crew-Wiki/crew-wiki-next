@@ -7,28 +7,41 @@ import {EditorRef, EditorType} from '@type/Editor.type';
 import {getBytes} from '@utils/getBytes';
 import {validateWriterOnChange} from '@utils/validation/writer';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
-import {createContext, useContext, useRef, useState} from 'react';
+import {createContext, useCallback, useContext, useRef, useState} from 'react';
 import {uploadImages} from '@apis/images';
 
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
 import {replaceLocalUrlToS3Url} from '@utils/replaceLocalUrlToS3Url';
-import {getEditorContents} from '@utils/getEditorContents';
 
-type DocumentWriteContextType = {
-  title: string | undefined;
+export type TitleProps = {
+  title: string;
   onTitleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onTitleBlur: (event: React.FocusEvent<HTMLInputElement, Element>, list?: string[]) => void;
   titleErrorMessage: ErrorMessage;
-  onTitleBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => Promise<void>;
-  writer: string | undefined;
+};
+
+export type WriterProps = {
+  writer: string;
   onWriterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   writerErrorMessage: ErrorMessage;
+};
+
+export type ContentsProps = {
+  contents: string;
+  initialContents?: string;
+  onContentsChange: (value: string) => void;
+  setImages: React.Dispatch<React.SetStateAction<UploadImageMeta[]>>;
+};
+
+type DocumentWriteContextType = {
+  titleProps: TitleProps;
+  writerProps: WriterProps;
+  contentsProps: ContentsProps;
   canSubmit: boolean;
   onSubmit: () => Promise<void>;
   isPending: boolean;
-  setImages: React.Dispatch<React.SetStateAction<UploadImageMeta[]>>;
   editorRef: EditorRef;
-  initialContents?: string;
 };
 
 const DocumentWriteContext = createContext<DocumentWriteContextType | null>(null);
@@ -74,9 +87,14 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
   const [images, setImages] = useState<UploadImageMeta[]>([]);
 
   const initialContents = initialData.contents;
+  const [contents, setContents] = useState(initialContents ?? '');
+
+  const onContentsChange = useCallback((value: string) => {
+    setContents(value);
+  }, []);
 
   const isError = titleErrorMessage !== null || writerErrorMessage !== null;
-  const isEmpty = title.trim() === '' || writer.trim() === '';
+  const isEmpty = title.trim() === '' || writer.trim() === '' || contents.trim() === '';
   const canSubmit = !isError && !isEmpty;
 
   const {postDocument, isPostPending} = usePostDocument();
@@ -84,7 +102,7 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
 
   const onSubmit = async () => {
     const newMetaList = await uploadImages({albumName: title, uploadImageMetaList: images});
-    const linkReplacedContents = replaceLocalUrlToS3Url(getEditorContents(editorRef), newMetaList);
+    const linkReplacedContents = replaceLocalUrlToS3Url(contents, newMetaList);
 
     const document: PostDocumentContent = {
       title,
@@ -103,19 +121,27 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
   return (
     <DocumentWriteContext.Provider
       value={{
-        title,
-        onTitleChange,
-        titleErrorMessage,
-        onTitleBlur,
-        writer,
-        onWriterChange,
-        writerErrorMessage,
+        titleProps: {
+          title,
+          onTitleBlur,
+          onTitleChange,
+          titleErrorMessage,
+        },
+        writerProps: {
+          writer,
+          onWriterChange,
+          writerErrorMessage,
+        },
+        contentsProps: {
+          contents,
+          initialContents,
+          onContentsChange,
+          setImages,
+        },
         canSubmit,
         onSubmit,
         isPending: isPostPending || isPutPending,
-        setImages,
         editorRef,
-        initialContents,
       }}
     >
       {children}
