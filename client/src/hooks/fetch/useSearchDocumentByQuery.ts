@@ -2,11 +2,20 @@
 
 import {useCallback, useEffect} from 'react';
 import useDebounce from '../useDebounce';
-import {searchDocument} from '@apis/document';
 import {useFetch} from '@hooks/useFetch';
+import {requestGet} from '@apis/http';
 
 const useSearchDocumentByQuery = (query: string) => {
-  const searchDocumentByQuery = useCallback(() => searchDocument(query), [query]);
+  const getSearchDocument = async (query: string) => {
+    const response = requestGet<string[]>({
+      baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+      endpoint: `/api/get-search-document?referQuery=${query}`,
+    });
+
+    return response;
+  };
+
+  const searchDocumentByQuery = useCallback(() => getSearchDocument(query), [query]);
   const {data, refetch, setData} = useFetch(searchDocumentByQuery, {enabled: true});
 
   const searchDocumentsIfValid = useCallback(() => {
