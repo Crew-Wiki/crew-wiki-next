@@ -1,6 +1,6 @@
-import {requestGet} from '@apis/http';
-import {ENDPOINT} from '@constants/endpoint';
-import {ErrorInfo, WikiDocument} from '@type/Document.type';
+'use client';
+
+import {ErrorInfo} from '@type/Document.type';
 
 export const validateTitleOnChange = (title: string) => {
   const errorInfo: ErrorInfo = {
@@ -19,18 +19,15 @@ export const validateTitleOnChange = (title: string) => {
   return errorInfo;
 };
 
-export const validateTitleOnBlur = async (title: string) => {
+export const validateTitleOnBlur = (title: string, titleList?: string[]) => {
   const errorInfo: ErrorInfo = {
     errorMessage: null,
     reset: null,
   };
 
-  try {
-    await requestGet<WikiDocument>({
-      endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
-    });
+  if (titleList?.includes(title)) {
     errorInfo.errorMessage = '이미 있는 문서입니다.';
-  } catch (error) {
+  } else {
     errorInfo.errorMessage = null;
   }
 

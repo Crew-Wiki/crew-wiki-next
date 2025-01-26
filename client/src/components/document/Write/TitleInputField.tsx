@@ -2,14 +2,19 @@
 
 import Input from '@components/common/Input';
 import {useDocumentWriteContext} from '@context/DocumentWriteContext';
+import {useGetRecentlyDocuments} from '@hooks/fetch/useGetRecentlyDocuments';
 
 type TitleInputField = {
   disabled?: boolean;
 };
 
 const TitleInputField = ({disabled = false}: TitleInputField) => {
-  const {title, titleErrorMessage, onTitleChange, onTitleBlur, writer, writerErrorMessage, onWriterChange} =
-    useDocumentWriteContext();
+  const {titleProps, writerProps} = useDocumentWriteContext();
+  const {title, onTitleChange, onTitleBlur, titleErrorMessage} = titleProps;
+  const {writer, onWriterChange, writerErrorMessage} = writerProps;
+
+  const {documents} = useGetRecentlyDocuments();
+  const titleList = documents.map(document => document.title);
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -25,7 +30,7 @@ const TitleInputField = ({disabled = false}: TitleInputField) => {
           handleChangeInput={onTitleChange}
           maxLength={12}
           disabled={disabled}
-          onBlur={onTitleBlur}
+          onBlur={event => onTitleBlur(event, titleList)}
           invalid={titleErrorMessage !== null}
         />
         <Input
