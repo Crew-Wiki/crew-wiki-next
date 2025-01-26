@@ -4,11 +4,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {useState, useEffect} from 'react';
 import {motion} from 'framer-motion';
-import SearchCircleSmall from '@app/image/search-circle.svg';
 import LogoImage from '@app/image/hangseong-white.png';
 import {twMerge} from 'tailwind-merge';
 import WikiInputField from './WikiInputField';
-import RandomButton from '@components/common/RandomButton';
+
+import dynamic from 'next/dynamic';
+const RightHeader = dynamic(() => import('./RightHeader'), {ssr: false});
 
 interface ScrollPosition {
   prev: number;
@@ -68,16 +69,7 @@ const WikiHeader = () => {
             <h1 className="font-bm text-2xl md:text-[40px] text-white font-normal">크루위키</h1>
           </Link>
 
-          <div className="flex items-center">
-            <RandomButton />
-            <WikiInputField className="w-80 hidden md:flex" handleSubmit={onSubmit} />
-            <Image
-              src={SearchCircleSmall}
-              alt="search"
-              className="cursor-pointer md:hidden"
-              onClick={toggleVisibility}
-            />
-          </div>
+          <RightHeader onSubmit={onSubmit} toggleVisibility={toggleVisibility} />
         </div>
         <div
           className={twMerge(
