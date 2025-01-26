@@ -70,7 +70,7 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
 
   const MARKDOWN_THROTTLE_TIME = 5000;
 
-  const {top, left, titles, onClick, showRelativeSearchTerms, recordRefStartPos, recordRefEndPose} =
+  const {top, left, titles, onClick, recordRefStartPos, recordRefEndPose, showRelativeSearchTerms} =
     useRelativeSearchTerms({editorRef});
 
   const handleChange = useCallback(() => {
@@ -94,7 +94,7 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
   }, [cleanup]);
 
   return (
-    <>
+    <div onClick={onClick}>
       <ForwardedEditor
         ref={editorRef}
         initialValue={'내용을 입력해주세요.'}
@@ -108,12 +108,11 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
         hooks={{addImageBlobHook: imageHandler}}
       />
       <RelativeSearchTerms
-        showRelativeSearchTerms={showRelativeSearchTerms}
+        show={showRelativeSearchTerms}
         style={{top: `${top + 200}px`, left, width: 320}}
         searchTerms={titles ?? []}
-        onClick={onClick}
       />
-    </>
+    </div>
   );
 }
 

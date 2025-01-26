@@ -11,7 +11,7 @@ import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTe
 
 interface WikiInputProps {
   className?: string;
-  handleSubmit: (e: React.FormEvent) => void;
+  handleSubmit: () => void;
 }
 
 const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
@@ -20,12 +20,14 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
 
   const {titles} = useSearchDocumentByQuery(value);
 
-  const onSubmit = (event: React.FormEvent, search?: string) => {
+  const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    const targetTitle = (event.target as HTMLElement).closest('button')?.id;
+
     if (value?.trim() === '') return;
 
-    if (search !== undefined) {
-      router.push(`${URLS.wiki}/${search}`);
+    if (targetTitle !== undefined) {
+      router.push(`${URLS.wiki}/${targetTitle}`);
     } else if (titles !== undefined && titles.length !== 0) {
       router.push(`${URLS.wiki}/${titles[0]}`);
     } else {
@@ -33,7 +35,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
     }
 
     setValue('');
-    handleSubmit(event);
+    handleSubmit();
   };
 
   return (
@@ -51,16 +53,10 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
         value={value}
         onChange={onChange}
       />
-      <button>
+      <button type="submit">
         <Image className="cursor-pointer max-[768px]:hidden" src={SearchCircle} alt="search" />
       </button>
-      {value.trim() !== '' && (
-        <RelativeSearchTerms
-          showRelativeSearchTerms={titles.length > 0}
-          searchTerms={titles ?? []}
-          onClick={onSubmit}
-        />
-      )}
+      {value.trim() !== '' && <RelativeSearchTerms searchTerms={titles ?? []} />}
     </form>
   );
 };
