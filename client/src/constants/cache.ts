@@ -1,7 +1,9 @@
-// ISR : cache 시간 어떻게 가져갈 지 논의 (안 가져가는 것도 좋을 듯)
+// ISR : cache 시간 어떻게 가져갈 지 논의
+// revalidate 1s
 export const CACHE = {
   time: {
-    revalidate: 30,
+    basicRevalidate: 43200, // 12 hours
+    longRevalidate: 604800, // 7 days
   },
   tag: {
     getDocuments: 'documents',

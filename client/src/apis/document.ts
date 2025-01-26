@@ -8,7 +8,7 @@ import {requestGet} from '@apis/http';
 export const getDocumentByTitle = async (title: string) => {
   const docs = await requestGet<WikiDocument>({
     endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
-    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getDocumentByTitle(title)]},
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByTitle(title)]},
   });
 
   return docs;
@@ -17,7 +17,7 @@ export const getDocumentByTitle = async (title: string) => {
 export const getDocumentLogsByTitle = async (title: string) => {
   const logs = await requestGet<WikiDocumentLogSummary[]>({
     endpoint: ENDPOINT.getDocumentLogsByTitle(title),
-    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getDocumentLogsByTitle(title)]},
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentLogsByTitle(title)]},
   });
 
   return logs.sort((a: WikiDocumentLogSummary, b: WikiDocumentLogSummary) =>
@@ -28,7 +28,7 @@ export const getDocumentLogsByTitle = async (title: string) => {
 export const getSpecificDocumentLog = async (logId: number) => {
   const response = await requestGet<WikiDocumentLogDetail>({
     endpoint: ENDPOINT.getSpecificDocumentLog(logId),
-    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getSpecificDocumentLog(logId)]},
+    next: {revalidate: CACHE.time.longRevalidate, tags: [CACHE.tag.getSpecificDocumentLog(logId)]},
   });
 
   return response;
@@ -37,7 +37,7 @@ export const getSpecificDocumentLog = async (logId: number) => {
 export const getRandomDocument = async () => {
   const docs = await requestGet<WikiDocument>({
     endpoint: ENDPOINT.getRandomDocument,
-    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getRandomDocument]},
+    cache: 'no-cache',
   });
 
   return docs.title;
@@ -50,7 +50,7 @@ interface RecentlyDocumentsResponse {
 export const getRecentlyDocuments = async () => {
   const {documents} = await requestGet<RecentlyDocumentsResponse>({
     endpoint: ENDPOINT.getRecentlyDocuments,
-    next: {revalidate: CACHE.time.revalidate, tags: [CACHE.tag.getRecentlyDocuments]},
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getRecentlyDocuments]},
   });
 
   return documents;
