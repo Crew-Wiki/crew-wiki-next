@@ -1,23 +1,17 @@
 'use client';
 
 import '@toast-ui/editor/toastui-editor.css';
-import {Editor, EditorProps} from '@toast-ui/react-editor';
 
 import dynamic from 'next/dynamic';
 
 import {UploadImageMeta} from '@type/Document.type';
-import {ForwardedRef, forwardRef, useCallback, useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useRelativeSearchTerms} from './useRelativeSearchTerms';
 import useThrottle from '@hooks/useThrottle';
 import {useDocumentWriteContext} from '@context/DocumentWriteContext';
 
-const WrappedEditor = dynamic(() => import('./WrappedEditor'), {ssr: false});
-
-const ForwardedEditor = forwardRef((props: EditorProps, forwardedRef: ForwardedRef<Editor>) => {
-  return <WrappedEditor {...props} forwardedRef={forwardedRef} />;
-});
-ForwardedEditor.displayName = 'ForwardedEditor';
+const DynamicLoadEditor = dynamic(() => import('@toast-ui/react-editor').then(mod => mod.Editor), {ssr: false});
 
 type HookCallback = (url: string, text?: string) => void;
 
@@ -95,7 +89,7 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
 
   return (
     <div onClick={onClick}>
-      <ForwardedEditor
+      <DynamicLoadEditor
         ref={editorRef}
         initialValue={'내용을 입력해주세요.'}
         onChange={handleChange}
