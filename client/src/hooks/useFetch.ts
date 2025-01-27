@@ -6,7 +6,7 @@ type UseFetchOptions = {
   enabled?: boolean;
 };
 
-export const useFetch = <T>(fetchFunction: () => Promise<T>, options?: UseFetchOptions) => {
+export const useFetch = <T>(fetchFunction: () => Promise<T>, options: UseFetchOptions = {enabled: true}) => {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -27,7 +27,7 @@ export const useFetch = <T>(fetchFunction: () => Promise<T>, options?: UseFetchO
   }, [fetchFunction]);
 
   useEffect(() => {
-    if (options?.enabled === true) {
+    if (options?.enabled) {
       fetchData();
     }
   }, [fetchData, fetchFunction, options?.enabled]);

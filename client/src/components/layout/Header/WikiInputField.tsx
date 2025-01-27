@@ -18,7 +18,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const router = useRouter();
 
-  const {titles} = useSearchDocumentByQuery(value);
+  const {titles} = useSearchDocumentByQuery(value, {enabled: false});
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();

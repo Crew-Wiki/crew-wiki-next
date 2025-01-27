@@ -13,7 +13,7 @@ const TitleInputField = ({disabled = false}: TitleInputField) => {
   const {title, onTitleChange, onTitleBlur, titleErrorMessage} = titleProps;
   const {writer, onWriterChange, writerErrorMessage} = writerProps;
 
-  const {titles} = useSearchDocumentByQuery('', {enabled: true});
+  const {titles} = useSearchDocumentByQuery('');
 
   return (
     <div className="flex flex-col gap-2 w-full">
