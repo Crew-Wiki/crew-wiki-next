@@ -14,7 +14,7 @@ export const useRelativeSearchTerms = ({editorRef}: UseRelativeSearchTermArgs) =
   const [refEndPos, setRefEndPos] = useState<[number, number] | null>(null);
   const [floatingAreaPosition, setFloatingAreaPosition] = useState<{top: number; left: number}>({top: 0, left: 0});
 
-  const {titles} = useSearchDocumentByQuery(referQuery);
+  const {titles} = useSearchDocumentByQuery(referQuery, {enabled: false});
   const floatingArea = typeof document !== 'undefined' ? document.createElement('div') : null;
 
   if (floatingArea) {
