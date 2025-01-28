@@ -8,7 +8,6 @@ import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 import useSearchDocumentByQuery from '@hooks/fetch/useSearchDocumentByQuery';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
-import {useRef} from 'react';
 
 interface WikiInputProps {
   className?: string;
@@ -20,8 +19,6 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const router = useRouter();
 
   const {titles} = useSearchDocumentByQuery(value, {enabled: false});
-
-  const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -44,7 +41,6 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
 
   return (
     <form
-      ref={formRef}
       onSubmit={onSubmit}
       className={twMerge(
         'flex relative h-11 px-4 py-2.5 rounded-xl bg-white border-grayscale-200 border-solid border gap-2',
