@@ -8,6 +8,7 @@ import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 import useSearchDocumentByQuery from '@hooks/fetch/useSearchDocumentByQuery';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
+import {useRef} from 'react';
 
 interface WikiInputProps {
   className?: string;
@@ -20,13 +21,16 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
 
   const {titles} = useSearchDocumentByQuery(value, {enabled: false});
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const targetTitle = (event.target as HTMLElement).closest('button')?.id;
-
     if (value?.trim() === '') return;
 
-    if (targetTitle !== undefined) {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter;
+    const targetTitle = submitter?.id;
+
+    if (targetTitle !== 'search-icon') {
       router.push(`${URLS.wiki}/${targetTitle}`);
     } else if (titles !== undefined && titles.length !== 0) {
       router.push(`${URLS.wiki}/${titles[0]}`);
@@ -38,8 +42,15 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
     handleSubmit();
   };
 
+  const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (formRef.current) {
+      formRef.current.requestSubmit(event.target as HTMLElement);
+    }
+  };
+
   return (
     <form
+      ref={formRef}
       onSubmit={onSubmit}
       className={twMerge(
         'flex relative h-11 px-4 py-2.5 rounded-xl bg-white border-grayscale-200 border-solid border gap-2',
@@ -53,10 +64,10 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
         value={value}
         onChange={onChange}
       />
-      <button type="submit">
+      <button type="submit" id="search-icon">
         <Image className="cursor-pointer max-[768px]:hidden" src={SearchCircle} alt="search" />
       </button>
-      {value.trim() !== '' && <RelativeSearchTerms searchTerms={titles ?? []} />}
+      {value.trim() !== '' && <RelativeSearchTerms onClick={onClick} searchTerms={titles ?? []} />}
     </form>
   );
 };
