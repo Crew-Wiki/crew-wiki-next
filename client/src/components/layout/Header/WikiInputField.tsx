@@ -22,11 +22,12 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const targetTitle = (event.target as HTMLElement).closest('button')?.id;
-
     if (value?.trim() === '') return;
 
-    if (targetTitle !== undefined) {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter;
+    const targetTitle = submitter?.id;
+
+    if (targetTitle !== 'search-icon') {
       router.push(`${URLS.wiki}/${targetTitle}`);
     } else if (titles !== undefined && titles.length !== 0) {
       router.push(`${URLS.wiki}/${titles[0]}`);
@@ -53,7 +54,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
         value={value}
         onChange={onChange}
       />
-      <button type="submit">
+      <button type="submit" id="search-icon">
         <Image className="cursor-pointer max-[768px]:hidden" src={SearchCircle} alt="search" />
       </button>
       {value.trim() !== '' && <RelativeSearchTerms searchTerms={titles ?? []} />}
