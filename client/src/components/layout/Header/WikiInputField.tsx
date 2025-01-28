@@ -42,12 +42,6 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
     handleSubmit();
   };
 
-  const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if (formRef.current) {
-      formRef.current.requestSubmit(event.target as HTMLElement);
-    }
-  };
-
   return (
     <form
       ref={formRef}
@@ -67,7 +61,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
       <button type="submit" id="search-icon">
         <Image className="cursor-pointer max-[768px]:hidden" src={SearchCircle} alt="search" />
       </button>
-      {value.trim() !== '' && <RelativeSearchTerms onClick={onClick} searchTerms={titles ?? []} />}
+      {value.trim() !== '' && <RelativeSearchTerms searchTerms={titles ?? []} />}
     </form>
   );
 };
