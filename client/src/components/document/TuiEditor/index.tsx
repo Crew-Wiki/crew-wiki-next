@@ -24,7 +24,7 @@ const toolbar = [
 
 type TuiEditorProps = {
   saveMarkdown?: (markdown: string) => void;
-  initialValue: string | null;
+  initialValue: string;
 };
 
 function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
@@ -91,7 +91,7 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
     <div onClick={onClick}>
       <DynamicLoadEditor
         ref={editorRef}
-        initialValue={'내용을 입력해주세요.'}
+        initialValue={initialValue}
         onChange={handleChange}
         initialEditType="markdown"
         autofocus={false}

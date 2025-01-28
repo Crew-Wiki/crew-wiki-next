@@ -14,7 +14,7 @@ const EditPage = () => {
     <>
       <PostHeader />
       <TitleInputField disabled />
-      <TuiEditor initialValue={contentsProps.initialContents ?? null} />
+      <TuiEditor initialValue={contentsProps.initialContents} />
     </>
   );
 };

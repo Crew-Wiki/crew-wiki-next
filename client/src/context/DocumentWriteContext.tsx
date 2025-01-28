@@ -13,6 +13,7 @@ import {uploadImages} from '@apis/images';
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
 import {replaceLocalUrlToS3Url} from '@utils/replaceLocalUrlToS3Url';
+import {EDITOR} from '@constants/editor';
 
 export type TitleProps = {
   title: string;
@@ -29,7 +30,7 @@ export type WriterProps = {
 
 export type ContentsProps = {
   contents: string;
-  initialContents?: string;
+  initialContents: string;
   onContentsChange: (value: string) => void;
   setImages: React.Dispatch<React.SetStateAction<UploadImageMeta[]>>;
 };
@@ -86,8 +87,8 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
   const editorRef = useRef<EditorType | null>(null);
   const [images, setImages] = useState<UploadImageMeta[]>([]);
 
-  const initialContents = initialData.contents;
-  const [contents, setContents] = useState(initialContents ?? '');
+  const initialContents = initialData.contents ?? EDITOR.initialValue;
+  const [contents, setContents] = useState(initialContents);
 
   const onContentsChange = useCallback((value: string) => {
     setContents(value);
