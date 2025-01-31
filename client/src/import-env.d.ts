@@ -6,6 +6,6 @@ declare namespace NodeJS {
     NEXT_PUBLIC_BUCKET_REGION: string;
     NEXT_PUBLIC_ACCESS_KEY: string;
     NEXT_PUBLIC_SECRET_KEY: string;
-    NEXT_PUBLIC_GOOGLE_ANALYTICS_TRACKING_ID: string;
+    NEXT_PUBLIC_AMPLITUDE_API_KEY: string;
   }
 }
