@@ -6,9 +6,11 @@ import useMutation from '@hooks/useMutation';
 import {WikiDocument} from '@type/Document.type';
 import {requestPost} from '@apis/http';
 import {useRouter} from 'next/navigation';
+import useAmplitude from '@hooks/useAmplitude';
 
 export const usePostDocument = () => {
   const router = useRouter();
+  const {trackDocumentCreate} = useAmplitude();
 
   const postDocument = async (document: PostDocumentContent) => {
     const newDocument = await requestPost<WikiDocument>({
@@ -23,6 +25,7 @@ export const usePostDocument = () => {
   const {mutate, isPending} = useMutation<PostDocumentContent, WikiDocument>({
     mutationFn: postDocument,
     onSuccess: document => {
+      trackDocumentCreate(document.title);
       router.push(`${URLS.wiki}/${document.title}`);
     },
   });

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.11.11",
     "@toast-ui/react-editor": "^3.2.3",
     "aws-sdk": "^2.1692.0",
     "dayjs": "^1.11.13",
