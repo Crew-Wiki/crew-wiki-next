@@ -59,20 +59,30 @@ const objectToQueryString = (params: ObjectQueryParams): string => {
     .join('&');
 };
 
-const prepareRequest = ({baseUrl = API_BASE_URL, method, endpoint, headers, body, queryParams, next}: httpArgs) => {
+const prepareRequest = ({
+  baseUrl = API_BASE_URL,
+  method,
+  endpoint,
+  headers,
+  body,
+  queryParams,
+  next,
+  cache,
+}: httpArgs) => {
   let url = `${baseUrl}${endpoint}`;
   if (queryParams) url += `?${objectToQueryString(queryParams)}`;
 
-  const requestInit = createRequestInit({method, headers, body, next});
+  const requestInit = createRequestInit({method, headers, body, next, cache});
 
   return {url, requestInit};
 };
 
-const createRequestInit = ({method, headers, body, next}: CreateRequestInitProps) => {
+const createRequestInit = ({method, headers, body, cache, next}: CreateRequestInitProps) => {
   const requestInit: RequestInit = {
     credentials: 'include',
     method,
     next,
+    cache,
   };
 
   if (body instanceof FormData) {
@@ -95,12 +105,20 @@ const request = async <T>(args: httpArgs) => {
 };
 
 const executeRequest = async ({url, requestInit}: FetchType) => {
-  const response: Response = await fetch(url, requestInit);
+  try {
+    const response: Response = await fetch(url, requestInit);
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error);
+    if (!response.ok) {
+      const errorData = await response.json();
+      const errorMessage = errorData?.message || JSON.stringify(errorData) || 'API 요청 실패';
+      throw new Error(errorMessage);
+    }
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    } else {
+      throw new Error('알 수 없는 오류 발생');
+    }
   }
-
-  return response;
 };
