@@ -6,6 +6,7 @@ import MobileDocumentHeader from '@components/document/layout/MobileDocumentHead
 import type {TitleParams} from '@type/PageParams.type';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
+import {notFound} from 'next/navigation';
 
 export const dynamicParams = true;
 
@@ -34,6 +35,11 @@ export async function generateMetadata({params}: TitleParams): Promise<Metadata>
 const DocumentPage = async ({params}: TitleParams) => {
   const {title} = await params;
   const document = await getDocumentByTitle(title);
+
+  if (!document) {
+    notFound();
+  }
+
   const contents = await markdownToHtml(document.contents);
 
   return (
