@@ -8,7 +8,7 @@
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "/apple-touch-icon.png",
+      "src": "/apple-icon.png",
       "sizes": "192x192"
     }
   ]
