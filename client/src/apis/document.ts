@@ -6,12 +6,18 @@ import {RecentlyDocument, WikiDocument, WikiDocumentLogDetail, WikiDocumentLogSu
 import {requestGet} from '@apis/http';
 
 export const getDocumentByTitle = async (title: string) => {
-  const docs = await requestGet<WikiDocument>({
-    endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
-    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByTitle(title)]},
-  });
+  try {
+    const docs = await requestGet<WikiDocument>({
+      endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
+      next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByTitle(title)]},
+    });
 
-  return docs;
+    return docs;
+  } catch (error) {
+    if (error instanceof Error) {
+      return null;
+    }
+  }
 };
 
 export const getDocumentLogsByTitle = async (title: string) => {
