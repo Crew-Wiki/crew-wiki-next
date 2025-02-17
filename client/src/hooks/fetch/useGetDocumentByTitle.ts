@@ -10,6 +10,7 @@ export const useGetDocumentByTitle = (title: string) => {
     const response = await requestGet<WikiDocument>({
       baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
       endpoint: `/api/get-document-by-title?title=${title}`,
+      cache: 'no-cache',
     });
 
     return response;
