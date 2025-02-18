@@ -9,6 +9,7 @@ const getSearchDocument = async (query: string) => {
   const response = await requestGet<string[]>({
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
     endpoint: `/api/get-search-document?referQuery=${query}`,
+    cache: 'no-cache',
   });
 
   return response;
@@ -26,7 +27,7 @@ const useSearchDocumentByQuery = (query: string, options?: UseSearchDocumentByQu
     if (query.trim() !== '' && /^[가-힣()0-9]*$/.test(query)) refetch();
   }, [query, refetch]);
 
-  const debouncedSearchDocuments = useDebounce(searchDocumentsIfValid, 200);
+  const debouncedSearchDocuments = useDebounce(searchDocumentsIfValid, 100);
 
   useEffect(() => {
     debouncedSearchDocuments();

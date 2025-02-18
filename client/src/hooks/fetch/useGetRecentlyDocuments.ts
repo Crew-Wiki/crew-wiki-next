@@ -10,6 +10,7 @@ export const useGetRecentlyDocuments = () => {
     const documents = requestGet<RecentlyDocument[]>({
       baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
       endpoint: '/api/get-recently-documents',
+      cache: 'no-cache',
     });
 
     return documents;
