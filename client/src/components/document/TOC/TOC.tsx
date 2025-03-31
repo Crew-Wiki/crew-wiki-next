@@ -49,13 +49,18 @@ function convertToTOCNumber(list: number[]) {
 }
 
 const getHTagOrder = (heading: string) => {
-  const match = heading.match(/^<h(\d)/)!;
+  const match = heading.match(/^<h(\d)/);
+
+  if (!match) {
+    console.error('Invalid heading:', heading);
+    return -1;
+  }
+
   return parseInt(match[1], 10);
 };
 
 const TOC = ({headTags}: TOCProps) => {
   const tocList: IToc[] = [];
-
   const headTagsToNumber = headTags.map(heading => getHTagOrder(heading));
 
   const tocNumber = convertToTOCNumber(headTagsToNumber);
