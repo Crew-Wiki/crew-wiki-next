@@ -30,29 +30,27 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      # 4. 환경변수 파일 github secret에서 가져와서 생성
-      - name: Create environments from github secrets
+      # 4. 환경변수 github secret에서 가져와서 Prod 환경으로 빌드
+      - name: Build using prod env
         run: |
-          echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
-          echo "NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}" >> .env
-          echo "NEXT_PUBLIC_BUCKET_NAME=${{ secrets.NEXT_PUBLIC_BUCKET_NAME }}" >> .env
-          echo "NEXT_PUBLIC_BUCKET_REGION=${{ secrets.NEXT_PUBLIC_BUCKET_REGION }}" >> .env
-          echo "NEXT_PUBLIC_ACCESS_KEY=${{ secrets.NEXT_PUBLIC_ACCESS_KEY }}" >> .env
-          echo "NEXT_PUBLIC_SECRET_KEY=${{ secrets.NEXT_PUBLIC_SECRET_KEY }}" >> .env
-          echo "NEXT_PUBLIC_AMPLITUDE_API_KEY=${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY }}" >> .env
+          env \
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }} \
+            NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }} \
+            NEXT_PUBLIC_BUCKET_NAME=${{ secrets.NEXT_PUBLIC_BUCKET_NAME }} \
+            NEXT_PUBLIC_BUCKET_REGION=${{ secrets.NEXT_PUBLIC_BUCKET_REGION }} \
+            NEXT_PUBLIC_ACCESS_KEY=${{ secrets.NEXT_PUBLIC_ACCESS_KEY }} \
+            NEXT_PUBLIC_SECRET_KEY=${{ secrets.NEXT_PUBLIC_SECRET_KEY }} \
+            NEXT_PUBLIC_AMPLITUDE_API_KEY=${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY }} \
+          yarn build
 
-      # 5. Prod 환경으로 빌드
-      - name: Build for Prod environment
-        run: yarn build
-
-      # 6. S3에 업로드할 zip 파일 생성
+      # 5. S3에 업로드할 zip 파일 생성 (위에서 .env를 삭제가 되지 않았을 때 여기서 zip에 포함시키지 않음)
       - name: zip create for S3 upload
-        run: zip -qq -r ./crew-wiki-build.zip .
+        run: zip -qq -r ./crew-wiki-build.zip . -x ".env"
         shell: bash
         # -qq: quit 모드로 실행 (에러나 경고메세지만 출력하도록 함)
         # -r: 지정된 디렉토리를 재귀적으로 압축 (하위 디렉토리와 파일들 모두 압축)
 
-      # 7. AWS 인증 설정
+      # 6. AWS 인증 설정
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -60,7 +58,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 8. S3에 zip 파일 업로드
+      # 7. S3에 zip 파일 업로드
       - name: Upload to S3
         env:
           S3_BUILD_BUCKET: ${{ secrets.S3_BUILD_BUCKET }}
@@ -68,7 +66,7 @@ jobs:
         run: |
           aws s3 cp --region $AWS_REGION ./crew-wiki-build.zip s3://$S3_BUILD_BUCKET/crew-wiki-build.zip
 
-      # 9. S3에 올라간 zip 파일을 CodeDeploy로 가져옴
+      # 8. S3에 올라간 zip 파일을 CodeDeploy로 가져옴
       - name: Code Deploy using S3 zip file
         env:
           CODE_DEPLOY_APPLICATION_NAME: ${{ secrets.CODE_DEPLOY_APPLICATION_NAME }}
