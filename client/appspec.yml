@@ -1,0 +1,23 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/workspace/crew-wiki-next/client
+    overwrite: yes
+permissions:
+  - object: /home/ubuntu/workspace/crew-wiki-next/client
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
+
+hooks:
+  BeforeInstall:
+    - location: ./clean.sh
+      timeout: 30
+      runas: ubuntu
+
+  AfterInstall:
+    - location: ./deploy.sh
+      timeout: 60
+      runas: ubuntu

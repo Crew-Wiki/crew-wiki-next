@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "pm2 start ecosystem.config.js --env production"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.11",
