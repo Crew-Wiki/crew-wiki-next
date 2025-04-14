@@ -35,15 +35,16 @@ export async function uploadImages({albumName, uploadImageMetaList}: UploadImage
       const extension = resizedImage.type.split('/')[1];
       const uploadImageKey = `${albumName}/${randomFileName}.${extension}`;
 
-      const uploadParams = {
-        Bucket: bucketName,
-        Key: uploadImageKey,
-        Body: resizedImage,
-        ContentType: resizedImage.type,
-      };
-
       try {
-        await s3Client.send(new PutObjectCommand(uploadParams));
+        await s3Client.send(
+          new PutObjectCommand({
+            Bucket: bucketName,
+            Key: uploadImageKey,
+            Body: resizedImage,
+            ContentType: resizedImage.type,
+            CacheControl: 'public, max-age=31536000',
+          }),
+        );
       } catch (err) {
         console.error('S3 Upload Error:', err);
       }
