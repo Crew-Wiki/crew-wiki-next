@@ -1,4 +1,4 @@
-import {addDataIdToToc} from '@utils/addDataIdToToc';
+import {processHtmlContent} from '@utils/processHtmlContent';
 import TOC from '../TOC/TOC';
 
 import './toastui-editor-viewer.css';
@@ -9,7 +9,7 @@ interface DocumentContentsProps {
 }
 
 const DocumentContents = ({contents}: DocumentContentsProps) => {
-  const html = addDataIdToToc(contents);
+  const html = processHtmlContent(contents);
 
   const extractDataIdsFromHtml = (htmlString: string) => {
     return htmlString.split('\n').filter(str => str.includes('data-id'));
