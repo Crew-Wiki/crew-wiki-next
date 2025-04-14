@@ -38,7 +38,6 @@ export async function uploadImages({albumName, uploadImageMetaList}: UploadImage
       const uploadImageKey = `${albumName}/${randomFileName}`;
 
       const upload = s3.upload({
-        ACL: 'public-read',
         Bucket: bucketName,
         Key: uploadImageKey,
         Body: resizedImage,
