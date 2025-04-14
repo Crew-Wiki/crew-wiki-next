@@ -2,22 +2,19 @@
 
 import {UploadImageMeta} from '@type/Document.type';
 import Resizer from 'react-image-file-resizer';
-import AWS from 'aws-sdk';
+import {S3Client, PutObjectCommand} from '@aws-sdk/client-s3';
 
 const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
 const region = process.env.NEXT_PUBLIC_BUCKET_REGION;
 const accessKeyId = process.env.NEXT_PUBLIC_ACCESS_KEY;
 const secretAccessKey = process.env.NEXT_PUBLIC_SECRET_KEY;
 
-AWS.config.update({
+const s3Client = new S3Client({
   region,
-  accessKeyId,
-  secretAccessKey,
-});
-
-const s3 = new AWS.S3({
-  apiVersion: '2006-03-01',
-  params: {Bucket: bucketName},
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
+  },
 });
 
 const resizeFile = (file: File) =>
@@ -35,19 +32,24 @@ export async function uploadImages({albumName, uploadImageMetaList}: UploadImage
     uploadImageMetaList.map(async imageMeta => {
       const randomFileName = Math.random().toString(36).substr(2, 11);
       const resizedImage = (await resizeFile(imageMeta.file)) as File;
-      const uploadImageKey = `${albumName}/${randomFileName}`;
+      const extension = resizedImage.type.split('/')[1];
+      const uploadImageKey = `${albumName}/${randomFileName}.${extension}`;
 
-      const upload = s3.upload({
-        ACL: 'public-read',
-        Bucket: bucketName,
-        Key: uploadImageKey,
-        Body: resizedImage,
-      });
+      try {
+        await s3Client.send(
+          new PutObjectCommand({
+            Bucket: bucketName,
+            Key: uploadImageKey,
+            Body: resizedImage,
+            ContentType: resizedImage.type,
+            CacheControl: 'public, max-age=31536000',
+          }),
+        );
+      } catch (err) {
+        console.error('S3 Upload Error:', err);
+      }
 
-      const newMeta = imageMeta;
-      const promise = await upload.promise();
-      newMeta.s3URL = promise.Location;
-
+      const newMeta = {...imageMeta, s3URL: `${process.env.NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN}/${uploadImageKey}`};
       return newMeta;
     }),
   );
