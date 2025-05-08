@@ -1,0 +1,16 @@
+name: create-issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add-issue-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jinhokim98/project-flow-add-issue-to-project@v1
+        with:
+          github_token: ${{ secrets.CONFIG_SUBMODULE_TOKEN }}
+          project_owner: "Crew-Wiki"
+          project_number: 13
+          target_column: "Todo"

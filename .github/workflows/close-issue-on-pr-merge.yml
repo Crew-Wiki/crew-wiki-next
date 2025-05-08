@@ -1,0 +1,19 @@
+name: Close Issue on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  close-issue:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Close Issue on PR Merge
+        uses: jinhokim98/project-flow-close-issue-on-pr-merge@v1
+        with:
+          github_token: ${{ secrets.CONFIG_SUBMODULE_TOKEN }}

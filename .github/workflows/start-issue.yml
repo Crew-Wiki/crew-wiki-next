@@ -1,0 +1,20 @@
+name: start-issue
+
+on:
+  create:
+
+jobs:
+  start-issue:
+    if: github.ref_type == 'branch' && contains(github.ref, 'feature')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Start Issue
+        uses: jinhokim98/project-flow-start-issue@v1
+        with:
+          github_token: ${{ secrets.CONFIG_SUBMODULE_TOKEN }}
+          project_owner: "Crew-Wiki"
+          project_number: 13
+          target_column: "In Progress"
