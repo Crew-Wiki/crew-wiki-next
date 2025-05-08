@@ -24,4 +24,4 @@ jobs:
         uses: jinhokim98/project-flow-set-pr-assignees-and-reviewers@v1
         with:
           github_token: ${{ secrets.CONFIG_SUBMODULE_TOKEN }}
-          team_reviewers: "Crew-Wiki-Frontend"
+          reviewers: "jinhokim98,Todari,ShinjungOh,chosim-dvlpr,eunwoo-levi"
