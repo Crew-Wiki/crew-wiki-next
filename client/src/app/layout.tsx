@@ -25,8 +25,7 @@ export const metadata: Metadata = {
     title: '크루위키',
     type: 'website',
     description: '우아한테크코스 크루들의 정보들을 담은 위키',
-    images:
-      'https://wootecowikibucket.s3.ap-northeast-2.amazonaws.com/%EB%8C%80%EB%AC%B8%EC%82%AC%EC%A7%84/%E1%84%83%E1%85%A2%E1%84%86%E1%85%AE%E1%86%AB.png',
+    images: `${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/daemoon.png`,
   },
 };
 
