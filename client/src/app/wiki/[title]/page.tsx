@@ -26,6 +26,7 @@ export async function generateMetadata({params}: TitleParams): Promise<Metadata>
     openGraph: {
       title: `크루위키 ${documentTitle}의 문서`,
       description: `${documentTitle}에 대한 정보(논란)를 확인하세요.`,
+      images: `${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/daemoon.png`,
     },
   };
 }
