@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {useState, useEffect} from 'react';
 import {motion} from 'framer-motion';
-import LogoImage from '@app/image/hangseong-white.png';
 import {twMerge} from 'tailwind-merge';
 import WikiInputField from './WikiInputField';
 
@@ -65,7 +64,13 @@ const WikiHeader = () => {
       <div className="flex flex-col justify-center items-center py-2">
         <div className="flex flex-row justify-between items-center px-4 header-container max-w-[1440px] w-full">
           <Link href="/" className="flex gap-2 items-center">
-            <Image src={LogoImage} alt="logo" className="w-8 h-10 md:h-16 md:w-14" />
+            <Image
+              src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/hangseong-white.png`}
+              width={32}
+              height={32}
+              alt="logo"
+              className="w-8 h-10 md:h-16 md:w-14"
+            />
             <h1 className="font-bm text-2xl md:text-[40px] text-white font-normal">크루위키</h1>
           </Link>
 

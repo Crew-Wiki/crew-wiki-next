@@ -1,6 +1,5 @@
 'use client';
 
-import SearchCircle from '@app/image/search-circle-secondary.svg';
 import {URLS} from '@constants/urls';
 import {twMerge} from 'tailwind-merge';
 import {useInput} from '@components/common/Input/useInput';
@@ -55,7 +54,13 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
         onChange={onChange}
       />
       <button type="submit" id="search-icon">
-        <Image className="cursor-pointer max-[768px]:hidden" src={SearchCircle} alt="search" />
+        <Image
+          className="cursor-pointer max-[768px]:hidden"
+          src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/search-circle-secondary.svg`}
+          width={24}
+          height={24}
+          alt="search"
+        />
       </button>
       {value.trim() !== '' && <RelativeSearchTerms searchTerms={titles ?? []} />}
     </form>
