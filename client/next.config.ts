@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
       fullUrl: true,
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: process.env.NEXT_PUBLIC_CDN_DOMAIN.slice(8),
+        pathname: '/images/**',
+      },
+    ],
+  },
   redirects: async () => [
     {
       source: '/',
