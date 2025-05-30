@@ -28,7 +28,6 @@ const getHTagOrder = (heading: string) => {
 };
 
 const TOC = ({headTags}: TOCProps) => {
-  console.log(headTags)
   const tocList: IToc[] = [];
   const headTagsToNumber = headTags.map(heading => getHTagOrder(heading));
   
