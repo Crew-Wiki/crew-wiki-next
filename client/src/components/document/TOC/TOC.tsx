@@ -1,3 +1,4 @@
+import { generateTOCNumber, HeadingCount, HeadingLevel } from '@utils/tocUtils';
 import {twMerge} from 'tailwind-merge';
 
 interface TOCProps {
@@ -16,38 +17,6 @@ const LEVEL_DEPTH: Record<number, string> = {
   3: 'pl-[30px]',
 };
 
-function convertToTOCNumber(list: number[]) {
-  const result: string[] = [];
-  let h1Count = 0;
-  let h2Count = 0;
-  let h3Count = 0;
-
-  list.forEach(num => {
-    switch (num) {
-      case 1:
-        h1Count += 1;
-        h2Count = 0;
-        h3Count = 0;
-        break;
-      case 2:
-        h2Count += 1;
-        h3Count = 0;
-        break;
-      case 3:
-        h3Count += 1;
-        break;
-      default:
-        break;
-    }
-
-    result.push(
-      `${h1Count !== 0 ? `${h1Count}` : ''}${h2Count !== 0 ? `.${h2Count}` : ''}${h3Count !== 0 ? `.${h3Count}` : ''}`,
-    );
-  });
-
-  return result;
-}
-
 const getHTagOrder = (heading: string) => {
   const match = heading.match(/^<h(\d)/);
 
@@ -62,15 +31,20 @@ const getHTagOrder = (heading: string) => {
 const TOC = ({headTags}: TOCProps) => {
   const tocList: IToc[] = [];
   const headTagsToNumber = headTags.map(heading => getHTagOrder(heading));
-
-  const tocNumber = convertToTOCNumber(headTagsToNumber);
-
+  
+  const headingCounts: HeadingCount[] = headTagsToNumber.map(level => ({
+    level: level as HeadingLevel,
+    count: 0,
+  }));
+  
+  const tocNumber = generateTOCNumber(headingCounts);
+  
   headTags.forEach(heading => {
     const text = heading.replace(/<[^>]*>/g, '').trim();
     const level = getHTagOrder(heading);
     tocList.push({text, level, index: ''});
   });
-
+  
   return (
     <aside
       className={twMerge(
@@ -82,11 +56,11 @@ const TOC = ({headTags}: TOCProps) => {
       <ul>
         {tocList.map((element, index) => (
           <li
-            data-index={index}
+            data-index={tocNumber[index]}
             key={index}
             className={`font-normal text-sm text-grayscale-800 cursor-pointer ${LEVEL_DEPTH[element.level]}`}
           >
-            <span data-index={index} className="text-primary-primary">
+            <span data-index={tocNumber[index]} className="text-primary-primary">
               {tocNumber[index]}
             </span>
             {` ${element.text}`}

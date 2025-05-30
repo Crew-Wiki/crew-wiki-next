@@ -52,6 +52,20 @@ table.ProseMirror-selectednode {
   z-index: 20;
 }
 
+.toastui-editor-contents h1 a,
+.toastui-editor-contents h2 a,
+.toastui-editor-contents h3 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.toastui-editor-contents h1 a:hover,
+.toastui-editor-contents h2 a:hover,
+.toastui-editor-contents h3 a:hover {
+  color: theme('colors.primary.primary');
+}
+
+
 .toastui-editor-contents *:not(table) {
   line-height: 160%;
   box-sizing: content-box;

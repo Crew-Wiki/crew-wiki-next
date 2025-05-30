@@ -4,28 +4,32 @@ import {useEffect} from 'react';
 
 export const AttachTocClickHandler = () => {
   useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      const index = target.dataset.index || target.closest('li')?.dataset.index;
+    const scrollToHeading = (hash: string) => {
+      const contents = document.querySelector('.toastui-editor-contents') as HTMLElement;
+      if (!contents) return;
 
-      if (index !== undefined) {
-        const contents = document.querySelector('.toastui-editor-contents') as HTMLElement;
-        const headings = contents.querySelectorAll('h1, h2, h3');
-        const heading = headings[parseInt(index, 10)];
-
-        if (heading) {
-          heading.scrollIntoView({behavior: 'smooth', block: 'center'});
-        }
+      const heading = contents.querySelector(`[data-id="${hash.slice(1)}"]`);
+      if (heading) {
+        heading.scrollIntoView({behavior: 'smooth', block: 'center'});
       }
     };
 
-    const toc = document.querySelector('aside ul') as HTMLElement;
-    toc?.addEventListener('click', handleClick);
+    if (window.location.hash) {
+      scrollToHeading(window.location.hash);
+    }
+
+    const handleHashChange = () => {
+      if (window.location.hash) {
+        scrollToHeading(window.location.hash);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
 
     return () => {
-      toc?.removeEventListener('click', handleClick);
+      window.removeEventListener('hashchange', handleHashChange);
     };
-  });
+  }, []);
 
   return null;
 };
