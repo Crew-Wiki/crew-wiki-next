@@ -8,7 +8,6 @@ interface TOCProps {
 interface IToc {
   text: string | null;
   level: number;
-  index: string;
 }
 
 const LEVEL_DEPTH: Record<number, string> = {
@@ -29,6 +28,7 @@ const getHTagOrder = (heading: string) => {
 };
 
 const TOC = ({headTags}: TOCProps) => {
+  console.log(headTags)
   const tocList: IToc[] = [];
   const headTagsToNumber = headTags.map(heading => getHTagOrder(heading));
   
@@ -42,7 +42,7 @@ const TOC = ({headTags}: TOCProps) => {
   headTags.forEach(heading => {
     const text = heading.replace(/<[^>]*>/g, '').trim();
     const level = getHTagOrder(heading);
-    tocList.push({text, level, index: ''});
+    tocList.push({text, level});
   });
 
   return (
