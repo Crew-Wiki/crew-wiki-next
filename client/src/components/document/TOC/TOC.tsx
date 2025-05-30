@@ -1,4 +1,4 @@
-import { generateTOCNumber, HeadingCount, HeadingLevel } from '@utils/tocUtils';
+import {generateTOCNumber, HeadingCount, HeadingLevel} from '@utils/tocUtils';
 import {twMerge} from 'tailwind-merge';
 
 interface TOCProps {
@@ -36,7 +36,7 @@ const TOC = ({headTags}: TOCProps) => {
     level: level as HeadingLevel,
     count: 0,
   }));
-  
+
   const tocNumber = generateTOCNumber(headingCounts);
   
   headTags.forEach(heading => {
@@ -44,7 +44,7 @@ const TOC = ({headTags}: TOCProps) => {
     const level = getHTagOrder(heading);
     tocList.push({text, level, index: ''});
   });
-  
+
   return (
     <aside
       className={twMerge(
@@ -56,14 +56,13 @@ const TOC = ({headTags}: TOCProps) => {
       <ul>
         {tocList.map((element, index) => (
           <li
-            data-index={tocNumber[index]}
             key={index}
             className={`font-normal text-sm text-grayscale-800 cursor-pointer ${LEVEL_DEPTH[element.level]}`}
           >
-            <span data-index={tocNumber[index]} className="text-primary-primary">
-              {tocNumber[index]}
-            </span>
-            {` ${element.text}`}
+            <a href={`#${tocNumber[index]}`}>
+              <span className="text-primary-primary">{tocNumber[index]}</span>
+              {` ${element.text}`}
+            </a>
           </li>
         ))}
       </ul>
