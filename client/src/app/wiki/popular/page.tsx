@@ -8,8 +8,9 @@ import PopularHeader from '@components/document/Popular/PopularHeader';
 const PopularPage = () => {
   const {data, sortType, changeSortType} = useGetPopularDocuments();
 
-  const topThreeDocuments = data.slice(0, 3);
-  const remainDocuments = data.slice(3);
+  const topTenDocuments = data.slice(0, 10);
+  const topThreeDocuments = topTenDocuments.slice(0, 3);
+  const remainDocuments = topTenDocuments.slice(3);
 
   return (
     <div className="flex w-full flex-col gap-6 max-[768px]:gap-2">
