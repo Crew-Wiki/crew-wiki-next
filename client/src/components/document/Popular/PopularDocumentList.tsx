@@ -9,10 +9,10 @@ interface PopularDocumentListProps {
   startRank?: number;
 }
 
-export default function PopularDocumentList({documents, sortType, startRank = 4}: PopularDocumentListProps) {
+const PopularDocumentList = ({documents, sortType, startRank = 4}: PopularDocumentListProps) => {
   if (documents.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center text-gray-500">
+      <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center text-gray-500">
         등록된 문서가 없습니다.
       </div>
     );
@@ -21,13 +21,10 @@ export default function PopularDocumentList({documents, sortType, startRank = 4}
   return (
     <div className="flex flex-col gap-2">
       {documents.map((document, index) => (
-        <PopularDocumentItem
-          key={document.title}
-          document={document}
-          rank={startRank + index}
-          sortType={sortType}
-        />
+        <PopularDocumentItem key={document.title} document={document} rank={startRank + index} sortType={sortType} />
       ))}
     </div>
   );
-}
+};
+
+export default PopularDocumentList;

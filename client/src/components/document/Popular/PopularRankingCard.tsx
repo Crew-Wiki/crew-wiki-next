@@ -11,7 +11,7 @@ interface PopularRankingCardProps {
 
 const rankEmojis = ['🥇', '🥈', '🥉'];
 
-export default function PopularRankingCard({document, rank, sortType}: PopularRankingCardProps) {
+const PopularRankingCard = ({document, rank, sortType}: PopularRankingCardProps) => {
   const displayCount = sortType === 'views' ? document.viewCount : document.editCount;
   const countLabel = sortType === 'views' ? '조회수' : '수정수';
 
@@ -40,4 +40,6 @@ export default function PopularRankingCard({document, rank, sortType}: PopularRa
       </div>
     </Link>
   );
-}
+};
+
+export default PopularRankingCard;

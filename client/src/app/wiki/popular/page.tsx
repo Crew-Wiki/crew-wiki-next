@@ -5,7 +5,7 @@ import PopularRankingCard from '@components/document/Popular/PopularRankingCard'
 import PopularDocumentList from '@components/document/Popular/PopularDocumentList';
 import PopularHeader from '@components/document/Popular/PopularHeader';
 
-export default function PopularPage() {
+const PopularPage = () => {
   const {data, sortType, changeSortType} = useGetPopularDocuments();
 
   const topThreeDocuments = data.slice(0, 3);
@@ -27,4 +27,6 @@ export default function PopularPage() {
       </section>
     </div>
   );
-}
+};
+
+export default PopularPage;

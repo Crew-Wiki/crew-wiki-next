@@ -7,7 +7,7 @@ interface PopularFilterButtonsProps {
   onSortTypeChange: (type: 'views' | 'edits') => void;
 }
 
-export default function PopularFilterButtons({sortType, onSortTypeChange}: PopularFilterButtonsProps) {
+const PopularFilterButtons = ({sortType, onSortTypeChange}: PopularFilterButtonsProps) => {
   return (
     <div className="flex gap-2">
       <Button size="xs" style={sortType === 'views' ? 'primary' : 'tertiary'} onClick={() => onSortTypeChange('views')}>
@@ -18,4 +18,6 @@ export default function PopularFilterButtons({sortType, onSortTypeChange}: Popul
       </Button>
     </div>
   );
-}
+};
+
+export default PopularFilterButtons;

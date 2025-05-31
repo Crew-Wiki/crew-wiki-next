@@ -9,7 +9,7 @@ interface PopularDocumentItemProps {
   sortType: 'views' | 'edits';
 }
 
-export default function PopularDocumentItem({document, rank, sortType}: PopularDocumentItemProps) {
+const PopularDocumentItem = ({document, rank, sortType}: PopularDocumentItemProps) => {
   const primaryCount = sortType === 'views' ? document.viewCount : document.editCount;
   const secondaryCount = sortType === 'views' ? document.editCount : document.viewCount;
 
@@ -35,4 +35,6 @@ export default function PopularDocumentItem({document, rank, sortType}: PopularD
       </div>
     </Link>
   );
-}
+};
+
+export default PopularDocumentItem;
