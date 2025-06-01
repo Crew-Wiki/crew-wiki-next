@@ -5,10 +5,10 @@ interface TOCProps {
   headTags: string[];
 }
 
-interface IToc {
-  text: string | null;
-  level: number;
-}
+type Result<T> = {
+  success: boolean;
+  data: T;
+};
 
 const LEVEL_DEPTH: Record<number, string> = {
   1: 'pl-[0px]',
@@ -16,33 +16,36 @@ const LEVEL_DEPTH: Record<number, string> = {
   3: 'pl-[30px]',
 };
 
-const getHTagOrder = (heading: string) => {
+const getHTagOrder = (heading: string): Result<HeadingLevel> => {
   const match = heading.match(/^<h(\d)/);
+  const level = match ? parseInt(match[1], 10) : null;
 
-  if (!match) {
-    console.error('Invalid heading:', heading);
-    return -1;
+  if (!level || level < 1 || level > 3) {
+    return {
+      success: false,
+      data: 1,
+    };
   }
 
-  return parseInt(match[1], 10);
+  return {
+    success: true,
+    data: level as HeadingLevel,
+  };
 };
 
 const TOC = ({headTags}: TOCProps) => {
-  const tocList: IToc[] = [];
-  const headTagsToNumber = headTags.map(heading => getHTagOrder(heading));
+  const tocList = headTags.map((headTag) => {
+    const text = headTag.replace(/<[^>]*>/g, '').trim();
+    const {data: level} = getHTagOrder(headTag);
+    return {text, level};
+  });
   
-  const headingCounts: HeadingCount[] = headTagsToNumber.map(level => ({
-    level: level as HeadingLevel,
+  const headingCounts: HeadingCount[] = tocList.map(({level}) => ({
+    level,
     count: 0,
   }));
 
   const tocNumber = generateTOCNumber(headingCounts);
-  
-  headTags.forEach(heading => {
-    const text = heading.replace(/<[^>]*>/g, '').trim();
-    const level = getHTagOrder(heading);
-    tocList.push({text, level});
-  });
 
   return (
     <aside
@@ -53,14 +56,14 @@ const TOC = ({headTags}: TOCProps) => {
     >
       <h2 className="font-pretendard text-lg font-bold text-grayscale-800">목차</h2>
       <ul>
-        {tocList.map((element, index) => (
+        {tocList.map(({text, level}, index) => (
           <li
             key={index}
-            className={`font-normal text-sm text-grayscale-800 cursor-pointer ${LEVEL_DEPTH[element.level]}`}
+            className={`font-normal text-sm text-grayscale-800 cursor-pointer ${LEVEL_DEPTH[level]}`}
           >
             <a href={`#${tocNumber[index]}`}>
               <span className="text-primary-primary">{tocNumber[index]}</span>
-              {` ${element.text}`}
+              {` ${text}`}
             </a>
           </li>
         ))}
