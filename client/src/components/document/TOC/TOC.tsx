@@ -6,7 +6,7 @@ interface TOCProps {
 }
 
 type Result<T> = {
-  success: boolean;
+  isError: boolean;
   data: T;
 };
 
@@ -22,24 +22,26 @@ const getHTagOrder = (heading: string): Result<HeadingLevel> => {
 
   if (!level || level < 1 || level > 3) {
     return {
-      success: false,
+      isError: true,
       data: 1,
     };
   }
 
   return {
-    success: true,
+    isError: false,
     data: level as HeadingLevel,
   };
 };
 
 const TOC = ({headTags}: TOCProps) => {
-  const tocList = headTags.map((headTag) => {
-    const text = headTag.replace(/<[^>]*>/g, '').trim();
-    const {data: level} = getHTagOrder(headTag);
-    return {text, level};
-  });
-  
+  const tocList = headTags
+    .map(headTag => {
+      const text = headTag.replace(/<[^>]*>/g, '').trim();
+      const {isError, data: level} = getHTagOrder(headTag);
+      return isError ? null : {text, level};
+    })
+    .filter((item): item is {text: string; level: HeadingLevel} => item !== null);
+
   const headingCounts: HeadingCount[] = tocList.map(({level}) => ({
     level,
     count: 0,
@@ -50,17 +52,14 @@ const TOC = ({headTags}: TOCProps) => {
   return (
     <aside
       className={twMerge(
-        'flex flex-col gap-2 w-fit px-6 py-4 border rounded-xl border-grayscale-100',
+        'flex w-fit flex-col gap-2 rounded-xl border border-grayscale-100 px-6 py-4',
         tocList.length === 0 ? 'hidden' : '',
       )}
     >
       <h2 className="font-pretendard text-lg font-bold text-grayscale-800">목차</h2>
       <ul>
         {tocList.map(({text, level}, index) => (
-          <li
-            key={index}
-            className={`font-normal text-sm text-grayscale-800 cursor-pointer ${LEVEL_DEPTH[level]}`}
-          >
+          <li key={index} className={`cursor-pointer text-sm font-normal text-grayscale-800 ${LEVEL_DEPTH[level]}`}>
             <a href={`#${tocNumber[index]}`}>
               <span className="text-primary-primary">{tocNumber[index]}</span>
               {` ${text}`}
