@@ -44,7 +44,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={pretendard.variable} style={{backgroundColor: '#f3f4f6'}}>
+    <html
+      lang="ko"
+      className={`${pretendard.variable} scroll-pt-[50vh] scroll-smooth`}
+      style={{backgroundColor: '#f3f4f6'}}
+    >
       <body className={bm.variable}>{children}</body>
     </html>
   );
