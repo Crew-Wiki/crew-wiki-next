@@ -6,30 +6,15 @@ interface HeadingCount {
 }
 
 export const generateTOCNumber = (headings: HeadingCount[]): string[] => {
-  return headings.reduce<{numbers: string[]; counts: Record<HeadingLevel, number>}>(
-    (acc, {level}) => {
-      const {numbers, counts} = acc;
+  type Acc = {counts: number[]; numbers: string[]};
+  const initial: Acc = {counts: [0, 0, 0], numbers: []};
 
-      counts[level] = (counts[level] || 0) + 1;
-
-      if (level === 1) {
-        counts[2] = 0;
-        counts[3] = 0;
-      } else if (level === 2) {
-        counts[3] = 0;
-      }
-
-      const number = [
-        counts[1] ? `${counts[1]}` : '',
-        counts[2] ? `.${counts[2]}` : '',
-        counts[3] ? `.${counts[3]}` : '',
-      ].join('');
-
-      return {
-        numbers: [...numbers, number],
-        counts,
-      };
-    },
-    {numbers: [], counts: {1: 0, 2: 0, 3: 0}},
-  ).numbers;
+  return headings.reduce((acc, {level}) => {
+    const newCounts = acc.counts.map((count, idx) => (idx < level - 1 ? count : idx === level - 1 ? count + 1 : 0));
+    const number = newCounts.slice(0, level).join('.');
+    return {
+      counts: newCounts,
+      numbers: [...acc.numbers, number],
+    };
+  }, initial).numbers;
 };
