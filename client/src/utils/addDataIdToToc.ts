@@ -1,6 +1,6 @@
-import {generateTOCNumber, HeadingCount, HeadingLevel} from './tocUtils';
+import {generateTOCNumber, HeadingLevel} from './tocUtils';
 
-const extractHeadingLevels = (html: string): HeadingCount[] => {
+const extractHeadingLevels = (html: string) => {
   const headingMatches = html.matchAll(/<(h[1-3])([^>]*)>/g);
   return Array.from(headingMatches).map(match => ({
     level: parseInt(match[1][1]) as HeadingLevel,

@@ -1,14 +1,9 @@
-import {generateTOCNumber, HeadingCount, HeadingLevel} from '@utils/tocUtils';
+import {generateTOCNumber, HeadingLevel} from '@utils/tocUtils';
 import {twMerge} from 'tailwind-merge';
 
 interface TOCProps {
   headTags: string[];
 }
-
-type Result<T> = {
-  isError: boolean;
-  data: T;
-};
 
 const LEVEL_DEPTH: Record<number, string> = {
   1: 'pl-[0px]',
@@ -16,37 +11,19 @@ const LEVEL_DEPTH: Record<number, string> = {
   3: 'pl-[30px]',
 };
 
-const getHTagOrder = (heading: string): Result<HeadingLevel> => {
-  const match = heading.match(/^<h(\d)/);
-  const level = match ? parseInt(match[1], 10) : null;
-
-  if (!level || level < 1 || level > 3) {
-    return {
-      isError: true,
-      data: 1,
-    };
-  }
-
-  return {
-    isError: false,
-    data: level as HeadingLevel,
-  };
+const getHTagOrder = (heading: string): HeadingLevel | null => {
+  const match = heading.match(/^<h([1-3])/);
+  return match ? (parseInt(match[1], 10) as HeadingLevel) : null;
 };
 
 const TOC = ({headTags}: TOCProps) => {
-  const tocList = headTags
-    .map(headTag => {
-      const text = headTag.replace(/<[^>]*>/g, '').trim();
-      const {isError, data: level} = getHTagOrder(headTag);
-      return isError ? null : {text, level};
-    })
-    .filter((item): item is {text: string; level: HeadingLevel} => item !== null);
+  const tocList = headTags.flatMap(headTag => {
+    const text = headTag.replace(/<[^>]*>/g, '').trim();
+    const level = getHTagOrder(headTag);
+    return level ? [{text, level}] : [];
+  });
 
-  const headingCounts: HeadingCount[] = tocList.map(({level}) => ({
-    level,
-    count: 0,
-  }));
-
+  const headingCounts = tocList.map(({level}) => ({level, count: 0}));
   const tocNumber = generateTOCNumber(headingCounts);
 
   return (
