@@ -4,7 +4,7 @@ export function processImageHtml(html: string): string {
 
   return html.replace(/<img\s+([^>]*?)src="([^"]+)"([^>]*?)>/g, (match, before, src, after) => {
     try {
-      let replacedSrc = src.replace(s3Domain, cloudfrontDomain);
+      const replacedSrc = src.replace(s3Domain, cloudfrontDomain);
 
       const url = new URL(replacedSrc);
       const pathParts = url.pathname.split('/');
@@ -16,9 +16,9 @@ export function processImageHtml(html: string): string {
       pathParts[pathParts.length - 1] = processedFilename;
       url.pathname = pathParts.join('/');
 
-      replacedSrc = url.toString();
+      const processedSrc = url.toString();
 
-      return `<img ${before}src="${replacedSrc}"${after}>`;
+      return `<img ${before}src="${processedSrc}"${after}>`;
     } catch {
       return match;
     }
