@@ -9,20 +9,13 @@ export function processImageHtml(html: string): string {
       const url = new URL(replacedSrc);
       const pathParts = url.pathname.split('/');
       const filename = pathParts[pathParts.length - 1];
-      const dotIndex = filename.lastIndexOf('.');
 
-      if (dotIndex === -1) {
-        pathParts[pathParts.length - 1] = `${filename}.jpeg`;
-      } else {
-        const baseName = filename.substring(0, dotIndex);
-        const ext = filename.substring(dotIndex + 1).toLowerCase();
+      const hasExtension = /\.(jpeg|jpg|png|gif|webp)$/i.test(filename);
+      const processedFilename = hasExtension ? filename : `${filename.replace(/\.[^/.]+$/, '')}.jpeg`;
 
-        if (ext !== 'jpeg') {
-          pathParts[pathParts.length - 1] = `${baseName}.jpeg`;
-        }
-      }
-
+      pathParts[pathParts.length - 1] = processedFilename;
       url.pathname = pathParts.join('/');
+
       replacedSrc = url.toString();
 
       return `<img ${before}src="${replacedSrc}"${after}>`;
