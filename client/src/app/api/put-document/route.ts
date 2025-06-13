@@ -4,13 +4,14 @@ import {PostDocumentContent} from '@apis/document';
 
 import {WikiDocument} from '@type/Document.type';
 import {ENDPOINT} from '@constants/endpoint';
-import {requestPut} from '@apis/http';
+import {requestPut} from '@http/server';
 import {NextRequest, NextResponse} from 'next/server';
 import {revalidateTag} from 'next/cache';
 import {CACHE} from '@constants/cache';
 
 const putDocument = async (document: PostDocumentContent) => {
   const response = await requestPut<WikiDocument>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: `${ENDPOINT.updateDocument}/${document.title}`,
     body: {
       writer: document.writer,
