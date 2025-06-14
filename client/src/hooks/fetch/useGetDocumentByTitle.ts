@@ -1,6 +1,7 @@
 'use client';
 
-import {requestGet} from '@apis/http';
+import {requestGet} from '@http/client';
+import {ENDPOINT} from '@constants/endpoint';
 import {useFetch} from '@hooks/useFetch';
 import {WikiDocument} from '@type/Document.type';
 import {useCallback} from 'react';
@@ -8,9 +9,8 @@ import {useCallback} from 'react';
 export const useGetDocumentByTitle = (title: string) => {
   const getDocumentByTitle = async (title: string) => {
     const response = await requestGet<WikiDocument>({
-      baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-      endpoint: `/api/get-document-by-title?title=${title}`,
-      cache: 'no-cache',
+      baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+      endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
     });
 
     return response;

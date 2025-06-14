@@ -4,7 +4,7 @@ import {PostDocumentContent} from '@apis/document';
 import {URLS} from '@constants/urls';
 import useMutation from '@hooks/useMutation';
 import {WikiDocument} from '@type/Document.type';
-import {requestPut} from '@apis/http';
+import {requestPut} from '@http/server';
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 

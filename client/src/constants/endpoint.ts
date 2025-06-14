@@ -8,4 +8,6 @@ export const ENDPOINT = {
   getDocumentLogsByTitle: (title: string) => `/document/${title}/log`,
   getSpecificDocumentLog: (logId: number) => `/document/log/${logId}`,
   postAdminLogin: '/admin/login',
+  getPresignedUrl: '/upload',
+  generateDocumentUUID: '/document/uuid',
 } as const;

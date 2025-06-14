@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.11",
-    "@aws-sdk/client-s3": "3.726.1",
     "@toast-ui/react-editor": "^3.2.3",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.15.0",

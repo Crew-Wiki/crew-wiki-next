@@ -3,11 +3,12 @@
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {RecentlyDocument, WikiDocument, WikiDocumentLogDetail, WikiDocumentLogSummary} from '@type/Document.type';
-import {requestGet} from '@apis/http';
+import {requestGet} from '@http/server';
 
 export const getDocumentByTitle = async (title: string) => {
   try {
     const docs = await requestGet<WikiDocument>({
+      baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
       endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
       next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByTitle(title)]},
     });
@@ -22,6 +23,7 @@ export const getDocumentByTitle = async (title: string) => {
 
 export const getDocumentLogsByTitle = async (title: string) => {
   const logs = await requestGet<WikiDocumentLogSummary[]>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getDocumentLogsByTitle(title),
     next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentLogsByTitle(title)]},
   });
@@ -33,6 +35,7 @@ export const getDocumentLogsByTitle = async (title: string) => {
 
 export const getSpecificDocumentLog = async (logId: number) => {
   const response = await requestGet<WikiDocumentLogDetail>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getSpecificDocumentLog(logId),
     next: {revalidate: CACHE.time.longRevalidate, tags: [CACHE.tag.getSpecificDocumentLog(logId)]},
   });
@@ -42,6 +45,7 @@ export const getSpecificDocumentLog = async (logId: number) => {
 
 export const getRandomDocument = async () => {
   const docs = await requestGet<WikiDocument>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getRandomDocument,
     cache: 'no-cache',
   });
@@ -55,6 +59,7 @@ interface RecentlyDocumentsResponse {
 
 export const getRecentlyDocuments = async () => {
   const {documents} = await requestGet<RecentlyDocumentsResponse>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getRecentlyDocuments,
     next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getRecentlyDocuments]},
   });
@@ -68,10 +73,12 @@ export interface PostDocumentContent {
   contents: string;
   writer: string;
   documentBytes: number;
+  uuid: string;
 }
 
 export const searchDocument = async (referQuery: string) => {
   const titles = await requestGet<string[]>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getDocumentSearch,
     cache: 'no-cache',
     queryParams: {
