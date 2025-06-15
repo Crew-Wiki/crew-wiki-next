@@ -3,13 +3,16 @@
 import {useCallback, useEffect} from 'react';
 import useDebounce from '../useDebounce';
 import {useFetch} from '@hooks/useFetch';
-import {requestGet} from '@apis/http';
+import {requestGet} from '@http/client';
+import {ENDPOINT} from '@constants/endpoint';
 
 const getSearchDocument = async (query: string) => {
   const response = await requestGet<string[]>({
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-    endpoint: `/api/get-search-document?referQuery=${query}`,
-    cache: 'no-cache',
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    endpoint: ENDPOINT.getDocumentSearch,
+    queryParams: {
+      keyWord: query,
+    },
   });
 
   return response;
