@@ -17,7 +17,7 @@ const PopularRankingCard = ({document, rank, sortType}: PopularRankingCardProps)
 
   return (
     <Link href={`/wiki/${encodeURIComponent(document.title)}`}>
-      <div className="h-full rounded-lg border border-primary-100 bg-white p-6">
+      <li className="h-full rounded-lg border border-primary-100 bg-white p-6">
         <div className="mb-4 flex items-center gap-3">
           <span className="text-3xl">{rankEmojis[rank - 1]}</span>
           <span className="text-lg font-semibold text-gray-600">{rank}위</span>
@@ -37,7 +37,7 @@ const PopularRankingCard = ({document, rank, sortType}: PopularRankingCardProps)
             </span>
           </div>
         </div>
-      </div>
+      </li>
     </Link>
   );
 };

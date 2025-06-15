@@ -19,7 +19,7 @@ const PopularDocumentList = ({documents, sortType, startRank = 4}: PopularDocume
           등록된 문서가 없습니다.
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <ol className="flex flex-col gap-2">
           {documents.map((document, index) => (
             <PopularDocumentItem
               key={document.title}
@@ -28,7 +28,7 @@ const PopularDocumentList = ({documents, sortType, startRank = 4}: PopularDocume
               sortType={sortType}
             />
           ))}
-        </div>
+        </ol>
       )}
     </>
   );
