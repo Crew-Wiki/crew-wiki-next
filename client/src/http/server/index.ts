@@ -6,7 +6,7 @@ import {
   ServerHttpArgs,
   ServerHttpMethodArgs,
   ServerCreateRequestInitProps,
-} from '../http.type';
+} from '@type/http.type';
 
 export const requestGet = async <T>({headers = {}, ...args}: ServerHttpMethodArgs): Promise<T> => {
   return await request<T>({

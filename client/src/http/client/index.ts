@@ -1,7 +1,7 @@
 'use client';
 
 import {objectToQueryString} from '../common';
-import {ClientCreateRequestInitProps, ClientHttpArgs, ClientHttpMethodArgs, FetchType} from '../http.type';
+import {ClientCreateRequestInitProps, ClientHttpArgs, ClientHttpMethodArgs, FetchType} from '@type/http.type';
 
 export const requestGet = async <T>({headers = {}, ...args}: ClientHttpMethodArgs): Promise<T> => {
   return await request<T>({
