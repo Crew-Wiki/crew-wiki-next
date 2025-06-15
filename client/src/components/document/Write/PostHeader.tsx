@@ -2,11 +2,50 @@
 
 import Button from '@components/common/Button';
 import DocumentTitle from '@components/document/layout/DocumentTitle';
-import {useRouter} from 'next/navigation';
-import {useDocumentWriteContext} from '@context/DocumentWriteContext';
+import {usePathname, useRouter} from 'next/navigation';
+import {ExcludeImages, useDocument} from '@store/document';
+import {uploadImages} from '@apis/images';
+import {replaceLocalUrlToS3Url} from '@utils/replaceLocalUrlToS3Url';
+import {PostDocumentContent} from '@apis/document';
+import {getBytes} from '@utils/getBytes';
+import {usePostDocument} from '@hooks/mutation/usePostDocument';
+import {usePutDocument} from '@hooks/mutation/usePutDocument';
+
+const RequestButton = () => {
+  const pathname = usePathname();
+  const values = useDocument(state => state.values);
+  const errors = useDocument(state => state.errorMessages);
+
+  const requiredFields: Array<ExcludeImages> = ['title', 'writer', 'contents'];
+  const canSubmit = requiredFields.every(field => values[field].trim() !== '' && errors[field] === null);
+
+  const {postDocument, isPostPending} = usePostDocument();
+  const {putDocument, isPutPending} = usePutDocument();
+  const isPending = isPostPending || isPutPending;
+
+  const onSubmit = async () => {
+    const newMetaList = await uploadImages({albumName: values.title, uploadImageMetaList: values.images});
+    const linkReplacedContents = replaceLocalUrlToS3Url(values.contents, newMetaList);
+
+    const document: PostDocumentContent = {
+      title: values.title,
+      contents: linkReplacedContents,
+      writer: values.writer,
+      documentBytes: getBytes(linkReplacedContents),
+    };
+
+    if (pathname.includes('post')) postDocument(document);
+    if (pathname.includes('edit')) putDocument(document);
+  };
+
+  return (
+    <Button style="primary" size="xs" disabled={!canSubmit || isPending} onClick={onSubmit}>
+      작성완료
+    </Button>
+  );
+};
 
 const PostHeader = () => {
-  const {onSubmit, isPending, canSubmit} = useDocumentWriteContext();
   const router = useRouter();
 
   const goBack = () => {
@@ -14,15 +53,13 @@ const PostHeader = () => {
   };
 
   return (
-    <header className="flex justify-between w-full">
+    <header className="flex w-full justify-between">
       <DocumentTitle title="작성하기" />
       <fieldset className="flex gap-2">
-        <Button style="tertiary" size="xs" onClick={goBack}>
+        <Button type="button" style="tertiary" size="xs" onClick={goBack}>
           취소하기
         </Button>
-        <Button style="primary" size="xs" onClick={onSubmit} disabled={isPending || !canSubmit}>
-          작성완료
-        </Button>
+        <RequestButton />
       </fieldset>
     </header>
   );
