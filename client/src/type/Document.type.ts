@@ -41,6 +41,13 @@ export interface RecentlyDocument {
   generateTime: string;
 }
 
+export interface PopularDocument {
+  id: number;
+  title: string;
+  viewCount: number;
+  editCount: number;
+}
+
 export type ErrorMessage = string | null;
 
 export type ErrorInfo = {
