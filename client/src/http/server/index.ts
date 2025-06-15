@@ -1,12 +1,7 @@
 'use server';
 
-import {
-  FetchType,
-  ObjectQueryParams,
-  ServerHttpArgs,
-  ServerHttpMethodArgs,
-  ServerCreateRequestInitProps,
-} from '@type/http.type';
+import {objectToQueryString} from '@http/common';
+import {FetchType, ServerHttpArgs, ServerHttpMethodArgs, ServerCreateRequestInitProps} from '@type/http.type';
 
 export const requestGet = async <T>({headers = {}, ...args}: ServerHttpMethodArgs): Promise<T> => {
   return await request<T>({
@@ -31,12 +26,6 @@ export const requestPut = async <T>({headers = {}, ...args}: ServerHttpMethodArg
     method: 'PUT',
     headers,
   });
-};
-
-const objectToQueryString = (params: ObjectQueryParams): string => {
-  return Object.entries(params)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join('&');
 };
 
 const prepareRequest = ({baseUrl, method, endpoint, headers, body, queryParams, next, cache}: ServerHttpArgs) => {
