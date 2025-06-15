@@ -25,7 +25,7 @@ const Page = () => {
 
   return (
     document && (
-      <DocumentWriteContextProvider mode="edit" title={document.title} contents={document.contents}>
+      <DocumentWriteContextProvider title={document.title} contents={document.contents}>
         <EditPage />
       </DocumentWriteContextProvider>
     )
