@@ -20,7 +20,7 @@ const PopularPage = () => {
         {/* 상위 3개 항목 - 금/은/동 */}
         <ol className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {topThreeDocuments.map((document, index) => (
-            <PopularRankingCard key={document.title} document={document} rank={index + 1} sortType={sortType} />
+            <PopularRankingCard key={document.id} document={document} rank={index + 1} sortType={sortType} />
           ))}
         </ol>
 

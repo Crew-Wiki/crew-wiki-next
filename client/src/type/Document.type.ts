@@ -42,6 +42,7 @@ export interface RecentlyDocument {
 }
 
 export interface PopularDocument {
+  id: number;
   title: string;
   viewCount: number;
   editCount: number;

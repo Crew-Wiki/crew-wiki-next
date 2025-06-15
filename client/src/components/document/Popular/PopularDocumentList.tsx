@@ -22,7 +22,7 @@ const PopularDocumentList = ({documents, sortType, startRank = 4}: PopularDocume
         <ol className="flex flex-col gap-2">
           {documents.map((document, index) => (
             <PopularDocumentItem
-              key={document.title}
+              key={document.id}
               document={document}
               rank={startRank + index}
               sortType={sortType}
