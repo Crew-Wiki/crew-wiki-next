@@ -3,11 +3,11 @@
 import {useCallback, useEffect} from 'react';
 import useDebounce from '../useDebounce';
 import {useFetch} from '@hooks/useFetch';
-import {requestGet} from '@http/client';
+import {httpClient} from '@http/client';
 import {ENDPOINT} from '@constants/endpoint';
 
 const getSearchDocument = async (query: string) => {
-  const response = await requestGet<string[]>({
+  const response = await httpClient.get<string[]>({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getDocumentSearch,
     queryParams: {

@@ -4,7 +4,7 @@ import {PostDocumentContent} from '@apis/document';
 import {URLS} from '@constants/urls';
 import useMutation from '@hooks/useMutation';
 import {WikiDocument} from '@type/Document.type';
-import {requestPut} from '@http/server';
+import {httpServer} from '@http/server';
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 
@@ -13,7 +13,7 @@ export const usePutDocument = () => {
   const {trackDocumentUpdate} = useAmplitude();
 
   const putDocument = async (document: PostDocumentContent) => {
-    const editDocument = await requestPut<WikiDocument>({
+    const editDocument = await httpServer.put<WikiDocument>({
       baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
       endpoint: '/api/put-document',
       body: document,
