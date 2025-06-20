@@ -9,7 +9,7 @@ interface PopularDocumentListProps {
   startRank?: number;
 }
 
-const PopularDocumentList = ({documents, sortType, startRank = 4}: PopularDocumentListProps) => {
+const PopularRemainingDocuments = ({documents, sortType, startRank = 4}: PopularDocumentListProps) => {
   const isDocumentEmpty = documents.length === 0;
 
   return (
@@ -21,12 +21,7 @@ const PopularDocumentList = ({documents, sortType, startRank = 4}: PopularDocume
       ) : (
         <ol className="flex flex-col gap-2">
           {documents.map((document, index) => (
-            <PopularDocumentItem
-              key={document.id}
-              document={document}
-              rank={startRank + index}
-              sortType={sortType}
-            />
+            <PopularDocumentItem key={document.id} document={document} rank={startRank + index} sortType={sortType} />
           ))}
         </ol>
       )}
@@ -34,4 +29,4 @@ const PopularDocumentList = ({documents, sortType, startRank = 4}: PopularDocume
   );
 };
 
-export default PopularDocumentList;
+export default PopularRemainingDocuments;

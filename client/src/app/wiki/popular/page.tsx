@@ -2,7 +2,7 @@
 
 import {useGetPopularDocuments} from '@hooks/fetch/useGetPopularDocuments';
 import PopularRankingCard from '@components/document/Popular/PopularRankingCard';
-import PopularDocumentList from '@components/document/Popular/PopularDocumentList';
+import PopularRemainingDocuments from '@components/document/Popular/PopularRemainingDocuments';
 import PopularHeader from '@components/document/Popular/PopularHeader';
 
 const PopularPage = () => {
@@ -24,7 +24,7 @@ const PopularPage = () => {
           ))}
         </ol>
 
-        <PopularDocumentList documents={remainDocuments} sortType={sortType} />
+        <PopularRemainingDocuments documents={remainDocuments} sortType={sortType} />
       </section>
     </div>
   );
