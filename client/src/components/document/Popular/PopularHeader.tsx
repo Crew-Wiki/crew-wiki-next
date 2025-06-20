@@ -1,9 +1,10 @@
 import DocumentTitle from '@components/document/layout/DocumentTitle';
 import PopularFilterButtons from './PopularFilterButtons';
+import {SortType} from '@type/Document.type';
 
 interface PopularHeaderProps {
-  sortType: 'views' | 'edits';
-  onSortTypeChange: (type: 'views' | 'edits') => void;
+  sortType: SortType;
+  onSortTypeChange: (type: SortType) => void;
 }
 
 const PopularHeader = ({sortType, onSortTypeChange}: PopularHeaderProps) => {

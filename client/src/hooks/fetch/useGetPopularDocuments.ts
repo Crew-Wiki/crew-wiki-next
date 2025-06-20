@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {PopularDocument} from '@type/Document.type';
+import {PopularDocument, SortType} from '@type/Document.type';
 
 export const mockData: PopularDocument[] = [
   {
@@ -63,8 +63,6 @@ export const mockData: PopularDocument[] = [
     editCount: 76,
   },
 ];
-
-type SortType = 'views' | 'edits';
 
 export const useGetPopularDocuments = () => {
   const [sortType, setSortType] = useState<SortType>('views');

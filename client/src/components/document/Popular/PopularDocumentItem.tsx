@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import {PopularDocument} from '@type/Document.type';
+import {PopularDocument, SortType} from '@type/Document.type';
 
 interface PopularDocumentItemProps {
   document: PopularDocument;
   rank: number;
-  sortType: 'views' | 'edits';
+  sortType: SortType;
 }
 
 const PopularDocumentItem = ({document, rank, sortType}: PopularDocumentItemProps) => {

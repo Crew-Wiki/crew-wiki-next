@@ -54,3 +54,5 @@ export type ErrorInfo = {
   errorMessage: ErrorMessage;
   reset: ((value: string) => string) | null;
 };
+
+export type SortType = 'views' | 'edits';

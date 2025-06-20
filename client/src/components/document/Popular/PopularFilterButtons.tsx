@@ -1,10 +1,11 @@
 'use client';
 
+import {SortType} from '@type/Document.type';
 import Button from '@components/common/Button';
 
 interface PopularFilterButtonsProps {
-  sortType: 'views' | 'edits';
-  onSortTypeChange: (type: 'views' | 'edits') => void;
+  sortType: SortType;
+  onSortTypeChange: (type: SortType) => void;
 }
 
 const PopularFilterButtons = ({sortType, onSortTypeChange}: PopularFilterButtonsProps) => {

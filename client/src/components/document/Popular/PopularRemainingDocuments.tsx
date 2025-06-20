@@ -1,11 +1,11 @@
 'use client';
 
-import {PopularDocument} from '@type/Document.type';
 import PopularDocumentItem from './PopularDocumentItem';
+import {PopularDocument, SortType} from '@type/Document.type';
 
 interface PopularDocumentListProps {
   documents: PopularDocument[];
-  sortType: 'views' | 'edits';
+  sortType: SortType;
   startRank?: number;
 }
 
