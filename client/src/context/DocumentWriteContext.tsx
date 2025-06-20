@@ -14,6 +14,7 @@ import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
 import {replaceLocalUrlToS3Url} from '@utils/replaceLocalUrlToS3Url';
 import {EDITOR} from '@constants/editor';
+import {useParams} from 'next/navigation';
 
 export type TitleProps = {
   title: string;
@@ -40,7 +41,8 @@ type DocumentWriteContextType = {
   writerProps: WriterProps;
   contentsProps: ContentsProps;
   canSubmit: boolean;
-  onSubmit: () => Promise<void>;
+  onPostSubmit: () => Promise<void>;
+  onEditSubmit: () => Promise<void>;
   isPending: boolean;
   editorRef: EditorRef;
 };
@@ -58,7 +60,6 @@ export const useDocumentWriteContext = () => {
 };
 
 type EditInitialData = {
-  mode: 'post' | 'edit';
   title?: string;
   writer?: string;
   contents?: string;
@@ -66,7 +67,9 @@ type EditInitialData = {
 
 type DocumentWriteContextProps = React.PropsWithChildren<EditInitialData>;
 
-export const DocumentWriteContextProvider = ({children, mode, ...initialData}: DocumentWriteContextProps) => {
+export const DocumentWriteContextProvider = ({children, ...initialData}: DocumentWriteContextProps) => {
+  const params = useParams();
+
   const {
     value: title,
     onChange: onTitleChange,
@@ -101,8 +104,9 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
   const {postDocument, isPostPending} = usePostDocument();
   const {putDocument, isPutPending} = usePutDocument();
 
-  const onSubmit = async () => {
-    const newMetaList = await uploadImages({albumName: title, uploadImageMetaList: images});
+  const onPostSubmit = async () => {
+    const uuid = crypto.randomUUID();
+    const newMetaList = await uploadImages({documentUUID: uuid, uploadImageMetaList: images});
     const linkReplacedContents = replaceLocalUrlToS3Url(contents, newMetaList);
 
     const document: PostDocumentContent = {
@@ -110,13 +114,26 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
       contents: linkReplacedContents,
       writer,
       documentBytes: getBytes(linkReplacedContents),
+      uuid,
     };
 
-    if (mode === 'post') {
-      postDocument(document);
-    } else {
-      putDocument(document);
-    }
+    postDocument(document);
+  };
+
+  const onEditSubmit = async () => {
+    const uuid = params.uuid as string;
+    const newMetaList = await uploadImages({documentUUID: uuid, uploadImageMetaList: images});
+    const linkReplacedContents = replaceLocalUrlToS3Url(contents, newMetaList);
+
+    const document: PostDocumentContent = {
+      title,
+      contents: linkReplacedContents,
+      writer,
+      documentBytes: getBytes(linkReplacedContents),
+      uuid,
+    };
+
+    putDocument(document);
   };
 
   return (
@@ -140,7 +157,8 @@ export const DocumentWriteContextProvider = ({children, mode, ...initialData}: D
           setImages,
         },
         canSubmit,
-        onSubmit,
+        onPostSubmit,
+        onEditSubmit,
         isPending: isPostPending || isPutPending,
         editorRef,
       }}
