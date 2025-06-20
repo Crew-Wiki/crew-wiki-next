@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import {PopularDocument, SortType} from '@type/Document.type';
+import {SORT_OPTIONS} from '@constants/popular';
 
 interface PopularRankingCardProps {
   document: PopularDocument;
@@ -12,8 +13,13 @@ interface PopularRankingCardProps {
 const rankEmojis = ['🥇', '🥈', '🥉'];
 
 const PopularRankingCard = ({document, rank, sortType}: PopularRankingCardProps) => {
-  const displayCount = sortType === 'views' ? document.viewCount : document.editCount;
-  const countLabel = sortType === 'views' ? '조회수' : '수정수';
+  const primaryCount = sortType === SORT_OPTIONS.views.label ? document.viewCount : document.editCount;
+  const primaryLabel =
+    sortType === SORT_OPTIONS.views.label ? SORT_OPTIONS.views.displayName : SORT_OPTIONS.edits.displayName;
+
+  const secondaryCount = sortType === SORT_OPTIONS.views.label ? document.editCount : document.viewCount;
+  const secondaryLabel =
+    sortType === SORT_OPTIONS.views.label ? SORT_OPTIONS.edits.displayName : SORT_OPTIONS.views.displayName;
 
   return (
     <Link href={`/wiki/${encodeURIComponent(document.title)}`}>
@@ -27,14 +33,12 @@ const PopularRankingCard = ({document, rank, sortType}: PopularRankingCardProps)
 
         <div className="flex flex-col gap-2 text-sm text-gray-600">
           <div className="flex justify-between">
-            <span>{countLabel}</span>
-            <span className="font-semibold">{displayCount.toLocaleString()}</span>
+            <span>{primaryLabel}</span>
+            <span className="font-semibold">{primaryCount.toLocaleString()}</span>
           </div>
           <div className="flex justify-between">
-            <span>{sortType === 'views' ? '수정수' : '조회수'}</span>
-            <span className="text-gray-500">
-              {sortType === 'views' ? document.editCount.toLocaleString() : document.viewCount.toLocaleString()}
-            </span>
+            <span>{secondaryLabel}</span>
+            <span className="text-gray-500">{secondaryCount.toLocaleString()}</span>
           </div>
         </div>
       </li>

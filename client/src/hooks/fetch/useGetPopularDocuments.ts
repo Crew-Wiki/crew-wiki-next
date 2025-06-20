@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {PopularDocument, SortType} from '@type/Document.type';
+import {SORT_OPTIONS} from '@constants/popular';
 
 export const mockData: PopularDocument[] = [
   {
@@ -65,14 +66,13 @@ export const mockData: PopularDocument[] = [
 ];
 
 export const useGetPopularDocuments = () => {
-  const [sortType, setSortType] = useState<SortType>('views');
+  const [sortType, setSortType] = useState<SortType>(SORT_OPTIONS.views.label as SortType);
   const [isLoading, setIsLoading] = useState(false);
 
   const sortedData = [...mockData].sort((a, b) => {
-    if (sortType === 'views') {
-      return b.viewCount - a.viewCount;
-    }
-    return b.editCount - a.editCount;
+    const aValue = sortType === SORT_OPTIONS.views.label ? a.viewCount : a.editCount;
+    const bValue = sortType === SORT_OPTIONS.views.label ? b.viewCount : b.editCount;
+    return bValue - aValue;
   });
 
   const showLoadingEffect = () => {

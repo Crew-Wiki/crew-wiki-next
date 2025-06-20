@@ -1,3 +1,5 @@
+import {SORT_OPTIONS} from '@constants/popular';
+
 export interface WikiDocument {
   documentId: number;
   title: string;
@@ -55,4 +57,13 @@ export type ErrorInfo = {
   reset: ((value: string) => string) | null;
 };
 
-export type SortType = 'views' | 'edits';
+export const SortOptions = {
+  views: {
+    label: SORT_OPTIONS.views.label,
+  },
+  edits: {
+    label: SORT_OPTIONS.edits.label
+  },
+}
+
+export type SortType = keyof typeof SortOptions;

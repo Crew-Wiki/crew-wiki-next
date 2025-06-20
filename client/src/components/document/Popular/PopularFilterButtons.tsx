@@ -1,7 +1,8 @@
 'use client';
 
-import {SortType} from '@type/Document.type';
 import Button from '@components/common/Button';
+import {SortType} from '@type/Document.type';
+import {SORT_OPTIONS} from '@constants/popular';
 
 interface PopularFilterButtonsProps {
   sortType: SortType;
@@ -9,14 +10,20 @@ interface PopularFilterButtonsProps {
 }
 
 const PopularFilterButtons = ({sortType, onSortTypeChange}: PopularFilterButtonsProps) => {
+  const sortTypes = Object.keys(SORT_OPTIONS) as SortType[];
+
   return (
     <div className="flex gap-2">
-      <Button size="xs" style={sortType === 'views' ? 'primary' : 'tertiary'} onClick={() => onSortTypeChange('views')}>
-        조회수 기준
-      </Button>
-      <Button size="xs" style={sortType === 'edits' ? 'primary' : 'tertiary'} onClick={() => onSortTypeChange('edits')}>
-        수정수 기준
-      </Button>
+      {sortTypes.map(type => (
+        <Button
+          key={type}
+          size="xs"
+          style={sortType === type ? 'primary' : 'tertiary'}
+          onClick={() => onSortTypeChange(type)}
+        >
+          {SORT_OPTIONS[type].displayName}
+        </Button>
+      ))}
     </div>
   );
 };
