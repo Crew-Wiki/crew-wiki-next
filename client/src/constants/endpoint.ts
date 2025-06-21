@@ -8,4 +8,5 @@ export const ENDPOINT = {
   getDocumentLogsByTitle: (title: string) => `/document/${title}/log`,
   getSpecificDocumentLog: (logId: number) => `/document/log/${logId}`,
   postAdminLogin: '/admin/login',
+  deleteDocument: (documentId: number) => `/admin/documents/${documentId}`,
 } as const;
