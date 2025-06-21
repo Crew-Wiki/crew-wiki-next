@@ -14,3 +14,13 @@ export const postAdminLogin = async ({loginId, password}: AdminLogin) => {
 
   return response;
 };
+
+export const deleteDocument = async (documentId: number) => {
+  // 임시 백엔드 base URL이므로 추후 실제 백엔드 base URL로 변경 예정
+  const response = await fetch(`TEMP_API_BASE_URL${ENDPOINT.deleteDocument}/${documentId}`, {
+    method: 'DELETE',
+    headers: {'Content-Type': 'application/json'},
+  });
+
+  return response;
+};
