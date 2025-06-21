@@ -5,11 +5,12 @@ import '@toast-ui/editor/toastui-editor.css';
 import dynamic from 'next/dynamic';
 
 import {UploadImageMeta} from '@type/Document.type';
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useRelativeSearchTerms} from './useRelativeSearchTerms';
 import useThrottle from '@hooks/useThrottle';
-import {useDocumentWriteContext} from '@context/DocumentWriteContext';
+import {EditorType} from '@type/Editor.type';
+import {useDocument} from '@store/document';
 
 const DynamicLoadEditor = dynamic(() => import('@toast-ui/react-editor').then(mod => mod.Editor), {ssr: false});
 
@@ -29,9 +30,9 @@ type TuiEditorProps = {
 
 function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
   const isDesktop = typeof window !== 'undefined' ? window.innerWidth >= 768 : false;
-
-  const {editorRef, contentsProps} = useDocumentWriteContext();
-  const {setImages, onContentsChange} = contentsProps;
+  const editorRef = useRef<EditorType | null>(null);
+  const onChange = useDocument(action => action.onChange);
+  const addImage = useDocument(action => action.addImage);
 
   const setImageMeta = (file: File, callback: HookCallback) => {
     const objectURL = URL.createObjectURL(file);
@@ -41,7 +42,7 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
       objectURL,
       s3URL: '',
     };
-    setImages(prev => [...prev, imageMeta]);
+    addImage(imageMeta);
   };
 
   useEffect(() => {
@@ -72,7 +73,7 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
 
     const instance = editorRef.current.getInstance();
     const markdown = instance.getMarkdown();
-    onContentsChange(markdown);
+    onChange(markdown, 'contents');
 
     if (saveMarkdown) {
       const saveMarkDownThrottle = makeThrottle(() => saveMarkdown(markdown), MARKDOWN_THROTTLE_TIME);
@@ -81,7 +82,7 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
 
     recordRefStartPos();
     recordRefEndPose();
-  }, [editorRef, makeThrottle, onContentsChange, recordRefEndPose, recordRefStartPos, saveMarkdown]);
+  }, [editorRef, makeThrottle, onChange, recordRefEndPose, recordRefStartPos, saveMarkdown]);
 
   useEffect(() => {
     return cleanup;
