@@ -27,6 +27,14 @@ export const requestPutClient = async <T>({headers = {}, ...args}: ClientHttpMet
   });
 };
 
+export const requestDeleteClient = async <T>({headers = {}, ...args}: ClientHttpMethodArgs): Promise<T> => {
+  return await request<T>({
+    ...args,
+    method: 'DELETE',
+    headers,
+  });
+};
+
 const prepareRequest = ({baseUrl, method, endpoint, headers, body, queryParams}: ClientHttpArgs) => {
   let url = `${baseUrl}${endpoint}`;
   if (queryParams) url += `?${objectToQueryString(queryParams)}`;
