@@ -2,7 +2,7 @@
 
 import Button from '@components/common/Button';
 import DocumentTitle from '@components/document/layout/DocumentTitle';
-import {usePathname, useRouter} from 'next/navigation';
+import {useRouter} from 'next/navigation';
 import {ExcludeImages, useDocument} from '@store/document';
 import {uploadImages} from '@apis/images';
 import {replaceLocalUrlToS3Url} from '@utils/replaceLocalUrlToS3Url';
@@ -11,8 +11,11 @@ import {getBytes} from '@utils/getBytes';
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
 
-const RequestButton = () => {
-  const pathname = usePathname();
+type ModeProps = {
+  mode: 'post' | 'edit';
+};
+
+const RequestButton = ({mode}: ModeProps) => {
   const values = useDocument(state => state.values);
   const errors = useDocument(state => state.errorMessages);
 
@@ -24,18 +27,19 @@ const RequestButton = () => {
   const isPending = isPostPending || isPutPending;
 
   const onSubmit = async () => {
-    const newMetaList = await uploadImages({albumName: values.title, uploadImageMetaList: values.images});
+    const newMetaList = await uploadImages({documentUUID: values.title, uploadImageMetaList: values.images});
     const linkReplacedContents = replaceLocalUrlToS3Url(values.contents, newMetaList);
 
     const document: PostDocumentContent = {
+      uuid: '',
       title: values.title,
       contents: linkReplacedContents,
       writer: values.writer,
       documentBytes: getBytes(linkReplacedContents),
     };
 
-    if (pathname.includes('post')) postDocument(document);
-    if (pathname.includes('edit')) putDocument(document);
+    if (mode === 'post') postDocument(document);
+    if (mode === 'edit') putDocument(document);
   };
 
   return (
@@ -45,7 +49,7 @@ const RequestButton = () => {
   );
 };
 
-const PostHeader = () => {
+const PostHeader = ({mode}: ModeProps) => {
   const router = useRouter();
 
   const goBack = () => {
@@ -59,7 +63,7 @@ const PostHeader = () => {
         <Button type="button" style="tertiary" size="xs" onClick={goBack}>
           취소하기
         </Button>
-        <RequestButton />
+        <RequestButton mode={mode} />
       </fieldset>
     </header>
   );

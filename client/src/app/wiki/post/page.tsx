@@ -26,7 +26,7 @@ const Page = () => {
 
   return (
     <section className="flex h-fit w-full flex-col gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-[768px]:gap-3 max-[768px]:p-4">
-      <PostHeader />
+      <PostHeader mode="post" />
       <TitleInputField />
       <TuiEditor initialValue={initialValue} saveMarkdown={saveMarkdown} />
     </section>
