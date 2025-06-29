@@ -73,6 +73,7 @@ export interface PostDocumentContent {
   contents: string;
   writer: string;
   documentBytes: number;
+  uuid: string;
 }
 
 export const searchDocument = async (referQuery: string) => {

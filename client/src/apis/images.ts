@@ -1,21 +1,22 @@
 'use client';
 
+import {ENDPOINT} from '@constants/endpoint';
+import {requestGetClient, requestPutClient} from '@http/client';
 import {UploadImageMeta} from '@type/Document.type';
 import Resizer from 'react-image-file-resizer';
-import {S3Client, PutObjectCommand} from '@aws-sdk/client-s3';
 
-const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
-const region = process.env.NEXT_PUBLIC_BUCKET_REGION;
-const accessKeyId = process.env.NEXT_PUBLIC_ACCESS_KEY;
-const secretAccessKey = process.env.NEXT_PUBLIC_SECRET_KEY;
+const uploadImageToS3 = async (uploadImageKey: string, image: File) => {
+  const presignedUrl = await requestGetClient<string>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    endpoint: `${ENDPOINT.getPresignedUrl}/${uploadImageKey}`,
+  });
 
-const s3Client = new S3Client({
-  region,
-  credentials: {
-    accessKeyId,
-    secretAccessKey,
-  },
-});
+  await requestPutClient({
+    baseUrl: '',
+    endpoint: presignedUrl,
+    body: image,
+  });
+};
 
 const resizeFile = (file: File) =>
   new Promise(res => {
@@ -23,28 +24,20 @@ const resizeFile = (file: File) =>
   });
 
 export type UploadImagesArgs = {
-  albumName: string;
+  documentUUID: string;
   uploadImageMetaList: UploadImageMeta[];
 };
 
-export async function uploadImages({albumName, uploadImageMetaList}: UploadImagesArgs) {
+export async function uploadImages({documentUUID, uploadImageMetaList}: UploadImagesArgs) {
   const newMetaList = await Promise.all(
     uploadImageMetaList.map(async imageMeta => {
       const randomFileName = Math.random().toString(36).substr(2, 11);
       const resizedImage = (await resizeFile(imageMeta.file)) as File;
       const extension = resizedImage.type.split('/')[1];
-      const uploadImageKey = `${albumName}/${randomFileName}.${extension}`;
+      const uploadImageKey = `${documentUUID}/${randomFileName}.${extension}`;
 
       try {
-        await s3Client.send(
-          new PutObjectCommand({
-            Bucket: bucketName,
-            Key: uploadImageKey,
-            Body: resizedImage,
-            ContentType: resizedImage.type,
-            CacheControl: 'public, max-age=31536000',
-          }),
-        );
+        await uploadImageToS3(uploadImageKey, resizedImage);
       } catch (err) {
         console.error('S3 Upload Error:', err);
       }

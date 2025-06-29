@@ -1,3 +1,5 @@
+import {SORT_OPTIONS} from '@constants/popular';
+
 export interface WikiDocument {
   documentId: number;
   title: string;
@@ -41,9 +43,27 @@ export interface RecentlyDocument {
   generateTime: string;
 }
 
+export interface PopularDocument {
+  id: number;
+  title: string;
+  viewCount: number;
+  editCount: number;
+}
+
 export type ErrorMessage = string | null;
 
 export type ErrorInfo = {
   errorMessage: ErrorMessage;
   reset: ((value: string) => string) | null;
 };
+
+export const SortOptions = {
+  views: {
+    label: SORT_OPTIONS.views.label,
+  },
+  edits: {
+    label: SORT_OPTIONS.edits.label
+  },
+}
+
+export type SortType = keyof typeof SortOptions;
