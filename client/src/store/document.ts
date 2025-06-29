@@ -42,7 +42,7 @@ validators.set('writer', {
   validateOnChange: validateWriterOnChange,
 });
 
-export const useDocument = create<State & Action>((set, get) => ({
+const initialValue = {
   values: {
     title: '',
     writer: '',
@@ -55,6 +55,10 @@ export const useDocument = create<State & Action>((set, get) => ({
     contents: null,
     images: null,
   },
+};
+
+export const useDocument = create<State & Action>((set, get) => ({
+  ...initialValue,
   setInit: initial => {
     set({
       values: initial,
@@ -118,19 +122,6 @@ export const useDocument = create<State & Action>((set, get) => ({
   },
 
   reset: () => {
-    set(() => ({
-      values: {
-        title: '',
-        writer: '',
-        contents: '',
-        images: [],
-      },
-      errorMessages: {
-        title: null,
-        writer: null,
-        contents: null,
-        images: null,
-      },
-    }));
+    set(() => initialValue);
   },
 }));
