@@ -1,4 +1,4 @@
-import {getAllDocuments} from '@apis/document';
+import {getAllDocumentsServer} from '@apis/server/document';
 import {WikiDocumentExpand} from '@type/Document.type';
 
 /**
@@ -17,7 +17,7 @@ export const getDocumentsMap = async (): Promise<Map<string, WikiDocumentExpand>
 
   // 처음 호출 ⇒ 네트워크 요청 + Map 생성
   inFlight = (async () => {
-    const list = await getAllDocuments();
+    const list = await getAllDocumentsServer();
     documentsMap = new Map(list.map(document => [document.uuid, document]));
     inFlight = null; // fetch 완료 후 초기화
     return documentsMap;

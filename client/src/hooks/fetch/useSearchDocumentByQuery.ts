@@ -3,32 +3,14 @@
 import {useCallback, useEffect} from 'react';
 import useDebounce from '../useDebounce';
 import {useFetch} from '@hooks/useFetch';
-import {requestGetClient} from '@http/client';
-import {ENDPOINT} from '@constants/endpoint';
-
-export type SearchDocumentResponse = {
-  title: string;
-  uuid: string;
-};
-
-const getSearchDocument = async (query: string) => {
-  const response = await requestGetClient<SearchDocumentResponse[]>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    endpoint: ENDPOINT.getDocumentSearch,
-    queryParams: {
-      keyWord: query,
-    },
-  });
-
-  return response;
-};
+import {getSearchDocumentClient} from '@apis/client/document';
 
 type UseSearchDocumentByQueryOptions = {
   enabled?: boolean;
 };
 
 const useSearchDocumentByQuery = (query: string, options?: UseSearchDocumentByQueryOptions) => {
-  const searchDocumentByQuery = useCallback(() => getSearchDocument(query), [query]);
+  const searchDocumentByQuery = useCallback(() => getSearchDocumentClient(query), [query]);
   const {data, refetch} = useFetch(searchDocumentByQuery, {enabled: options?.enabled});
 
   const searchDocumentsIfValid = useCallback(() => {

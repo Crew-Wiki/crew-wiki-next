@@ -3,7 +3,7 @@ export const ENDPOINT = {
   updateDocument: '/document',
   getDocumentByTitle: '/document',
   getDocumentByUUID: '/document/uuid',
-  getRandomDocument: '/document',
+  getRandomDocument: '/document/random',
   getRecentlyDocuments: '/document/recent',
   getDocumentSearch: '/document/search',
   getDocumentLogsByTitle: (title: string) => `/document/${title}/log`,

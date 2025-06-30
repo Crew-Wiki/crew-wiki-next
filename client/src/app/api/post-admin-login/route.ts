@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {postAdminLogin} from '@apis/admin';
+import {postAdminLogin} from '@apis/server/admin';
 import {cookies} from 'next/headers';
 
 export const POST = async (request: Request) => {

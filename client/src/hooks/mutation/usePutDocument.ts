@@ -1,29 +1,18 @@
 'use client';
 
-import {PostDocumentContent} from '@apis/document';
 import {URLS} from '@constants/urls';
 import useMutation from '@hooks/useMutation';
-import {WikiDocument} from '@type/Document.type';
-import {requestPutServer} from '@http/server';
+import {PostDocumentContent, WikiDocument} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
+import {putDocumentClient} from '@apis/client/document';
 
 export const usePutDocument = () => {
   const router = useRouter();
   const {trackDocumentUpdate} = useAmplitude();
 
-  const putDocument = async (document: PostDocumentContent) => {
-    const editDocument = await requestPutServer<WikiDocument>({
-      baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-      endpoint: '/api/put-document',
-      body: document,
-    });
-
-    return editDocument;
-  };
-
   const {mutate, isPending} = useMutation<PostDocumentContent, WikiDocument>({
-    mutationFn: putDocument,
+    mutationFn: putDocumentClient,
     onSuccess: document => {
       trackDocumentUpdate(document.title, document.documentUUID);
       router.push(`${URLS.wiki}/${document.documentUUID}`);

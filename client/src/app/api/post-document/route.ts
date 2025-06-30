@@ -1,20 +1,14 @@
 'use server';
 
-import {PostDocumentContent} from '@apis/document';
 import {CACHE} from '@constants/cache';
-import {ENDPOINT} from '@constants/endpoint';
-import {WikiDocument} from '@type/Document.type';
-import {requestPostServer} from '@http/server';
+import {PostDocumentContent} from '@type/Document.type';
 import {revalidateTag} from 'next/cache';
 import {NextRequest, NextResponse} from 'next/server';
 import {clearDocumentsCache} from '@utils/documentCache';
+import {postDocumentServer} from '@apis/server/document';
 
 const postDocument = async (document: PostDocumentContent) => {
-  const response = await requestPostServer<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    endpoint: ENDPOINT.postDocument,
-    body: document,
-  });
+  const response = await postDocumentServer(document);
 
   revalidateTag(CACHE.tag.getAllDocuments);
   revalidateTag(CACHE.tag.getRecentlyDocuments);

@@ -75,3 +75,11 @@ export type WikiDocumentExpand = Omit<WikiDocument, 'documentUUID'> & {
   id: number;
   documentBytes: number;
 };
+
+export interface PostDocumentContent {
+  title: string;
+  contents: string;
+  writer: string;
+  documentBytes: number;
+  uuid: string;
+}

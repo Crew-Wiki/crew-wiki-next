@@ -3,16 +3,17 @@
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {
+  PostDocumentContent,
   RecentlyDocument,
   WikiDocument,
   WikiDocumentExpand,
   WikiDocumentLogDetail,
   WikiDocumentLogSummary,
 } from '@type/Document.type';
-import {requestGetServer} from '@http/server';
+import {requestGetServer, requestPostServer, requestPutServer} from '@http/server';
 import {PaginationResponse} from '@type/General.type';
 
-export const getDocumentByTitle = async (title: string) => {
+export const getDocumentByTitleServer = async (title: string) => {
   try {
     const docs = await requestGetServer<WikiDocument>({
       baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -28,7 +29,7 @@ export const getDocumentByTitle = async (title: string) => {
   }
 };
 
-export const getDocumentByUUID = async (uuid: string) => {
+export const getDocumentByUUIDServer = async (uuid: string) => {
   try {
     const docs = await requestGetServer<WikiDocument>({
       baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -44,7 +45,7 @@ export const getDocumentByUUID = async (uuid: string) => {
   }
 };
 
-export const getDocumentLogsByUUID = async (uuid: string) => {
+export const getDocumentLogsByUUIDServer = async (uuid: string) => {
   const logs = await requestGetServer<WikiDocumentLogSummary[]>({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getDocumentLogsByUUID(uuid),
@@ -56,7 +57,7 @@ export const getDocumentLogsByUUID = async (uuid: string) => {
   );
 };
 
-export const getSpecificDocumentLog = async (logId: number) => {
+export const getSpecificDocumentLogServer = async (logId: number) => {
   const response = await requestGetServer<WikiDocumentLogDetail>({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getSpecificDocumentLog(logId),
@@ -66,21 +67,11 @@ export const getSpecificDocumentLog = async (logId: number) => {
   return response;
 };
 
-export const getRandomDocument = async () => {
-  const docs = await requestGetServer<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    endpoint: ENDPOINT.getRandomDocument,
-    cache: 'no-cache',
-  });
-
-  return docs.documentUUID;
-};
-
 interface RecentlyDocumentsResponse {
   documents: RecentlyDocument[];
 }
 
-export const getRecentlyDocuments = async () => {
+export const getRecentlyDocumentsServer = async () => {
   const documents = await requestGetServer<RecentlyDocumentsResponse>({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getRecentlyDocuments,
@@ -90,16 +81,7 @@ export const getRecentlyDocuments = async () => {
   return documents;
 };
 
-// 요청할 때 필요한 데이터
-export interface PostDocumentContent {
-  title: string;
-  contents: string;
-  writer: string;
-  documentBytes: number;
-  uuid: string;
-}
-
-export const searchDocument = async (referQuery: string) => {
+export const searchDocumentServer = async (referQuery: string) => {
   const titles = await requestGetServer<string[]>({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     endpoint: ENDPOINT.getDocumentSearch,
@@ -112,8 +94,8 @@ export const searchDocument = async (referQuery: string) => {
   return titles;
 };
 
-export const getAllDocuments = async () => {
-  const totalSize = (await searchDocument('')).length; // 전체 문서의 길이를 알기 위해
+export const getAllDocumentsServer = async () => {
+  const totalSize = (await searchDocumentServer('')).length; // 전체 문서의 길이를 알기 위해
 
   const documents = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -126,4 +108,24 @@ export const getAllDocuments = async () => {
   });
 
   return documents.data;
+};
+
+export const postDocumentServer = async (document: PostDocumentContent) => {
+  const response = await requestPostServer<WikiDocument>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    endpoint: ENDPOINT.postDocument,
+    body: document,
+  });
+
+  return response;
+};
+
+export const putDocumentServer = async (document: PostDocumentContent) => {
+  const response = await requestPutServer<WikiDocument>({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    endpoint: ENDPOINT.updateDocument,
+    body: document,
+  });
+
+  return response;
 };

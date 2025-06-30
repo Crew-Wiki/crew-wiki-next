@@ -4,13 +4,13 @@ import Button from '@components/common/Button';
 import DocumentTitle from '@components/document/layout/DocumentTitle';
 import {useRouter} from 'next/navigation';
 import {ExcludeImages, useDocument} from '@store/document';
-import {uploadImages} from '@apis/images';
+import {uploadImages} from '@apis/client/images';
 import {replaceLocalUrlToS3Url} from '@utils/replaceLocalUrlToS3Url';
-import {PostDocumentContent} from '@apis/document';
 import {getBytes} from '@utils/getBytes';
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
 import {URLS} from '@constants/urls';
+import {PostDocumentContent} from '@type/Document.type';
 
 type ModeProps = {
   mode: 'post' | 'edit';
