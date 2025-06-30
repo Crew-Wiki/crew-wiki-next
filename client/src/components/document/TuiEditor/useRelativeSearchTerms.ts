@@ -26,10 +26,11 @@ export const useRelativeSearchTerms = ({editorRef}: UseRelativeSearchTermArgs) =
 
   const onClick = (event: React.MouseEvent<HTMLElement>) => {
     if (!editorRef.current || !refStartPos || !refEndPos) return;
-    const targetTitle = (event.target as HTMLElement).closest('button')?.id;
+    const targetUUID = (event.target as HTMLElement).closest('button')?.id;
+    const targetTitle = (event.target as HTMLElement).closest('button')?.dataset.title;
 
-    if (targetTitle) {
-      const replacement = `[${targetTitle}](https://crew-wiki.site/wiki/${encodeURI(targetTitle!)})`;
+    if (targetTitle && targetUUID) {
+      const replacement = `[${targetTitle}](https://crew-wiki.site/wiki/${targetUUID})`;
       editorRef.current.getInstance().replaceSelection(replacement, [refStartPos[0], refStartPos[1] - 1], refEndPos);
       setRefEndPos(null);
       setRefStartPos(null);
