@@ -11,7 +11,7 @@ type PresignedUrlResponse = {
 
 const uploadImageToS3 = async (uploadImageKey: string, image: File) => {
   const {url} = await requestGetClient<PresignedUrlResponse>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: `${ENDPOINT.getPresignedUrl}/${uploadImageKey}`,
   });
 

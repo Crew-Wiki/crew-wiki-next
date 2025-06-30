@@ -6,7 +6,7 @@ import {PostDocumentContent, RecentlyDocument, WikiDocument} from '@type/Documen
 
 export const getDocumentByTitleClient = async (title: string) => {
   const response = await requestGetClient<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
   });
 
@@ -15,7 +15,7 @@ export const getDocumentByTitleClient = async (title: string) => {
 
 export const getDocumentByUUIDClient = async (uuid: string) => {
   const response = await requestGetClient<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: `${ENDPOINT.getDocumentByUUID}/${uuid}`,
   });
 
@@ -24,7 +24,7 @@ export const getDocumentByUUIDClient = async (uuid: string) => {
 
 export const getRecentlyDocumentsClient = () => {
   const documents = requestGetClient<RecentlyDocument[]>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getRecentlyDocuments,
   });
 
@@ -33,7 +33,7 @@ export const getRecentlyDocumentsClient = () => {
 
 export const getRandomDocumentClient = async () => {
   const document = await requestGetClient<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getRandomDocument,
   });
 
@@ -47,7 +47,7 @@ export type TitleAndUUID = {
 
 export const getSearchDocumentClient = async (query: string) => {
   const response = await requestGetClient<TitleAndUUID[]>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getDocumentSearch,
     queryParams: {
       keyWord: query,
@@ -59,7 +59,7 @@ export const getSearchDocumentClient = async (query: string) => {
 
 export const postDocumentClient = async (document: PostDocumentContent) => {
   const newDocument = await requestPostClient<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: '/api/post-document',
     body: document,
   });
@@ -69,7 +69,7 @@ export const postDocumentClient = async (document: PostDocumentContent) => {
 
 export const putDocumentClient = async (document: PostDocumentContent) => {
   const editDocument = await requestPutClient<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: '/api/put-document',
     body: document,
   });

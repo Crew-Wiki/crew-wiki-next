@@ -16,7 +16,7 @@ import {PaginationResponse} from '@type/General.type';
 export const getDocumentByTitleServer = async (title: string) => {
   try {
     const docs = await requestGetServer<WikiDocument>({
-      baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+      baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
       endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
       next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByTitle(title)]},
     });
@@ -32,7 +32,7 @@ export const getDocumentByTitleServer = async (title: string) => {
 export const getDocumentByUUIDServer = async (uuid: string) => {
   try {
     const docs = await requestGetServer<WikiDocument>({
-      baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+      baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
       endpoint: `${ENDPOINT.getDocumentByUUID}/${uuid}`,
       next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByUUID(uuid)]},
     });
@@ -47,7 +47,7 @@ export const getDocumentByUUIDServer = async (uuid: string) => {
 
 export const getDocumentLogsByUUIDServer = async (uuid: string) => {
   const logs = await requestGetServer<WikiDocumentLogSummary[]>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getDocumentLogsByUUID(uuid),
     next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentLogsByUUID(uuid)]},
   });
@@ -59,7 +59,7 @@ export const getDocumentLogsByUUIDServer = async (uuid: string) => {
 
 export const getSpecificDocumentLogServer = async (logId: number) => {
   const response = await requestGetServer<WikiDocumentLogDetail>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getSpecificDocumentLog(logId),
     next: {revalidate: CACHE.time.longRevalidate, tags: [CACHE.tag.getSpecificDocumentLog(logId)]},
   });
@@ -73,7 +73,7 @@ interface RecentlyDocumentsResponse {
 
 export const getRecentlyDocumentsServer = async () => {
   const documents = await requestGetServer<RecentlyDocumentsResponse>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getRecentlyDocuments,
     next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getRecentlyDocuments]},
   });
@@ -83,7 +83,7 @@ export const getRecentlyDocumentsServer = async () => {
 
 export const searchDocumentServer = async (referQuery: string) => {
   const titles = await requestGetServer<string[]>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getDocumentSearch,
     cache: 'no-cache',
     queryParams: {
@@ -98,7 +98,7 @@ export const getAllDocumentsServer = async () => {
   const totalSize = (await searchDocumentServer('')).length; // 전체 문서의 길이를 알기 위해
 
   const documents = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getAllDocuments,
     queryParams: {
       pageNumber: 0,
@@ -112,7 +112,7 @@ export const getAllDocumentsServer = async () => {
 
 export const postDocumentServer = async (document: PostDocumentContent) => {
   const response = await requestPostServer<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.postDocument,
     body: document,
   });
@@ -122,7 +122,7 @@ export const postDocumentServer = async (document: PostDocumentContent) => {
 
 export const putDocumentServer = async (document: PostDocumentContent) => {
   const response = await requestPutServer<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.updateDocument,
     body: document,
   });
