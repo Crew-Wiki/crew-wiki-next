@@ -1,12 +1,12 @@
 import type {UUIDLogParams, UUIDParams} from '@type/PageParams.type';
 import {LogContent} from './LogContent';
-import {getDocumentLogsByUUID} from '@apis/server/document';
 import {Metadata} from 'next';
-import {getDocumentsMap} from '@utils/documentCache';
+import {getDocumentLogsByUUIDServer} from '@apis/server/document';
+import {getDocumentTitleUsingUUID} from '@utils/getDocumentUsingUUIDInCache';
 
 export async function generateMetadata({params}: UUIDLogParams): Promise<Metadata> {
   const {uuid} = await params;
-  const documentTitle = (await getDocumentsMap()).get(uuid)?.title;
+  const documentTitle = await getDocumentTitleUsingUUID(uuid);
 
   return {
     title: `${documentTitle} 편집로그`,
@@ -20,7 +20,7 @@ export async function generateMetadata({params}: UUIDLogParams): Promise<Metadat
 
 const Page = async ({params}: UUIDParams) => {
   const {uuid} = await params;
-  const documentLogs = await getDocumentLogsByUUID(uuid);
+  const documentLogs = await getDocumentLogsByUUIDServer(uuid);
 
   return (
     <div className="flex w-full flex-col gap-4">
