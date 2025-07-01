@@ -10,7 +10,7 @@ const Layout = ({children}: React.PropsWithChildren) => {
       <div className="flex h-fit items-center justify-center">
         <main className="flex h-fit w-full max-w-[1440px] items-start justify-center gap-6 px-4 py-6 max-[768px]:px-0 max-[768px]:py-2">
           {children}
-          {/* <RecentlyEdit /> */}
+          <RecentlyEdit />
         </main>
       </div>
     </div>
