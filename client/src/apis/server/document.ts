@@ -4,14 +4,25 @@ import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {
   PostDocumentContent,
-  RecentlyDocument,
   WikiDocument,
   WikiDocumentExpand,
   WikiDocumentLogDetail,
   WikiDocumentLogSummary,
 } from '@type/Document.type';
 import {requestGetServer, requestPostServer, requestPutServer} from '@http/server';
-import {PaginationResponse} from '@type/General.type';
+import {PaginationParams, PaginationResponse} from '@type/General.type';
+import {allDocuemtsParams, recentlyParams} from '@constants/params';
+
+export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
+  const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.getDocuments,
+    queryParams: params,
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocuments(params)]},
+  });
+
+  return response;
+};
 
 export const getDocumentByTitleServer = async (title: string) => {
   try {
@@ -67,20 +78,6 @@ export const getSpecificDocumentLogServer = async (logId: number) => {
   return response;
 };
 
-interface RecentlyDocumentsResponse {
-  documents: RecentlyDocument[];
-}
-
-export const getRecentlyDocumentsServer = async () => {
-  const documents = await requestGetServer<RecentlyDocumentsResponse>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getRecentlyDocuments,
-    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getRecentlyDocuments]},
-  });
-
-  return documents;
-};
-
 export const searchDocumentServer = async (referQuery: string) => {
   const titles = await requestGetServer<string[]>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
@@ -94,20 +91,14 @@ export const searchDocumentServer = async (referQuery: string) => {
   return titles;
 };
 
+export const getRecentlyDocumentsServer = async () => {
+  const response = await getDocumentsServerWithPagination(recentlyParams);
+  return response.data;
+};
+
 export const getAllDocumentsServer = async () => {
-  const totalSize = (await searchDocumentServer('')).length; // 전체 문서의 길이를 알기 위해
-
-  const documents = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getAllDocuments,
-    queryParams: {
-      pageNumber: 0,
-      pageSize: totalSize,
-    },
-    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getAllDocuments]},
-  });
-
-  return documents.data;
+  const response = await getDocumentsServerWithPagination(allDocuemtsParams);
+  return response.data;
 };
 
 export const postDocumentServer = async (document: PostDocumentContent) => {

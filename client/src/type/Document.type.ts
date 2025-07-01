@@ -38,13 +38,6 @@ export interface UploadImageMeta {
   s3URL: string;
 }
 
-export interface RecentlyDocument {
-  documentId: number;
-  documentUUID: string;
-  title: string;
-  generateTime: string;
-}
-
 export interface PopularDocument {
   id: number;
   title: string;

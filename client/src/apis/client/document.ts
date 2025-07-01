@@ -2,12 +2,12 @@
 
 import {ENDPOINT} from '@constants/endpoint';
 import {requestGetClient, requestPostClient, requestPutClient} from '@http/client';
-import {PostDocumentContent, RecentlyDocument, WikiDocument} from '@type/Document.type';
+import {PostDocumentContent, WikiDocument} from '@type/Document.type';
 
 export const getDocumentByTitleClient = async (title: string) => {
   const response = await requestGetClient<WikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
+    endpoint: ENDPOINT.getDocumentByTitle(title),
   });
 
   return response;
@@ -16,19 +16,10 @@ export const getDocumentByTitleClient = async (title: string) => {
 export const getDocumentByUUIDClient = async (uuid: string) => {
   const response = await requestGetClient<WikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: `${ENDPOINT.getDocumentByUUID}/${uuid}`,
+    endpoint: ENDPOINT.getDocumentByUUID(uuid),
   });
 
   return response;
-};
-
-export const getRecentlyDocumentsClient = () => {
-  const documents = requestGetClient<RecentlyDocument[]>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getRecentlyDocuments,
-  });
-
-  return documents;
 };
 
 export const getRandomDocumentClient = async () => {
