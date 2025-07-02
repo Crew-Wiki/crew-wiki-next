@@ -4,8 +4,8 @@ import {CACHE} from '@constants/cache';
 import {PostDocumentContent} from '@type/Document.type';
 import {revalidateTag} from 'next/cache';
 import {NextRequest, NextResponse} from 'next/server';
-import {clearDocumentsCache} from '@utils/documentCache';
 import {postDocumentServer} from '@apis/server/document';
+import {addDocumentCache} from '@utils/documentCache';
 
 const postDocument = async (document: PostDocumentContent) => {
   const response = await postDocumentServer(document);
@@ -13,7 +13,17 @@ const postDocument = async (document: PostDocumentContent) => {
   revalidateTag(CACHE.tag.getAllDocuments);
   revalidateTag(CACHE.tag.getRecentlyDocuments);
   revalidateTag(CACHE.tag.getDocumentLogsByUUID(document.uuid));
-  clearDocumentsCache();
+
+  await addDocumentCache({
+    title: response.title,
+    contents: response.contents,
+    writer: response.writer,
+    documentBytes: document.documentBytes,
+    generateTime: response.generateTime,
+    uuid: response.documentUUID,
+    id: response.documentId,
+  });
+
   return response;
 };
 

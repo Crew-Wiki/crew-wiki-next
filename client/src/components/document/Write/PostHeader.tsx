@@ -46,6 +46,7 @@ const RequestButton = ({mode}: ModeProps) => {
     if (mode === 'edit') putDocument(document);
 
     router.push(`${URLS.wiki}/${uuid}`);
+    router.refresh();
   };
 
   return (
