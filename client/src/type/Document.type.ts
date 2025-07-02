@@ -63,7 +63,7 @@ export const SortOptions = {
 
 export type SortType = keyof typeof SortOptions;
 
-export type WikiDocumentExpand = Omit<WikiDocument, 'documentUUID'> & {
+export type WikiDocumentExpand = Omit<WikiDocument, 'documentUUID' | 'documentId'> & {
   uuid: string;
   id: number;
   documentBytes: number;
