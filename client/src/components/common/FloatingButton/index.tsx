@@ -8,7 +8,7 @@ const FloatingButton = () => {
 
   return (
     <svg
-      className={'drop-shadow-lg fixed bottom-8 right-8 cursor-pointer md:bottom-12 md:right-12'}
+      className={'fixed bottom-8 right-8 cursor-pointer drop-shadow-lg md:bottom-12 md:right-12'}
       width="36"
       height="36"
       viewBox="0 0 36 36"

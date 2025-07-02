@@ -1,11 +1,11 @@
 'use client';
 
-import {SearchDocumentResponse} from '@hooks/fetch/useSearchDocumentByQuery';
+import {TitleAndUUID} from '@apis/client/document';
 
 interface RelativeSearchTermsProps {
   style?: React.CSSProperties;
   show?: boolean;
-  searchTerms: SearchDocumentResponse[];
+  searchTerms: TitleAndUUID[];
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 

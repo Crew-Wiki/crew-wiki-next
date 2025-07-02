@@ -60,25 +60,25 @@ const WikiHeader = () => {
   };
 
   return (
-    <motion.div className="sticky z-50 top-0 w-full bg-primary-primary " animate={{y}} transition={{duration: 0.3}}>
-      <div className="flex flex-col justify-center items-center py-2">
-        <div className="flex flex-row justify-between items-center px-4 header-container max-w-[1440px] w-full">
-          <Link href="/" className="flex gap-2 items-center">
+    <motion.div className="sticky top-0 z-50 w-full bg-primary-primary" animate={{y}} transition={{duration: 0.3}}>
+      <div className="flex flex-col items-center justify-center py-2">
+        <div className="header-container flex w-full max-w-[1440px] flex-row items-center justify-between px-4">
+          <Link href="/" className="flex items-center gap-2">
             <Image
               src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/hangseong-white.png`}
               width={32}
               height={32}
               alt="logo"
-              className="w-8 h-10 md:h-16 md:w-14"
+              className="h-10 w-8 md:h-16 md:w-14"
             />
-            <h1 className="font-bm text-2xl md:text-[40px] text-white font-normal">크루위키</h1>
+            <h1 className="font-bm text-2xl font-normal text-white md:text-[40px]">크루위키</h1>
           </Link>
 
           <RightHeader onSubmit={onSubmit} toggleVisibility={toggleVisibility} />
         </div>
         <div
           className={twMerge(
-            'flex px-4 pt-4 pb-2 w-full items-center md:hidden',
+            'flex w-full items-center px-4 pb-2 pt-4 md:hidden',
             isVisibleSmallSearchBar ? '' : 'hidden',
           )}
         >

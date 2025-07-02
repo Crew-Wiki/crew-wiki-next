@@ -19,7 +19,7 @@ const Input = <T extends string | number | readonly string[] | undefined>({
   return (
     <input
       className={twMerge(
-        'w-full outline-none font-pretendard text-base font-normal text-grayscale-800 placeholder:text-grayscale-lightText focus:border-secondary-400 active:border-secondary-400 disabled:text-grayscale-400 disabled:border-grayscale-200',
+        'w-full font-pretendard text-base font-normal text-grayscale-800 outline-none placeholder:text-grayscale-lightText focus:border-secondary-400 active:border-secondary-400 disabled:border-grayscale-200 disabled:text-grayscale-400',
         className,
         invalid ? 'border-error-error focus:border-error-error active:border-error-error' : '',
       )}
