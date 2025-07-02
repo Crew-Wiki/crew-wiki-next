@@ -1,7 +1,7 @@
 // ISR : cache 시간 어떻게 가져갈 지 논의
 
 import {PaginationParams} from '@type/General.type';
-import {allDocuemtsParams, recentlyParams} from './params';
+import {allDocumentsParams, recentlyParams} from './params';
 
 export const generatePaginationCacheTags = (
   {pageNumber, pageSize, sort, sortDirection}: PaginationParams,
@@ -24,12 +24,14 @@ export const CACHE = {
   },
   tag: {
     getDocuments: (params: PaginationParams) => generatePaginationCacheTags(params, 'documents'),
-    getAllDocuments: generatePaginationCacheTags(allDocuemtsParams, 'all-documents'),
+    getAllDocuments: generatePaginationCacheTags(allDocumentsParams, 'documents'),
+    getRecentlyDocuments: generatePaginationCacheTags(recentlyParams, 'documents'),
+
     getDocumentByTitle: (title: string) => `title:${decodeURI(title)}`,
     getDocumentByUUID: (uuid: string) => `title:${uuid}`,
-    getRecentlyDocuments: generatePaginationCacheTags(recentlyParams, 'recently'),
     getDocumentLogsByUUID: (uuid: string) => `logs:${uuid}`,
     getSpecificDocumentLog: (logId: number) => `specificLog:${logId}`,
+
     getDocumentSearch: 'search',
     getRandomDocument: 'random',
   },

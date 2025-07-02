@@ -11,7 +11,7 @@ import {
 } from '@type/Document.type';
 import {requestGetServer, requestPostServer, requestPutServer} from '@http/server';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
-import {allDocuemtsParams, recentlyParams} from '@constants/params';
+import {allDocumentsParams, recentlyParams} from '@constants/params';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
   const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
@@ -97,7 +97,7 @@ export const getRecentlyDocumentsServer = async () => {
 };
 
 export const getAllDocumentsServer = async () => {
-  const response = await getDocumentsServerWithPagination(allDocuemtsParams);
+  const response = await getDocumentsServerWithPagination(allDocumentsParams);
   return response.data;
 };
 
