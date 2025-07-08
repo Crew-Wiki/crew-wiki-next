@@ -25,6 +25,11 @@ const nextConfig: NextConfig = {
       destination: `${URLS.wiki}/${URLS.daemoon}`,
       permanent: false,
     },
+    {
+      source: `${URLS.wiki}/%EB%8C%80%EB%AC%B8`,
+      destination: `${URLS.wiki}/${URLS.daemoon}`,
+      permanent: true,
+    },
   ],
 };
 
