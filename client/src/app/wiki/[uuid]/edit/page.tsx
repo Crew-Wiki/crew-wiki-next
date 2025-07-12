@@ -23,7 +23,6 @@ const EditPage = ({document}: EditPageProps) => {
         title: document.title,
         writer: document.writer,
         contents: document.contents,
-        images: [],
       },
       document.documentUUID,
     );
