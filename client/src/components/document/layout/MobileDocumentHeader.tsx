@@ -3,11 +3,10 @@ import {URLS} from '@constants/urls';
 import Link from 'next/link';
 
 interface MobileDocumentHeaderProps {
-  title: string;
   uuid: string;
 }
 
-const MobileDocumentHeader = ({title, uuid}: MobileDocumentHeaderProps) => {
+const MobileDocumentHeader = ({uuid}: MobileDocumentHeaderProps) => {
   return (
     <div className="md:hidden">
       <fieldset className="flex gap-2 max-md:w-full max-md:justify-center">

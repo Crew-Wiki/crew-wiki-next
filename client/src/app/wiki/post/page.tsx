@@ -19,7 +19,6 @@ const Page = () => {
         title: '',
         writer: '',
         contents: initialValue,
-        images: [],
       },
       null,
     );

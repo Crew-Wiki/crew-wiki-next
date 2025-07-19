@@ -33,12 +33,6 @@ export interface WikiDocumentLogDetail {
   writer: string;
 }
 
-export interface UploadImageMeta {
-  file: File;
-  objectURL: string;
-  s3URL: string;
-}
-
 export interface PopularDocument {
   id: number;
   title: string;

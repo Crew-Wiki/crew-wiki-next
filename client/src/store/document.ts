@@ -1,22 +1,21 @@
 import {create} from 'zustand';
-import {ErrorInfo, ErrorMessage, UploadImageMeta} from '@type/Document.type';
+import {ErrorInfo, ErrorMessage} from '@type/Document.type';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
 import {validateWriterOnChange} from '@utils/validation/writer';
 
-export type Field = 'title' | 'writer' | 'contents' | 'images';
-export type ExcludeImages = Exclude<Field, 'images'>;
+export type Field = 'title' | 'writer' | 'contents';
 
 type FieldType = {
   title: string;
   writer: string;
   contents: string;
-  images: UploadImageMeta[];
 };
 
 type State = {
   values: FieldType;
   errorMessages: Record<Field, ErrorMessage>;
-  uuid: string | null;
+  uuid: string;
+  isImageUploadPending: boolean;
 };
 
 type Validators = {
@@ -26,10 +25,10 @@ type Validators = {
 
 type Action = {
   setInit: (initial: FieldType, uuid: string | null) => void;
-  addImage: (newImage: UploadImageMeta) => void;
-  onChange: (value: string, field: ExcludeImages) => void;
-  onBlur: (value: string, field: ExcludeImages, list?: string[]) => void;
+  onChange: (value: string, field: Field) => void;
+  onBlur: (value: string, field: Field, list?: string[]) => void;
   reset: () => void;
+  updateImageUploadPending: (isPending: boolean) => void;
 };
 
 const validators: Map<Field, Validators> = new Map();
@@ -43,23 +42,22 @@ validators.set('writer', {
   validateOnChange: validateWriterOnChange,
 });
 
-const initialValue = {
+const initialValue: State = {
   values: {
     title: '',
     writer: '',
     contents: '',
-    images: [],
   },
   errorMessages: {
     title: null,
     writer: null,
     contents: null,
-    images: null,
   },
-  uuid: null,
+  uuid: '',
+  isImageUploadPending: false,
 };
 
-export const useDocument = create<State & Action>((set, get) => ({
+export const useDocument = create<State & Action>(set => ({
   ...initialValue,
   setInit: (initial, uuid) => {
     set({
@@ -67,15 +65,13 @@ export const useDocument = create<State & Action>((set, get) => ({
         title: initial.title,
         writer: initial.writer,
         contents: initial.contents,
-        images: [],
       },
       errorMessages: {
         title: null,
         writer: null,
         contents: null,
-        images: null,
       },
-      uuid,
+      uuid: uuid ? uuid : crypto.randomUUID(),
     });
   },
 
@@ -120,12 +116,9 @@ export const useDocument = create<State & Action>((set, get) => ({
     }));
   },
 
-  addImage: newImage => {
-    set(state => ({
-      values: {
-        ...state.values,
-        images: [...state.values.images, newImage],
-      },
+  updateImageUploadPending: (isPending: boolean) => {
+    set(() => ({
+      isImageUploadPending: isPending,
     }));
   },
 
