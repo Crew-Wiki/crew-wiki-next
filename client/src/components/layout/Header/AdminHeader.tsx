@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -11,12 +13,14 @@ const AdminHeader = () => {
             width={32}
             height={32}
             alt="logo"
-            className="w-8 h-10 md:h-16 md:w-14"
+            className="h-10 w-8 md:h-16 md:w-14"
           />
-          <h1 className="font-bm text-2xl md:text-[40px] text-white font-normal">크루위키</h1>
+          <h1 className="font-bm text-2xl font-normal text-white md:text-[40px]">크루위키</h1>
         </Link>
       </div>
-      <div className="flex flex-1 items-center justify-end font-bm text-2xl md:text-[40px] text-white font-normal">관리자 페이지</div>
+      <div className="flex flex-1 items-center justify-end font-bm text-2xl font-normal text-white md:text-[40px]">
+        관리자 페이지
+      </div>
     </nav>
   );
 };
