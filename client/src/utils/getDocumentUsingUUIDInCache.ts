@@ -15,9 +15,5 @@ export const getDocumentUsingUUID = async (uuid: string) => {
   const documentMap = await getDocumentsMap();
   const document = documentMap.get(uuid);
 
-  if (!document) {
-    throw new Error(`캐시에 ${uuid}를 가진 문서가 없습니다.`);
-  }
-
-  return document;
+  return document || null;
 };
