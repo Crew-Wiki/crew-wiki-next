@@ -70,11 +70,11 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-[80%] max-w-lg rounded-lg bg-primary-200 px-8 py-10 shadow-lg md:w-full">
-      <h2 className="mb-6 text-2xl font-bold text-white">관리자 로그인</h2>
+    <div className="w-[80%] max-w-lg rounded-xl bg-white px-8 py-10 shadow-lg md:w-full">
+      <h2 className="mb-8 text-center font-bm text-3xl text-grayscale-text">관리자 로그인</h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="loginId" className="mb-2 block text-sm font-medium">
+        <div className="mb-6">
+          <label htmlFor="loginId" className="mb-2 block font-pretendard text-sm font-medium text-grayscale-700">
             아이디
           </label>
           <input
@@ -83,18 +83,22 @@ export default function LoginForm() {
             name="loginId"
             value={adminForm.loginId}
             onChange={handleInputChange}
-            className={`w-full rounded border px-3 py-2 text-black focus:outline-none focus:ring focus:ring-primary-500 ${adminForm.loginId && !isValid.loginId ? 'border-red-500' : ''}`}
+            className={`w-full rounded-lg border px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:border-error-400 focus:outline-none focus:ring-2 focus:ring-error-400/20 ${
+              adminForm.loginId && !isValid.loginId
+                ? 'border-error-error focus:border-error-error focus:ring-error-error/20'
+                : 'border-grayscale-200'
+            }`}
             placeholder="아이디를 입력하세요"
             autoComplete="off"
           />
           {adminForm.loginId && !isValid.loginId && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-2 font-pretendard text-sm text-error-error">
               아이디는 4~20자이며, 문자(영문자 또는 한글)를 반드시 포함해야 합니다.
             </p>
           )}
         </div>
-        <div className="mb-6">
-          <label htmlFor="password" className="mb-2 block text-sm font-medium">
+        <div className="mb-8">
+          <label htmlFor="password" className="mb-2 block font-pretendard text-sm font-medium text-grayscale-700">
             비밀번호
           </label>
           <input
@@ -103,19 +107,23 @@ export default function LoginForm() {
             name="password"
             value={adminForm.password}
             onChange={handleInputChange}
-            className={`w-full rounded border px-3 py-2 text-black focus:outline-none focus:ring focus:ring-primary-500 ${adminForm.password && !isValid.password ? 'border-red-500' : ''}`}
+            className={`w-full rounded-lg border px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:border-error-400 focus:outline-none focus:ring-2 focus:ring-error-400/20 ${
+              adminForm.password && !isValid.password
+                ? 'border-error-error focus:border-error-error focus:ring-error-error/20'
+                : 'border-grayscale-200'
+            }`}
             placeholder="비밀번호를 입력하세요"
             autoComplete="new-password"
           />
           {adminForm.password && !isValid.password && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-2 font-pretendard text-sm text-error-error">
               비밀번호는 8자 이상이며, 문자(영문자 또는 한글), 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.
             </p>
           )}
         </div>
         <button
           type="submit"
-          className="w-full rounded bg-primary-400 px-4 py-2 font-semibold text-white transition duration-200 hover:bg-primary-700 focus:outline-none focus:ring focus:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-300"
+          className="w-full rounded-lg bg-primary-primary px-4 py-3 font-bm text-white transition-all duration-200 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-primary/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-grayscale-300 disabled:text-grayscale-500 disabled:active:scale-100"
           disabled={!isValid.loginId || !isValid.password}
         >
           로그인
