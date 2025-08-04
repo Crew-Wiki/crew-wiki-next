@@ -16,6 +16,7 @@ export const usePostDocument = () => {
     onSuccess: document => {
       trackDocumentCreate(document.title, document.documentUUID);
       router.push(`${URLS.wiki}/${document.documentUUID}`);
+      router.refresh();
     },
   });
 

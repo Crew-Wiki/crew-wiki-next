@@ -12,6 +12,7 @@ import {
 import {requestGetServer, requestPostServer, requestPutServer} from '@http/server';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
+import {TitleAndUUID} from '@apis/client/document';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
   const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
@@ -24,27 +25,22 @@ export const getDocumentsServerWithPagination = async (params: PaginationParams)
   return response;
 };
 
-export const getDocumentByTitleServer = async (title: string) => {
-  try {
-    const docs = await requestGetServer<WikiDocument>({
-      baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-      endpoint: `${ENDPOINT.getDocumentByTitle}/${title}`,
-      next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByTitle(title)]},
-    });
+// 전체 문서의 UUID와 제목을 불러오기 위한 목적
+export const getDocumentsUUIDServer = async () => {
+  const response = await requestGetServer<TitleAndUUID[]>({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: `${ENDPOINT.getDocumentSearch}?keyWord=`,
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentsUUID]},
+  });
 
-    return docs;
-  } catch (error) {
-    if (error instanceof Error) {
-      return null;
-    }
-  }
+  return response;
 };
 
 export const getDocumentByUUIDServer = async (uuid: string) => {
   try {
     const docs = await requestGetServer<WikiDocument>({
       baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-      endpoint: `${ENDPOINT.getDocumentByUUID}/${uuid}`,
+      endpoint: ENDPOINT.getDocumentByUUID(uuid),
       next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByUUID(uuid)]},
     });
 
@@ -75,19 +71,6 @@ export const getSpecificDocumentLogServer = async (logId: number) => {
   });
 
   return response;
-};
-
-export const searchDocumentServer = async (referQuery: string) => {
-  const titles = await requestGetServer<string[]>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getDocumentSearch,
-    cache: 'no-cache',
-    queryParams: {
-      keyWord: referQuery,
-    },
-  });
-
-  return titles;
 };
 
 export const getRecentlyDocumentsServer = async () => {

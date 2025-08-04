@@ -1,12 +1,12 @@
 import type {UUIDLogParams, UUIDParams} from '@type/PageParams.type';
 import {Metadata} from 'next';
-import {getDocumentLogsByUUIDServer} from '@apis/server/document';
-import {getDocumentTitleUsingUUID} from '@utils/getDocumentUsingUUIDInCache';
+import {getDocumentByUUIDServer, getDocumentLogsByUUIDServer} from '@apis/server/document';
 import {LogList} from './LogList';
 
 export async function generateMetadata({params}: UUIDLogParams): Promise<Metadata> {
   const {uuid} = await params;
-  const documentTitle = await getDocumentTitleUsingUUID(uuid);
+  const document = await getDocumentByUUIDServer(uuid);
+  const documentTitle = document?.title;
 
   return {
     title: `${documentTitle} 편집로그`,
