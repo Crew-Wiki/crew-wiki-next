@@ -4,7 +4,7 @@ import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
 import type {UUIDParams} from '@type/PageParams.type';
-import {generateDocumentMetadata} from '@utils/generateDocumentMetadata';
+import {generateDocumentPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
 import {notFound} from 'next/navigation';
@@ -18,7 +18,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({params}: UUIDParams): Promise<Metadata> {
   const {uuid} = await params;
-  return await generateDocumentMetadata(uuid);
+  return await generateDocumentPageMetadata(uuid);
 }
 
 // next.js v15부터 params를 받기 위해 await를 사용해야 함

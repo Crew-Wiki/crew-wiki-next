@@ -4,13 +4,13 @@ import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
 import type {UUIDLogParams} from '@type/PageParams.type';
-import {generateDocumentMetadata} from '@utils/generateDocumentMetadata';
+import {generateLogPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
 
 export async function generateMetadata({params}: UUIDLogParams): Promise<Metadata> {
   const {uuid} = await params;
-  return generateDocumentMetadata(uuid);
+  return await generateLogPageMetadata(uuid);
 }
 
 const Page = async ({params}: UUIDLogParams) => {
