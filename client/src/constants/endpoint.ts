@@ -11,4 +11,5 @@ export const ENDPOINT = {
   getSpecificDocumentLog: (logId: number) => `/document/log/${logId}`,
   postAdminLogin: '/admin/login',
   getPresignedUrl: '/upload',
+  postViewsFlush: '/document/views/flush',
 } as const;
