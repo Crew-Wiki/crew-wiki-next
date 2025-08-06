@@ -11,7 +11,6 @@ export const IncrementViewCountByUUID = ({uuid}: IncrementViewCountProps) => {
   const {postViewCount} = usePostViewCount();
 
   useEffect(() => {
-    console.log(uuid);
     if (uuid) postViewCount({uuid});
   }, [uuid]);
 
