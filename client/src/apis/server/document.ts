@@ -12,6 +12,7 @@ import {
 import {requestGetServer, requestPostServer, requestPutServer} from '@http/server';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
+import {ViewCountByUUID} from '@type/viewCount.type';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
   const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
@@ -120,7 +121,7 @@ export const putDocumentServer = async (document: PostDocumentContent) => {
   return response;
 };
 
-export const postViewsFlush = async (views: Map<string, number>) => {
+export const postViewsFlush = async (views: ViewCountByUUID) => {
   await requestPostServer({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.postViewsFlush,
