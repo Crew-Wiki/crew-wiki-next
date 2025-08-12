@@ -1,5 +1,11 @@
 import {open, unlink, readFile} from 'fs/promises';
 
+export class FileLockError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'FileLockError';
+  }
+}
 export async function acquireLock(lockFilePath: string): Promise<boolean> {
   try {
     const fileHandle = await open(lockFilePath, 'wx');
@@ -11,7 +17,7 @@ export async function acquireLock(lockFilePath: string): Promise<boolean> {
     if (err.code === 'EEXIST') {
       return await handleExistingLock(lockFilePath);
     }
-    throw error;
+    throw new FileLockError(`Failed to acquire lock: ${(error as Error).message}`);
   }
 }
 
@@ -23,7 +29,7 @@ export async function releaseLock(lockFilePath: string): Promise<void> {
     if (err.code === 'ENOENT') {
       return;
     }
-    throw error;
+    throw new FileLockError(`Failed to release lock: ${(error as Error).message}`);
   }
 }
 
