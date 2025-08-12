@@ -4,7 +4,7 @@ import {readDataFile} from '@utils/readDataFile';
 import {writeFile} from 'fs/promises';
 import {join} from 'path';
 
-const DATA_FILE_PATH = join(process.cwd(), 'src', 'data', 'view_data.json');
+const DATA_FILE_PATH = join(process.cwd(), process.env.VIEW_DATA_FILE_PATH);
 
 export async function incrementViewCount(
   uuid: string,
