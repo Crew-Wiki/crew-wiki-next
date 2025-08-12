@@ -1,4 +1,4 @@
-import {IncrementResult, ViewData} from '@type/viewCount.type';
+import {IncrementResult, ViewCountByUUID, ViewData} from '@type/viewCount.type';
 import {withLock} from '@utils/fileLock';
 import {writeFile} from 'fs/promises';
 import {postViewsFlush} from './document';
@@ -11,7 +11,7 @@ export async function flushViewCountIfNecessary(incrementResult: IncrementResult
 
   const lockPath = filePath.replace('.json', '.lock');
   let apiSuccess = false;
-  const combinedDataToFlush: {[uuid: string]: number} = {};
+  const combinedDataToFlush: ViewCountByUUID = {};
 
   await withLock(lockPath, async () => {
     const data: ViewData = await readDataFile(filePath);
