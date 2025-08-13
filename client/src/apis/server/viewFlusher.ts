@@ -10,7 +10,6 @@ export async function flushViewCountIfNecessary(incrementResult: IncrementResult
   }
 
   const lockPath = filePath.replace('.json', '.lock');
-  let apiSuccess = false;
   const combinedDataToFlush: ViewCountByUUID = {};
 
   await withLock(lockPath, async () => {
@@ -32,21 +31,15 @@ export async function flushViewCountIfNecessary(incrementResult: IncrementResult
 
   try {
     await postViewsFlush(combinedDataToFlush);
-    apiSuccess = true;
   } catch (error) {
     console.error('백엔드 API 전송 중 오류:', error);
-    apiSuccess = false;
-  }
-
-  // API 호출 결과에 따라 파일 데이터를 업데이트합니다. (다시 Lock 획득)
-  await withLock(lockPath, async () => {
-    const data: ViewData = await readDataFile(filePath);
-    if (!apiSuccess) {
-      // API 호출 실패 시: 이전에 플러싱하려던 데이터를 failed_count에 다시 병합
+    // API 호출 실패 시: 이전에 플러싱하려던 데이터를 failed_count에 다시 병합
+    await withLock(lockPath, async () => {
+      const data: ViewData = await readDataFile(filePath);
       for (const uuid in combinedDataToFlush) {
         data.failed_count[uuid] = (data.failed_count[uuid] || 0) + combinedDataToFlush[uuid];
       }
-    }
-    await writeFile(filePath, JSON.stringify(data, null, 2));
-  });
+      await writeFile(filePath, JSON.stringify(data, null, 2));
+    });
+  }
 }
