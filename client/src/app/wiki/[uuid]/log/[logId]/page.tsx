@@ -4,22 +4,13 @@ import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
 import type {UUIDLogParams} from '@type/PageParams.type';
-import {getDocumentTitleUsingUUID} from '@utils/getDocumentUsingUUIDInCache';
+import {generateLogPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
 
 export async function generateMetadata({params}: UUIDLogParams): Promise<Metadata> {
   const {uuid} = await params;
-  const documentTitle = await getDocumentTitleUsingUUID(uuid);
-
-  return {
-    title: documentTitle,
-    description: `${documentTitle}에 대한 정보(논란)를 확인하세요.`,
-    openGraph: {
-      title: `크루위키 ${documentTitle}의 문서`,
-      description: `${documentTitle}에 대한 정보(논란)를 확인하세요.`,
-    },
-  };
+  return await generateLogPageMetadata(uuid);
 }
 
 const Page = async ({params}: UUIDLogParams) => {
