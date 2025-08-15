@@ -46,13 +46,13 @@ export class Trie {
     for (const [char, child] of node.child) this.searchFunc(child, prefix + char, results);
   }
 
-  delete(word: string): void {
-    this.deleteFunc(this.root, word, 0);
+  delete(word: string, uuid: string): void {
+    this.deleteFunc(this.root, word, uuid, 0);
   }
 
-  private deleteFunc(node: Node, word: string, depth: number): boolean {
+  private deleteFunc(node: Node, word: string, uuid: string, depth: number): boolean {
     if (depth === word.length) {
-      if (!node.isEnd) return false;
+      if (!node.isEnd || node.uuid !== uuid) return false;
       node.isEnd = false;
       return node.child.size === 0;
     }
@@ -61,13 +61,13 @@ export class Trie {
     const nextNode = node.child.get(char);
     if (!nextNode) return false;
 
-    const shouldDeleteChild = this.deleteFunc(nextNode, word, depth + 1);
+    const shouldDeleteChild = this.deleteFunc(nextNode, word, uuid, depth + 1);
     if (shouldDeleteChild) node.child.delete(char);
     return node.child.size === 0 && !node.isEnd;
   }
 
   update(oldTitle: string, newTitle: string, uuid: string): void {
-    this.delete(oldTitle);
+    this.delete(oldTitle, uuid);
     this.insert(newTitle, uuid);
   }
 }
