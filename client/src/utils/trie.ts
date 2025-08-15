@@ -3,6 +3,7 @@ import {TitleAndUUID} from '@apis/client/document';
 class Node {
   child: Map<string, Node> = new Map();
   uuid?: string;
+  title?: string;
   isEnd: boolean = false;
 }
 
@@ -24,6 +25,7 @@ export class Trie {
       currentNode = currentNode.child.get(char)!;
     }
     currentNode.uuid = uuid;
+    currentNode.title = word;
     currentNode.isEnd = true;
   }
 
@@ -42,7 +44,9 @@ export class Trie {
   }
 
   private searchFunc(node: Node, prefix: string, results: TitleAndUUID[]) {
-    if (node.isEnd && node.uuid) results.push({title: prefix, uuid: node.uuid});
+    if (node.isEnd && node.uuid && node.title) {
+      results.push({title: node.title, uuid: node.uuid});
+    }
     for (const [char, child] of node.child) this.searchFunc(child, prefix + char, results);
   }
 
@@ -54,6 +58,8 @@ export class Trie {
     if (depth === word.length) {
       if (!node.isEnd || node.uuid !== uuid) return false;
       node.isEnd = false;
+      node.uuid = undefined;
+      node.title = undefined;
       return node.child.size === 0;
     }
 

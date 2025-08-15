@@ -11,7 +11,8 @@ type Action = {
   setInit: (titles: TitleAndUUID[]) => void;
   addTitle: (title: string, uuid: string) => void;
   updateTitle: (oldTitle: string, newTitle: string, uuid: string) => void;
-  deleteTitle: (title: string) => void;
+  deleteTitle: (title: string, uuid: string) => void;
+  searchTitle: (title: string) => TitleAndUUID[];
 };
 
 export const useTrie = create<State & Action>((set, get) => ({
@@ -35,9 +36,15 @@ export const useTrie = create<State & Action>((set, get) => ({
     set({titles: titles.map(t => (t.uuid === uuid ? {title: newTitle, uuid} : t))});
   },
 
-  deleteTitle: title => {
+  deleteTitle: (title, uuid) => {
     const {trie, titles} = get();
-    trie.delete(title);
+    trie.delete(title, uuid);
     set({titles: titles.filter(t => t.title !== title)});
+  },
+
+  searchTitle: title => {
+    const {trie} = get();
+    const results = trie.search(title);
+    return results;
   },
 }));
