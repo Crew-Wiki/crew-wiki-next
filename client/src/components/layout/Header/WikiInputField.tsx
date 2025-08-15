@@ -24,7 +24,12 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
     event.preventDefault();
     if (value?.trim() === '') return;
 
-    if (data.length !== 0) {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter;
+    const targetUUID = submitter?.id;
+
+    if (targetUUID !== 'search-icon' && targetUUID !== undefined) {
+      router.push(`${URLS.wiki}/${targetUUID}`);
+    } else if (data.length !== 0) {
       router.push(`${URLS.wiki}/${data[0]?.uuid}`);
     } else {
       router.push(`${URLS.wiki}/${value}`);
