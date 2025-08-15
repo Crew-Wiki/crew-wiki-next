@@ -80,7 +80,7 @@ export const putDocumentClient = async (document: PostDocumentContent) => {
 };
 
 export const getDocumentTitleListClient = async () => {
-  const response = await requestGetClient<string[]>({
+  const response = await requestGetClient<TitleAndUUID[]>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: '/api/get-document-title-list',
   });

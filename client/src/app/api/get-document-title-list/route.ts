@@ -5,10 +5,9 @@ import {NextResponse} from 'next/server';
 
 export const GET = async () => {
   const documents = await getDocumentsUUIDServer();
-  const titles = documents.map(value => value.title);
 
   const response = {
-    data: titles,
+    data: documents,
     code: 'SUCCESS',
   };
 

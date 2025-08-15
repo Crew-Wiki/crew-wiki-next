@@ -5,8 +5,8 @@ import {twMerge} from 'tailwind-merge';
 import {useInput} from '@components/common/Input/useInput';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
-import useSearchDocumentByQuery from '@hooks/fetch/useSearchDocumentByQuery';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
+import {useTrie} from '@store/trie';
 
 interface WikiInputProps {
   className?: string;
@@ -17,20 +17,15 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const router = useRouter();
 
-  const {titles} = useSearchDocumentByQuery(value, {enabled: false});
+  const trie = useTrie(state => state.trie);
+  const data = trie.search(value);
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (value?.trim() === '') return;
 
-    const submitter = (event.nativeEvent as SubmitEvent).submitter;
-    const targetUUID = submitter?.id;
-
-    // TODO: 이 부분은 키워드 검색 api가 완성되어야 작업할 수 있음
-    if (targetUUID !== 'search-icon') {
-      router.push(`${URLS.wiki}/${targetUUID}`);
-    } else if (titles !== undefined && titles.length !== 0) {
-      router.push(`${URLS.wiki}/${titles[0].uuid}`);
+    if (data.length !== 0) {
+      router.push(`${URLS.wiki}/${data[0]?.uuid}`);
     } else {
       router.push(`${URLS.wiki}/${value}`);
     }
@@ -63,7 +58,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
           alt="search"
         />
       </button>
-      {value.trim() !== '' && <RelativeSearchTerms searchTerms={titles ?? []} />}
+      {value.trim() !== '' && <RelativeSearchTerms searchTerms={data} />}
     </form>
   );
 };
