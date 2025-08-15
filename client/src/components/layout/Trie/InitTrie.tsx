@@ -5,12 +5,14 @@ import {useTrie} from '@store/trie';
 import {useEffect} from 'react';
 
 const InitTrie = () => {
-  const {titles, uuids} = useGetDocumentTitleList();
+  const {data} = useGetDocumentTitleList();
   const setInit = useTrie(state => state.setInit);
 
   useEffect(() => {
-    setInit(titles.map((title, index) => ({title, uuid: uuids[index]})));
-  }, [titles, uuids]);
+    if (data) {
+      setInit(data);
+    }
+  }, [data, setInit]);
 
   return null;
 };

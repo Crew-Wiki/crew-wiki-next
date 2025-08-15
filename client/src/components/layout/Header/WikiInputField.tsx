@@ -17,8 +17,8 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const router = useRouter();
 
-  const trie = useTrie(state => state.trie);
-  const data = trie.search(value);
+  const searchTitle = useTrie(state => state.searchTitle);
+  const data = searchTitle(value);
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();

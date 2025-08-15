@@ -21,9 +21,14 @@ export const POST = async (request: NextRequest) => {
   const document: PostDocumentContent = await request.json();
 
   try {
-    await postDocument(document);
+    const createdDocument = await postDocument(document);
 
-    return NextResponse.json(document, {status: 200});
+    const response = {
+      data: createdDocument,
+      code: 'SUCCESS',
+    };
+
+    return NextResponse.json(response, {status: 200});
   } catch (error) {
     return NextResponse.json({error}, {status: 500});
   }
