@@ -5,8 +5,7 @@ import {NextResponse} from 'next/server';
 import {join} from 'path';
 
 const DATA_FILE_PATH = join(process.cwd(), process.env.VIEW_DATA_FILE_PATH);
-
-const THRESHOLD = 50;
+const THRESHOLD = Number(process.env.VIEW_DATA_FLUSH_THRESHOLD);
 
 export type PostViewCountResponse = {success: boolean; message: string};
 
