@@ -1,21 +1,12 @@
 import type {UUIDLogParams, UUIDParams} from '@type/PageParams.type';
 import {Metadata} from 'next';
 import {getDocumentLogsByUUIDServer} from '@apis/server/document';
-import {getDocumentTitleUsingUUID} from '@utils/getDocumentUsingUUIDInCache';
 import {LogList} from './LogList';
+import {generateLogsPageMetadata} from '@utils/generateDocumentMetadata';
 
 export async function generateMetadata({params}: UUIDLogParams): Promise<Metadata> {
   const {uuid} = await params;
-  const documentTitle = await getDocumentTitleUsingUUID(uuid);
-
-  return {
-    title: `${documentTitle} 편집로그`,
-    description: `${documentTitle} 문서의 편집로그입니다.`,
-    openGraph: {
-      title: `크루위키 ${documentTitle}문서의 편집로그`,
-      description: `${documentTitle}에 대한 정보(논란)를 확인하세요.`,
-    },
-  };
+  return await generateLogsPageMetadata(uuid);
 }
 
 const Page = async ({params}: UUIDParams) => {

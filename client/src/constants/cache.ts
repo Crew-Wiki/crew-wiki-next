@@ -24,15 +24,12 @@ export const CACHE = {
   },
   tag: {
     getDocuments: (params: PaginationParams) => generatePaginationCacheTags(params, 'documents'),
-    getAllDocuments: generatePaginationCacheTags(allDocumentsParams, 'documents'),
     getRecentlyDocuments: generatePaginationCacheTags(recentlyParams, 'documents'),
-
     getDocumentByTitle: (title: string) => `title:${decodeURI(title)}`,
     getDocumentByUUID: (uuid: string) => `title:${uuid}`,
     getDocumentLogsByUUID: (uuid: string) => `logs:${uuid}`,
     getSpecificDocumentLog: (logId: number) => `specificLog:${logId}`,
 
-    getDocumentSearch: 'search',
-    getRandomDocument: 'random',
+    getDocumentsUUID: 'get-documents-uuid',
   },
 } as const;

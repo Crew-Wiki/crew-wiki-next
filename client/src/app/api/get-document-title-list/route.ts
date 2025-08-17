@@ -1,11 +1,11 @@
 'use server';
 
-import {getDocumentsMap} from '@utils/documentCache';
+import {getDocumentsUUIDServer} from '@apis/server/document';
 import {NextResponse} from 'next/server';
 
 export const GET = async () => {
-  const documentMap = await getDocumentsMap();
-  const titles = [...documentMap].map(([, value]) => value.title);
+  const documents = await getDocumentsUUIDServer();
+  const titles = documents.map(value => value.title);
 
   const response = {
     data: titles,

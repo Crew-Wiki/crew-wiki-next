@@ -1,10 +1,10 @@
+import {getDocumentByUUIDServer} from '@apis/server/document';
 import {UUIDParams} from '@type/PageParams.type';
-import {getDocumentTitleUsingUUID} from '@utils/getDocumentUsingUUIDInCache';
 import {Metadata} from 'next';
 
 export async function generateMetadata({params}: UUIDParams): Promise<Metadata> {
   const {uuid} = await params;
-  const documentTitle = await getDocumentTitleUsingUUID(uuid);
+  const documentTitle = await getDocumentByUUIDServer(uuid);
 
   return {
     title: `${documentTitle} 편집하기`,
