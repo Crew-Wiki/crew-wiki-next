@@ -15,25 +15,20 @@ export async function incrementViewCount(
 
   return await withLock(lockPath, async () => {
     const data: ViewData = await readDataFile(filePath);
-    data.current_count[uuid] = (data.current_count[uuid] || 0) + 1;
+    data.accumulative_count[uuid] = (data.accumulative_count[uuid] || 0) + 1;
 
     await writeFile(filePath, JSON.stringify(data, null, 2));
 
-    const totalCurrentCount = Object.values(data.current_count).reduce((sum, count) => sum + count, 0);
-    const totalFailedCount = Object.values(data.failed_count).reduce((sum, count) => sum + count, 0);
-    const totalCurrentAndFailedCount = totalCurrentCount + totalFailedCount;
+    const totalAccumulativeCount = Object.values(data.accumulative_count).reduce((sum, count) => sum + count, 0);
 
-    const shouldFlush = totalCurrentAndFailedCount >= threshold;
+    const shouldFlush = totalAccumulativeCount >= threshold;
     const result: IncrementResult = {
-      current_count: data.current_count,
-      failed_count: data.failed_count,
+      accumulative_count: data.accumulative_count,
       shouldFlush,
-      incremented_uuid: uuid,
-      incremented_count: data.current_count[uuid],
     };
 
     if (shouldFlush) {
-      result.total_views_to_flush = totalCurrentAndFailedCount;
+      result.total_views_to_flush = totalAccumulativeCount;
     }
 
     return result;

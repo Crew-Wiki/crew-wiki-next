@@ -42,7 +42,7 @@ const DocumentPage = async ({params}: UUIDParams) => {
         <DocumentContents contents={contents} />
       </section>
       <DocumentFooter generateTime={document.generateTime} />
-      <IncrementViewCountByUUID uuid={document.uuid} />
+      <IncrementViewCountByUUID uuid={document.documentUUID} />
     </div>
   );
 };

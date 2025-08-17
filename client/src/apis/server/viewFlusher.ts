@@ -10,34 +10,27 @@ export async function flushViewCountIfNecessary(incrementResult: IncrementResult
   }
 
   const lockPath = filePath.replace('.json', '.lock');
-  const combinedDataToFlush: ViewCountByUUID = {};
+  let dataToFlush: ViewCountByUUID = {};
 
   await withLock(lockPath, async () => {
     const data: ViewData = await readDataFile(filePath);
 
-    // current_count와 failed_count를 합쳐서 플러싱할 데이터를 만듭니다.
-    for (const uuid in data.current_count) {
-      combinedDataToFlush[uuid] = (combinedDataToFlush[uuid] || 0) + data.current_count[uuid];
-    }
-    for (const uuid in data.failed_count) {
-      combinedDataToFlush[uuid] = (combinedDataToFlush[uuid] || 0) + data.failed_count[uuid];
-    }
+    dataToFlush = {...data.accumulative_count};
 
-    // 파일에서 current_count와 failed_count를 모두 초기화합니다.
-    data.current_count = {};
-    data.failed_count = {};
+    data.accumulative_count = {};
     await writeFile(filePath, JSON.stringify(data, null, 2));
   });
 
   try {
-    await postViewsFlush(combinedDataToFlush);
+    await postViewsFlush(dataToFlush);
   } catch (error) {
     console.error('백엔드 API 전송 중 오류:', error);
-    // API 호출 실패 시: 이전에 플러싱하려던 데이터를 failed_count에 다시 병합
+
     await withLock(lockPath, async () => {
+      // data를 비워주고 postViewsFlush를 수행하는 동안 조회수가 증가한 경우에 대비하기 위해 다시 file read
       const data: ViewData = await readDataFile(filePath);
-      for (const uuid in combinedDataToFlush) {
-        data.failed_count[uuid] = (data.failed_count[uuid] || 0) + combinedDataToFlush[uuid];
+      for (const uuid in dataToFlush) {
+        data.accumulative_count[uuid] = (data.accumulative_count[uuid] || 0) + dataToFlush[uuid];
       }
       await writeFile(filePath, JSON.stringify(data, null, 2));
     });
