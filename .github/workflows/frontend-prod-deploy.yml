@@ -10,69 +10,20 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./client
-
     steps:
-      # 1. Git 리포지토리 체크아웃
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # 2. Node.js 20.15.1 version으로 셋팅
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
         with:
-          node-version: "20.15.1"
-
-      # 3. 의존성 설치
-      - name: Install dependencies
-        run: yarn install
-
-      # 4. 환경변수 github secret에서 가져와서 Prod 환경으로 빌드
-      - name: Build using prod env
-        run: |
-          env \
-            NEXT_PUBLIC_BACKEND_SERVER_BASE_URL=${{ secrets.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL }} \
-            NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL=${{ secrets.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL }} \
-            NEXT_PUBLIC_AMPLITUDE_API_KEY=${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY }} \
-            NEXT_PUBLIC_IMAGE_S3_DOMAIN=${{ secrets.NEXT_PUBLIC_IMAGE_S3_DOMAIN }} \
-            NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN=${{ secrets.NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN }} \
-            NEXT_PUBLIC_CDN_DOMAIN=${{ secrets.NEXT_PUBLIC_CDN_DOMAIN }} \
-          yarn build
-
-      # 5. S3에 업로드할 zip 파일 생성 (위에서 .env를 삭제가 되지 않았을 때 여기서 zip에 포함시키지 않음)
-      - name: zip create for S3 upload
-        run: zip -qq -r ./crew-wiki-build.zip . -x ".env"
-        shell: bash
-        # -qq: quit 모드로 실행 (에러나 경고메세지만 출력하도록 함)
-        # -r: 지정된 디렉토리를 재귀적으로 압축 (하위 디렉토리와 파일들 모두 압축)
-
-      # 6. AWS 인증 설정
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      # 7. S3에 zip 파일 업로드
-      - name: Upload to S3
-        env:
-          S3_BUILD_BUCKET: ${{ secrets.S3_BUILD_BUCKET }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          aws s3 cp --region $AWS_REGION ./crew-wiki-build.zip s3://$S3_BUILD_BUCKET/crew-wiki-build.zip
-
-      # 8. S3에 올라간 zip 파일을 CodeDeploy로 가져옴
-      - name: Code Deploy using S3 zip file
-        env:
-          CODE_DEPLOY_APPLICATION_NAME: ${{ secrets.CODE_DEPLOY_APPLICATION_NAME }}
-          CODE_DEPLOY_GROUP_NAME: ${{ secrets.CODE_DEPLOY_GROUP_NAME }}
-          S3_BUILD_BUCKET: ${{ secrets.S3_BUILD_BUCKET }}
-        run: aws deploy create-deployment
-          --application-name $CODE_DEPLOY_APPLICATION_NAME
-          --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name $CODE_DEPLOY_GROUP_NAME
-          --s3-location bucket=$S3_BUILD_BUCKET,key=crew-wiki-build.zip,bundleType=zip
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.EC2_DEPLOY_DIR }}
+            source ~/.bashrc
+            source ~/.nvm/nvm.sh
+            nvm use 22.16.0
+            git pull origin main
+            yarn install
+            yarn build
+            pm2 restart ecosystem.config.js --update-env
