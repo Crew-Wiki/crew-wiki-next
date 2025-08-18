@@ -10,8 +10,7 @@ export function processImageHtml(html: string): string {
       const pathParts = url.pathname.split('/');
       const filename = pathParts[pathParts.length - 1];
 
-      const hasExtension = /\.(jpeg|jpg|png|gif|webp)$/i.test(filename);
-      const processedFilename = hasExtension ? filename : `${filename.replace(/\.[^/.]+$/, '')}.jpeg`;
+      const processedFilename = filename.replace(/\.[^/.]+$/, '') + '.jpeg';
 
       pathParts[pathParts.length - 1] = processedFilename;
       url.pathname = pathParts.join('/');
