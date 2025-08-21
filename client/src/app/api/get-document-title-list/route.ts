@@ -7,7 +7,7 @@ export const GET = async () => {
   const documents = await getDocumentsUUIDServer();
 
   const response = {
-    data: documents,
+    data: documents.map(({title, uuid}) => ({title, uuid})),
     code: 'SUCCESS',
   };
 
