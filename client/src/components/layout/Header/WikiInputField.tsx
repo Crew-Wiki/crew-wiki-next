@@ -7,6 +7,7 @@ import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useTrie} from '@store/trie';
+import useAmplitude from '@hooks/useAmplitude';
 
 interface WikiInputProps {
   className?: string;
@@ -16,6 +17,7 @@ interface WikiInputProps {
 const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const router = useRouter();
+  const {trackDocumentSearch} = useAmplitude();
 
   const searchTitle = useTrie(action => action.searchTitle);
   const data = searchTitle(value);
@@ -28,10 +30,13 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
     const targetUUID = submitter?.id;
 
     if (targetUUID !== 'search-icon' && targetUUID !== undefined) {
+      trackDocumentSearch(value, targetUUID);
       router.push(`${URLS.wiki}/${targetUUID}`);
     } else if (data.length !== 0) {
+      trackDocumentSearch(value, data[0]?.uuid ?? 'not_found');
       router.push(`${URLS.wiki}/${data[0]?.uuid}`);
     } else {
+      trackDocumentSearch(value, 'not_found');
       router.push(`${URLS.wiki}/${value}`);
     }
 
