@@ -26,7 +26,7 @@ export const useTrie = create<State & Action>((set, get) => ({
 
   addTitle: (title, uuid) => {
     const {trie, titles} = get();
-    trie.insert(title, uuid);
+    trie.add(title, uuid);
     set({titles: [...titles, {title, uuid}]});
   },
 

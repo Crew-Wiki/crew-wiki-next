@@ -12,20 +12,20 @@ export class Trie {
 
   constructor(data: TitleAndUUID[] = []) {
     this.root = new Node();
-    data.forEach(({title, uuid}) => this.insert(title, uuid));
+    data.forEach(({title, uuid}) => this.add(title, uuid));
   }
 
-  insert(word: string, uuid: string): void {
+  add(title: string, uuid: string): void {
     let currentNode = this.root;
 
-    for (const char of word) {
+    for (const char of title) {
       if (!currentNode.child.has(char)) {
         currentNode.child.set(char, new Node());
       }
       currentNode = currentNode.child.get(char)!;
     }
     currentNode.uuid = uuid;
-    currentNode.title = word;
+    currentNode.title = title;
     currentNode.isEnd = true;
   }
 
@@ -74,6 +74,6 @@ export class Trie {
 
   update(oldTitle: string, newTitle: string, uuid: string): void {
     this.delete(oldTitle, uuid);
-    this.insert(newTitle, uuid);
+    this.add(newTitle, uuid);
   }
 }
