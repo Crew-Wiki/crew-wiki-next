@@ -9,7 +9,7 @@ import {useRouter} from 'next/navigation';
 import {URLS} from '@constants/urls';
 
 export default function AdminDocumentsPage() {
-  const {value, directlyChangeValue: setValue, onChange} = useInput({});
+  const {value, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
   const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
   const [filteredDocuments, setFilteredDocuments] = useState<WikiDocumentExpand[]>([]);
@@ -125,7 +125,10 @@ export default function AdminDocumentsPage() {
 
               return (
                 <tr key={document.uuid} className="hover:bg-grayscale-50">
-                  <td className="px-6 py-4 font-pretendard text-sm text-grayscale-text hover:cursor-pointer">
+                  <td
+                    className="px-6 py-4 font-pretendard text-sm text-grayscale-text hover:cursor-pointer hover:text-primary-primary hover:underline"
+                    onClick={() => router.push(`${URLS.wiki}/${document.uuid}`)}
+                  >
                     {document.title}
                   </td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
