@@ -1,33 +1,40 @@
 'use client';
 
 import Button from '@components/common/Button';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useInput} from '@components/common/Input/useInput';
-
-interface Document {
-  id: number;
-  title: string;
-  views: number;
-  edits: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import {getAllDocumentsServer} from '@apis/server/document';
+import {WikiDocumentExpand} from '@type/Document.type';
 
 export default function AdminDocumentsPage() {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // 더미 데이터
-  const documents: Document[] = Array.from({length: 10}, (_, index) => ({
-    id: index + 1,
-    title: '루나',
-    views: 47,
-    edits: 3,
-    createdAt: '2025.04.03',
-    updatedAt: '2025.05.07',
-  }));
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const allDocs = await getAllDocumentsServer();
+        setDocuments(allDocs);
+      } catch (error) {
+        console.error('문서를 불러오는데 실패했습니다:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDocuments();
+  }, []);
 
   const totalPages = 8;
+
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="text-grayscale-lightText">문서를 불러오는 중...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -61,25 +68,33 @@ export default function AdminDocumentsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-grayscale-100">
-            {documents.map(document => (
-              <tr key={document.id} className="hover:bg-grayscale-50">
-                <td className="px-6 py-4 font-pretendard text-sm text-grayscale-text">{document.title}</td>
-                <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{document.views}</td>
-                <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{document.edits}</td>
-                <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{document.createdAt}</td>
-                <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{document.updatedAt}</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center justify-center gap-2">
-                    <Button size="xxs" style="tertiary" onClick={() => console.log('편집', document.id)}>
-                      편집
-                    </Button>
-                    <Button size="xxs" style="text" onClick={() => console.log('문서 삭제', document.id)}>
-                      문서 삭제
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {documents.map(document => {
+              const createdDate = new Date(document.generateTime).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+              }).replace(/\. /g, '.').replace(/\.$/, '');
+
+              return (
+                <tr key={document.uuid} className="hover:bg-grayscale-50">
+                  <td className="px-6 py-4 font-pretendard text-sm text-grayscale-text">{document.title}</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{createdDate}</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{createdDate}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-center gap-2">
+                      <Button size="xxs" style="tertiary" onClick={() => console.log('편집', document.uuid)}>
+                        편집
+                      </Button>
+                      <Button size="xxs" style="text" onClick={() => console.log('문서 삭제', document.uuid)}>
+                        문서 삭제
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
