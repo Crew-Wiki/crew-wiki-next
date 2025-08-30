@@ -3,7 +3,7 @@
 import Button from '@components/common/Button';
 import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
-import {getAllDocumentsServer} from '@apis/server/document';
+import {getAllDocumentsServer, deleteDocumentServer} from '@apis/server/document';
 import {WikiDocumentExpand} from '@type/Document.type';
 
 export default function AdminDocumentsPage() {
@@ -49,9 +49,32 @@ export default function AdminDocumentsPage() {
     const currentGroup = Math.floor((currentPage - 1) / 10);
     const startPage = currentGroup * 10 + 1;
     const endPage = Math.min(startPage + 9, totalPages);
-    
+
     return Array.from({length: endPage - startPage + 1}, (_, index) => startPage + index);
   }, [currentPage, totalPages]);
+
+  const getDeleteConfirmMessage = (title: string) => {
+    return `"${title}" 문서를 정말 삭제하시겠어요?\n이 작업은 되돌릴 수 없어요.`;
+  };
+
+  const handleDelete = async (uuid: string, title: string) => {
+    const confirmMessage = getDeleteConfirmMessage(title);
+
+    if (confirm(confirmMessage)) {
+      try {
+        await deleteDocumentServer(uuid);
+        const updatedDocs = documents.filter(document => document.uuid !== uuid);
+        setDocuments(updatedDocs);
+        setFilteredDocuments(updatedDocs.filter(document =>
+          document.title.toLowerCase().includes(value.toLowerCase())
+        ));
+        alert('문서가 삭제되었습니다.');
+      } catch (error) {
+        console.error('문서 삭제 실패:', error);
+        alert('문서 삭제에 실패했습니다.');
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -112,7 +135,7 @@ export default function AdminDocumentsPage() {
                       <Button size="xxs" style="tertiary" onClick={() => console.log('편집', document.uuid)}>
                         편집
                       </Button>
-                      <Button size="xxs" style="text" onClick={() => console.log('문서 삭제', document.uuid)}>
+                      <Button size="xxs" style="text" onClick={() => handleDelete(document.uuid, document.title)}>
                         문서 삭제
                       </Button>
                     </div>
