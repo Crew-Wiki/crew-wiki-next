@@ -194,6 +194,13 @@ export default function AdminDocumentsPage() {
         >
           다음
         </button>
+        <button
+          onClick={() => setCurrentPage(totalPages)}
+          className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
+          disabled={currentPage === totalPages}
+        >
+          끝
+        </button>
       </div>
     </div>
   );
