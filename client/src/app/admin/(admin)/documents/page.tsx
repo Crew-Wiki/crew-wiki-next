@@ -159,6 +159,13 @@ export default function AdminDocumentsPage() {
       {/* 페이지네이션 */}
       <div className="flex items-center justify-center gap-1">
         <button
+          onClick={() => setCurrentPage(1)}
+          className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
+          disabled={currentPage === 1}
+        >
+          처음
+        </button>
+        <button
           onClick={() => {
             const currentGroup = Math.floor((currentPage - 1) / 10);
             if (currentGroup > 0) {
