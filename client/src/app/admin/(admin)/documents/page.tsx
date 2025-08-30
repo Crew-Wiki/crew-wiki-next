@@ -5,6 +5,8 @@ import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
 import {getAllDocumentsServer, deleteDocumentServer} from '@apis/server/document';
 import {WikiDocumentExpand} from '@type/Document.type';
+import {useRouter} from 'next/navigation';
+import {URLS} from '@constants/urls';
 
 export default function AdminDocumentsPage() {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
@@ -12,6 +14,7 @@ export default function AdminDocumentsPage() {
   const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
   const [filteredDocuments, setFilteredDocuments] = useState<WikiDocumentExpand[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const pageSize = 10;
 
@@ -132,7 +135,7 @@ export default function AdminDocumentsPage() {
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{createdDate}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
-                      <Button size="xxs" style="tertiary" onClick={() => console.log('편집', document.uuid)}>
+                      <Button size="xxs" style="tertiary" onClick={() => router.push(`${URLS.wiki}/${document.uuid}${URLS.edit}`)}>
                         편집
                       </Button>
                       <Button size="xxs" style="text" onClick={() => handleDelete(document.uuid, document.title)}>
