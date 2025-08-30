@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@components/common/Button';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
 import {getAllDocumentsServer} from '@apis/server/document';
 import {WikiDocumentExpand} from '@type/Document.type';
@@ -12,6 +12,8 @@ export default function AdminDocumentsPage() {
   const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
   const [filteredDocuments, setFilteredDocuments] = useState<WikiDocumentExpand[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const pageSize = 10;
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -36,7 +38,20 @@ export default function AdminDocumentsPage() {
     setCurrentPage(1);
   }, [value, documents]);
 
-  const totalPages = 8;
+  const totalPages = Math.ceil(filteredDocuments.length / pageSize);
+
+  const paginatedDocuments = filteredDocuments.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const pageNumbers = useMemo(() => {
+    const currentGroup = Math.floor((currentPage - 1) / 10);
+    const startPage = currentGroup * 10 + 1;
+    const endPage = Math.min(startPage + 9, totalPages);
+    
+    return Array.from({length: endPage - startPage + 1}, (_, index) => startPage + index);
+  }, [currentPage, totalPages]);
 
   if (loading) {
     return (
@@ -78,7 +93,7 @@ export default function AdminDocumentsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-grayscale-100">
-            {filteredDocuments.map(document => {
+            {paginatedDocuments.map(document => {
               const createdDate = new Date(document.generateTime).toLocaleDateString('ko-KR', {
                 year: 'numeric',
                 month: '2-digit',
@@ -112,13 +127,18 @@ export default function AdminDocumentsPage() {
       {/* 페이지네이션 */}
       <div className="flex items-center justify-center gap-1">
         <button
-          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+          onClick={() => {
+            const currentGroup = Math.floor((currentPage - 1) / 10);
+            if (currentGroup > 0) {
+              setCurrentPage(currentGroup * 10);
+            }
+          }}
           className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
-          disabled={currentPage === 1}
+          disabled={currentPage <= 10}
         >
           이전
         </button>
-        {Array.from({length: totalPages}, (_, i) => i + 1).map(page => (
+        {pageNumbers.map(page => (
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
@@ -130,9 +150,15 @@ export default function AdminDocumentsPage() {
           </button>
         ))}
         <button
-          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+          onClick={() => {
+            const currentGroup = Math.floor((currentPage - 1) / 10);
+            const nextGroupFirstPage = (currentGroup + 1) * 10 + 1;
+            if (nextGroupFirstPage <= totalPages) {
+              setCurrentPage(nextGroupFirstPage);
+            }
+          }}
           className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
-          disabled={currentPage === totalPages}
+          disabled={Math.floor((currentPage - 1) / 10) >= Math.floor((totalPages - 1) / 10)}
         >
           다음
         </button>
