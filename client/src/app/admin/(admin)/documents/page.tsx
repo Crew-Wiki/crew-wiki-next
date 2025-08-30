@@ -10,6 +10,7 @@ export default function AdminDocumentsPage() {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
   const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
+  const [filteredDocuments, setFilteredDocuments] = useState<WikiDocumentExpand[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export default function AdminDocumentsPage() {
       try {
         const allDocs = await getAllDocumentsServer();
         setDocuments(allDocs);
+        setFilteredDocuments(allDocs);
       } catch (error) {
         console.error('문서를 불러오는데 실패했습니다:', error);
       } finally {
@@ -25,6 +27,14 @@ export default function AdminDocumentsPage() {
     };
     fetchDocuments();
   }, []);
+
+  useEffect(() => {
+    const filtered = documents.filter(document =>
+      document.title.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredDocuments(filtered);
+    setCurrentPage(1);
+  }, [value, documents]);
 
   const totalPages = 8;
 
@@ -68,7 +78,7 @@ export default function AdminDocumentsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-grayscale-100">
-            {documents.map(document => {
+            {filteredDocuments.map(document => {
               const createdDate = new Date(document.generateTime).toLocaleDateString('ko-KR', {
                 year: 'numeric',
                 month: '2-digit',
