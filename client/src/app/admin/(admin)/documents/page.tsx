@@ -34,19 +34,14 @@ export default function AdminDocumentsPage() {
   }, []);
 
   useEffect(() => {
-    const filtered = documents.filter(document =>
-      document.title.toLowerCase().includes(value.toLowerCase())
-    );
+    const filtered = documents.filter(document => document.title.toLowerCase().includes(value.toLowerCase()));
     setFilteredDocuments(filtered);
     setCurrentPage(1);
   }, [value, documents]);
 
   const totalPages = Math.ceil(filteredDocuments.length / pageSize);
 
-  const paginatedDocuments = filteredDocuments.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const paginatedDocuments = filteredDocuments.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const pageNumbers = useMemo(() => {
     const currentGroup = Math.floor((currentPage - 1) / 10);
@@ -68,9 +63,9 @@ export default function AdminDocumentsPage() {
         await deleteDocumentServer(uuid);
         const updatedDocs = documents.filter(document => document.uuid !== uuid);
         setDocuments(updatedDocs);
-        setFilteredDocuments(updatedDocs.filter(document =>
-          document.title.toLowerCase().includes(value.toLowerCase())
-        ));
+        setFilteredDocuments(
+          updatedDocs.filter(document => document.title.toLowerCase().includes(value.toLowerCase())),
+        );
         alert('문서가 삭제되었습니다.');
       } catch (error) {
         console.error('문서 삭제 실패:', error);
@@ -98,8 +93,7 @@ export default function AdminDocumentsPage() {
           placeholder="검색할 문서의 제목을 입력하세요."
           value={value}
           onChange={onChange}
-          className="flex-1 rounded-lg border border-grayscale-200 px-4 py-2 font-pretendard text-sm
-          text-grayscale-800 placeholder:text-grayscale-lightText focus:border-primary-primary focus:outline-none"
+          className="flex-1 rounded-lg border border-grayscale-200 px-4 py-2 font-pretendard text-sm text-grayscale-800 placeholder:text-grayscale-lightText focus:border-primary-primary focus:outline-none"
         />
       </div>
 
@@ -120,22 +114,31 @@ export default function AdminDocumentsPage() {
           </thead>
           <tbody className="divide-y divide-grayscale-100">
             {paginatedDocuments.map(document => {
-              const createdDate = new Date(document.generateTime).toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-              }).replace(/\. /g, '.').replace(/\.$/, '');
+              const createdDate = new Date(document.generateTime)
+                .toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+                .replace(/\. /g, '.')
+                .replace(/\.$/, '');
 
               return (
                 <tr key={document.uuid} className="hover:bg-grayscale-50">
-                  <td className="px-6 py-4 font-pretendard text-sm text-grayscale-text">{document.title}</td>
+                  <td className="px-6 py-4 font-pretendard text-sm text-grayscale-text hover:cursor-pointer">
+                    {document.title}
+                  </td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{createdDate}</td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{createdDate}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
-                      <Button size="xxs" style="tertiary" onClick={() => router.push(`${URLS.wiki}/${document.uuid}${URLS.edit}`)}>
+                      <Button
+                        size="xxs"
+                        style="tertiary"
+                        onClick={() => router.push(`${URLS.wiki}/${document.uuid}${URLS.edit}`)}
+                      >
                         편집
                       </Button>
                       <Button size="xxs" style="text" onClick={() => handleDelete(document.uuid, document.title)}>

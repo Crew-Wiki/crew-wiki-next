@@ -21,7 +21,7 @@ export default function AdminDashboardPage() {
     <div className="flex flex-col gap-6">
       <h1 className="font-bm text-2xl text-grayscale-text">대시보드</h1>
 
-       {/* 통계 자료 - 콘텐츠는 생각 필요 */}
+      {/* 통계 자료 - 콘텐츠는 생각 필요 */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-lg border border-grayscale-200 bg-white p-6">
           <h3 className="font-pretendard text-sm text-grayscale-600">전체 방문자</h3>
@@ -33,11 +33,15 @@ export default function AdminDashboardPage() {
         </div>
         <div className="rounded-lg border border-grayscale-200 bg-white p-6">
           <h3 className="font-pretendard text-sm text-grayscale-600">오늘 생성된 문서</h3>
-          <p className="mt-2 font-bm text-3xl text-grayscale-900">{userAndDocumentStats.todayCreateDocuments.toLocaleString()}</p>
+          <p className="mt-2 font-bm text-3xl text-grayscale-900">
+            {userAndDocumentStats.todayCreateDocuments.toLocaleString()}
+          </p>
         </div>
         <div className="rounded-lg border border-grayscale-200 bg-white p-6">
           <h3 className="font-pretendard text-sm text-grayscale-600">전체 문서</h3>
-          <p className="mt-2 font-bm text-3xl text-grayscale-900">{userAndDocumentStats.totalDocuments.toLocaleString()}</p>
+          <p className="mt-2 font-bm text-3xl text-grayscale-900">
+            {userAndDocumentStats.totalDocuments.toLocaleString()}
+          </p>
         </div>
       </div>
 
