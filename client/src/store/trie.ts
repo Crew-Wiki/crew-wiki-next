@@ -39,7 +39,7 @@ export const useTrie = create<State & Action>((set, get) => ({
   deleteTitle: (title, uuid) => {
     const {trie, titles} = get();
     trie.delete(title, uuid);
-    set({titles: titles.filter(t => t.title !== title)});
+    set({titles: titles.filter(t => t.uuid !== uuid)});
   },
 
   searchTitle: title => {
