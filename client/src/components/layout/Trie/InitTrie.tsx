@@ -12,7 +12,8 @@ const InitTrie = () => {
     if (data) {
       setInit(data);
     }
-  }, [data, setInit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return null;
 };
