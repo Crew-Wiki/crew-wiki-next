@@ -1,10 +1,11 @@
 'use server';
 
 import {CACHE} from '@constants/cache';
-import {PostDocumentContent} from '@type/Document.type';
+import {PostDocumentContent, WikiDocument} from '@type/Document.type';
 import {revalidateTag} from 'next/cache';
 import {NextRequest, NextResponse} from 'next/server';
 import {postDocumentServer} from '@apis/server/document';
+import {ApiResponseType} from '@type/http.type';
 
 const postDocument = async (document: PostDocumentContent) => {
   const response = await postDocumentServer(document);
@@ -22,13 +23,18 @@ export const POST = async (request: NextRequest) => {
   try {
     const createdDocument = await postDocument(document);
 
-    const response = {
+    const response: ApiResponseType<WikiDocument> = {
       data: createdDocument,
       code: 'SUCCESS',
     };
 
     return NextResponse.json(response, {status: 200});
   } catch (error) {
-    return NextResponse.json({error}, {status: 500});
+    const response: ApiResponseType<null> = {
+      data: null,
+      code: 'ERROR',
+      message: error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.',
+    };
+    return NextResponse.json(response, {status: 500});
   }
 };

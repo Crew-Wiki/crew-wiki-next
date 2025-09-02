@@ -43,3 +43,9 @@ export type ErrorType = {
   code: string;
   message: string;
 };
+
+export type ApiResponseType<T> = {
+  data: T;
+  code: 'SUCCESS' | 'ERROR';
+  message?: string;
+};
