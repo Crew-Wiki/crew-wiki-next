@@ -16,6 +16,7 @@ type State = {
   errorMessages: Record<Field, ErrorMessage>;
   uuid: string;
   isImageUploadPending: boolean;
+  originalVersion: number;
 };
 
 type Validators = {
@@ -24,7 +25,7 @@ type Validators = {
 };
 
 type Action = {
-  setInit: (initial: FieldType, uuid: string | null) => void;
+  setInit: (initial: FieldType, uuid: string | null, version?: number) => void;
   onChange: (value: string, field: Field) => void;
   onBlur: (value: string, field: Field, list?: string[]) => void;
   reset: () => void;
@@ -55,11 +56,12 @@ const initialValue: State = {
   },
   uuid: '',
   isImageUploadPending: false,
+  originalVersion: 0,
 };
 
 export const useDocument = create<State & Action>(set => ({
   ...initialValue,
-  setInit: (initial, uuid) => {
+  setInit: (initial, uuid, version) => {
     set({
       values: {
         title: initial.title,
@@ -72,6 +74,7 @@ export const useDocument = create<State & Action>(set => ({
         contents: null,
       },
       uuid: uuid ? uuid : crypto.randomUUID(),
+      originalVersion: version ? version : 0,
     });
   },
 

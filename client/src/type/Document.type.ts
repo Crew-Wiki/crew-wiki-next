@@ -9,6 +9,10 @@ export interface WikiDocument {
   generateTime: string;
 }
 
+export interface LatestWikiDocument extends WikiDocument {
+  latestVersion: number;
+}
+
 export interface WriteDocumentContent {
   title: string;
   contents: string;
