@@ -33,9 +33,20 @@ const useAmplitude = () => {
     [trackEvent],
   );
 
+  const trackDocumentSearch = useCallback(
+    (title: string, documentUUID: string) => {
+      trackEvent('문서 검색', {
+        title,
+        documentUUID,
+      });
+    },
+    [trackEvent],
+  );
+
   return {
     trackDocumentCreate,
     trackDocumentUpdate,
+    trackDocumentSearch,
   };
 };
 
