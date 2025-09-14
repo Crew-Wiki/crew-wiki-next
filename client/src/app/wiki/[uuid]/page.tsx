@@ -8,6 +8,7 @@ import {generateDocumentPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
 import {notFound} from 'next/navigation';
+import {IncrementViewCountByUUID} from './IncrementViewCountByUUID';
 
 export const dynamicParams = true;
 
@@ -41,6 +42,7 @@ const DocumentPage = async ({params}: UUIDParams) => {
         <DocumentContents contents={contents} />
       </section>
       <DocumentFooter generateTime={document.generateTime} />
+      <IncrementViewCountByUUID uuid={document.documentUUID} />
     </div>
   );
 };

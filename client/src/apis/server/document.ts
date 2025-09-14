@@ -12,6 +12,7 @@ import {
 import {requestGetServer, requestPostServer, requestPutServer} from '@http/server';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
+import {ViewCountByUUID} from '@type/viewCount.type';
 import {TitleAndUUID} from '@apis/client/document';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
@@ -101,4 +102,12 @@ export const putDocumentServer = async (document: PostDocumentContent) => {
   });
 
   return response;
+};
+
+export const postViewsFlush = async (viewCount: ViewCountByUUID) => {
+  await requestPostServer({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.postViewsFlush,
+    body: viewCount,
+  });
 };
