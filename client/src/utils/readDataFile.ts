@@ -8,7 +8,7 @@ export async function readDataFile(filePath: string): Promise<ViewData> {
   } catch (error) {
     const err = error as NodeJS.ErrnoException;
     if (err.code === 'ENOENT') {
-      return {current_count: {}, failed_count: {}};
+      return {accumulative_count: {}};
     }
     throw err;
   }
