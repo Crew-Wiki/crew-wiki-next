@@ -5,8 +5,9 @@ import {twMerge} from 'tailwind-merge';
 import {useInput} from '@components/common/Input/useInput';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
-import useSearchDocumentByQuery from '@hooks/fetch/useSearchDocumentByQuery';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
+import {useTrie} from '@store/trie';
+import useAmplitude from '@hooks/useAmplitude';
 
 interface WikiInputProps {
   className?: string;
@@ -16,8 +17,10 @@ interface WikiInputProps {
 const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
   const router = useRouter();
+  const {trackDocumentSearch} = useAmplitude();
 
-  const {titles} = useSearchDocumentByQuery(value, {enabled: false});
+  const searchTitle = useTrie(action => action.searchTitle);
+  const data = searchTitle(value);
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -26,12 +29,14 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
     const submitter = (event.nativeEvent as SubmitEvent).submitter;
     const targetUUID = submitter?.id;
 
-    // TODO: 이 부분은 키워드 검색 api가 완성되어야 작업할 수 있음
-    if (targetUUID !== 'search-icon') {
+    if (targetUUID !== 'search-icon' && targetUUID !== undefined) {
+      trackDocumentSearch(value, targetUUID);
       router.push(`${URLS.wiki}/${targetUUID}`);
-    } else if (titles !== undefined && titles.length !== 0) {
-      router.push(`${URLS.wiki}/${titles[0].uuid}`);
+    } else if (data.length !== 0) {
+      trackDocumentSearch(value, data[0]?.uuid ?? 'not_found');
+      router.push(`${URLS.wiki}/${data[0]?.uuid}`);
     } else {
+      trackDocumentSearch(value, 'not_found');
       router.push(`${URLS.wiki}/${value}`);
     }
 
@@ -63,7 +68,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
           alt="search"
         />
       </button>
-      {value.trim() !== '' && <RelativeSearchTerms searchTerms={titles ?? []} />}
+      {value.trim() !== '' && <RelativeSearchTerms searchTerms={data} />}
     </form>
   );
 };

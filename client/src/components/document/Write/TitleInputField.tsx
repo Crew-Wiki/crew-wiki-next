@@ -33,7 +33,7 @@ const TitleInput = () => {
       handleChangeInput={event => onChange(event.target.value, 'title')}
       maxLength={12}
       disabled={pathname.includes('edit')}
-      onBlur={event => onBlur(event.target.value, 'title', titles ?? [])}
+      onBlur={event => onBlur(event.target.value, 'title', titles)}
       invalid={error !== null}
     />
   );
