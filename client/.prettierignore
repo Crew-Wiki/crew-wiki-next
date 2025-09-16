@@ -12,6 +12,7 @@ build
 # 환경 파일
 .env
 .env.local
+.env.sentry-build-plugin
 
 # 퍼블릭 파일
 public
