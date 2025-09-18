@@ -7,7 +7,6 @@ import {useRouter} from 'next/navigation';
 import {useEffect} from 'react';
 
 export default function GlobalError({error}: {error: Error & {digest?: string}}) {
-  console.log('GlobalError', error);
   const router = useRouter();
 
   useEffect(() => {
