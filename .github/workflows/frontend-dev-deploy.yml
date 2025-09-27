@@ -23,4 +23,4 @@ jobs:
             git pull origin develop
             yarn install
             yarn build
-            pm2 restart ecosystem.config.js --update-env
+            pm2 restart ecosystem.config.js --env development --update-env
