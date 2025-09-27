@@ -1,4 +1,4 @@
-name: frontend-prod-deploy
+name: frontend-dev-deploy
 
 on:
   workflow_dispatch: # 직접 실행 시에만 동작
