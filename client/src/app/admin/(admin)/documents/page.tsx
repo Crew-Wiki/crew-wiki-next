@@ -55,6 +55,21 @@ export default function AdminDocumentsPage() {
     return `"${title}" 문서를 정말 삭제하시겠어요?\n이 작업은 되돌릴 수 없어요.`;
   };
 
+  const handleClickPrevPageGroup = () => {
+    const currentGroup = Math.floor((currentPage - 1) / 10);
+    if (currentGroup > 0) {
+      setCurrentPage(currentGroup * 10);
+    }
+  }
+
+  const handleClickNextPageGroup = () => {
+    const currentGroup = Math.floor((currentPage - 1) / 10);
+    const nextGroupFirstPage = (currentGroup + 1) * 10 + 1;
+    if (nextGroupFirstPage <= totalPages) {
+      setCurrentPage(nextGroupFirstPage);
+    }
+  }
+
   const handleDelete = async (uuid: string, title: string) => {
     const confirmMessage = getDeleteConfirmMessage(title);
 
@@ -166,12 +181,7 @@ export default function AdminDocumentsPage() {
           처음
         </button>
         <button
-          onClick={() => {
-            const currentGroup = Math.floor((currentPage - 1) / 10);
-            if (currentGroup > 0) {
-              setCurrentPage(currentGroup * 10);
-            }
-          }}
+          onClick={handleClickPrevPageGroup}
           className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
           disabled={currentPage <= 10}
         >
@@ -189,13 +199,7 @@ export default function AdminDocumentsPage() {
           </button>
         ))}
         <button
-          onClick={() => {
-            const currentGroup = Math.floor((currentPage - 1) / 10);
-            const nextGroupFirstPage = (currentGroup + 1) * 10 + 1;
-            if (nextGroupFirstPage <= totalPages) {
-              setCurrentPage(nextGroupFirstPage);
-            }
-          }}
+          onClick={handleClickNextPageGroup}
           className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
           disabled={Math.floor((currentPage - 1) / 10) >= Math.floor((totalPages - 1) / 10)}
         >
