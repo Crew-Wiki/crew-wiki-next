@@ -16,7 +16,7 @@ export default function AdminDocumentsPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const pageSize = 10;
+  const PAGE_SIZE = 10;
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -39,9 +39,9 @@ export default function AdminDocumentsPage() {
     setCurrentPage(1);
   }, [value, documents]);
 
-  const totalPages = Math.ceil(filteredDocuments.length / pageSize);
+  const totalPages = Math.ceil(filteredDocuments.length / PAGE_SIZE);
 
-  const paginatedDocuments = filteredDocuments.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const paginatedDocuments = filteredDocuments.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const pageNumbers = useMemo(() => {
     const currentGroup = Math.floor((currentPage - 1) / 10);
