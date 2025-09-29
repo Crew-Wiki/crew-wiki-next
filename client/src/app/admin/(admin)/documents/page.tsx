@@ -18,26 +18,9 @@ export default function AdminDocumentsPage() {
 
   const PAGE_SIZE = 10;
 
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const allDocs = await getAllDocumentsServer();
-        setDocuments(allDocs);
-        setFilteredDocuments(allDocs);
-      } catch (error) {
-        console.error('문서를 불러오는데 실패했습니다:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDocuments();
-  }, []);
-
-  useEffect(() => {
-    const filtered = documents.filter(document => document.title.toLowerCase().includes(value.toLowerCase()));
-    setFilteredDocuments(filtered);
-    setCurrentPage(1);
-  }, [value, documents]);
+  const filterDocumentsByTitle = (docs: WikiDocumentExpand[], searchValue: string) => {
+    return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
+  };
 
   const totalPages = Math.ceil(filteredDocuments.length / PAGE_SIZE);
 
@@ -60,7 +43,7 @@ export default function AdminDocumentsPage() {
     if (currentGroup > 0) {
       setCurrentPage(currentGroup * 10);
     }
-  }
+  };
 
   const handleClickNextPageGroup = () => {
     const currentGroup = Math.floor((currentPage - 1) / 10);
@@ -68,7 +51,7 @@ export default function AdminDocumentsPage() {
     if (nextGroupFirstPage <= totalPages) {
       setCurrentPage(nextGroupFirstPage);
     }
-  }
+  };
 
   const handleDelete = async (uuid: string, title: string) => {
     const confirmMessage = getDeleteConfirmMessage(title);
@@ -78,9 +61,7 @@ export default function AdminDocumentsPage() {
         await deleteDocumentServer(uuid);
         const updatedDocs = documents.filter(document => document.uuid !== uuid);
         setDocuments(updatedDocs);
-        setFilteredDocuments(
-          updatedDocs.filter(document => document.title.toLowerCase().includes(value.toLowerCase())),
-        );
+        setFilteredDocuments(filterDocumentsByTitle(updatedDocs, value));
         alert('문서가 삭제되었습니다.');
       } catch (error) {
         console.error('문서 삭제 실패:', error);
@@ -88,6 +69,27 @@ export default function AdminDocumentsPage() {
       }
     }
   };
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const allDocs = await getAllDocumentsServer();
+        setDocuments(allDocs);
+        setFilteredDocuments(allDocs);
+      } catch (error) {
+        console.error('문서를 불러오는데 실패했습니다:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDocuments();
+  }, []);
+
+  useEffect(() => {
+    const filtered = filterDocumentsByTitle(documents, value);
+    setFilteredDocuments(filtered);
+    setCurrentPage(1);
+  }, [value, documents]);
 
   if (loading) {
     return (
