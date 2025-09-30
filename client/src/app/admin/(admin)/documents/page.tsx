@@ -12,7 +12,6 @@ export default function AdminDocumentsPage() {
   const {value, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
   const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
-  const [filteredDocuments, setFilteredDocuments] = useState<WikiDocumentExpand[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -22,8 +21,8 @@ export default function AdminDocumentsPage() {
     return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
   };
 
+  const filteredDocuments = filterDocumentsByTitle(documents, value)
   const totalPages = Math.ceil(filteredDocuments.length / PAGE_SIZE);
-
   const paginatedDocuments = filteredDocuments.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const pageNumbers = useMemo(() => {
@@ -61,7 +60,6 @@ export default function AdminDocumentsPage() {
         await deleteDocumentServer(uuid);
         const updatedDocs = documents.filter(document => document.uuid !== uuid);
         setDocuments(updatedDocs);
-        setFilteredDocuments(filterDocumentsByTitle(updatedDocs, value));
         alert('문서가 삭제되었습니다.');
       } catch (error) {
         console.error('문서 삭제 실패:', error);
@@ -75,7 +73,6 @@ export default function AdminDocumentsPage() {
       try {
         const allDocs = await getAllDocumentsServer();
         setDocuments(allDocs);
-        setFilteredDocuments(allDocs);
       } catch (error) {
         console.error('문서를 불러오는데 실패했습니다:', error);
       } finally {
@@ -86,10 +83,8 @@ export default function AdminDocumentsPage() {
   }, []);
 
   useEffect(() => {
-    const filtered = filterDocumentsByTitle(documents, value);
-    setFilteredDocuments(filtered);
     setCurrentPage(1);
-  }, [value, documents]);
+  }, [value]);
 
   if (loading) {
     return (
