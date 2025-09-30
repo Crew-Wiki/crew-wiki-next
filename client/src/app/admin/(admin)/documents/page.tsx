@@ -122,7 +122,6 @@ export default function AdminDocumentsPage() {
               <th className="px-6 py-3 text-left font-pretendard text-sm font-medium text-grayscale-700">문서 제목</th>
               <th className="px-6 py-3 text-center font-pretendard text-sm font-medium text-grayscale-700">조회수</th>
               <th className="px-6 py-3 text-center font-pretendard text-sm font-medium text-grayscale-700">수정수</th>
-              <th className="px-6 py-3 text-center font-pretendard text-sm font-medium text-grayscale-700">생성일</th>
               <th className="px-6 py-3 text-center font-pretendard text-sm font-medium text-grayscale-700">
                 최근 편집일
               </th>
@@ -150,7 +149,6 @@ export default function AdminDocumentsPage() {
                   </td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
-                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{createdDate}</td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{createdDate}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
