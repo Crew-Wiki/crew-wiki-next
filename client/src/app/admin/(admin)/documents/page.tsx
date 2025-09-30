@@ -125,7 +125,7 @@ export default function AdminDocumentsPage() {
           </thead>
           <tbody className="divide-y divide-grayscale-100">
             {paginatedDocuments.map(document => {
-              const createdDate = new Date(document.generateTime)
+              const latestEditDate = new Date(document.generateTime)
                 .toLocaleDateString('ko-KR', {
                   year: 'numeric',
                   month: '2-digit',
@@ -144,7 +144,7 @@ export default function AdminDocumentsPage() {
                   </td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
-                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{createdDate}</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{latestEditDate}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
                       <Button
