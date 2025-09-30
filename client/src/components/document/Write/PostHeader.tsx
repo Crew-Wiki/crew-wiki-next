@@ -7,7 +7,6 @@ import {Field, useDocument} from '@store/document';
 import {getBytes} from '@utils/getBytes';
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
-import {URLS} from '@constants/urls';
 import {PostDocumentContent} from '@type/Document.type';
 
 type ModeProps = {
@@ -19,7 +18,6 @@ const RequestButton = ({mode}: ModeProps) => {
   const values = useDocument(state => state.values);
   const errors = useDocument(state => state.errorMessages);
   const isImageUploadPending = useDocument(state => state.isImageUploadPending);
-  const router = useRouter();
 
   const requiredFields: Array<Field> = ['title', 'writer', 'contents'];
   const canSubmit = requiredFields.every(field => values[field].trim() !== '' && errors[field] === null);
@@ -37,11 +35,8 @@ const RequestButton = ({mode}: ModeProps) => {
       documentBytes: getBytes(values.contents),
     };
 
-    if (mode === 'post') postDocument(document);
-    if (mode === 'edit') putDocument(document);
-
-    router.push(`${URLS.wiki}/${uuid}`);
-    router.refresh();
+    if (mode === 'post') await postDocument(document);
+    if (mode === 'edit') await putDocument(document);
   };
 
   return (
