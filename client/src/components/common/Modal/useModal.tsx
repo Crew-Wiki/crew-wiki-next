@@ -39,8 +39,8 @@ export const useModal = <T,>(modal: ReactNode, {closeOnClickDimmedLayer = true, 
   );
 
   useEffect(() => {
-    return () => close(undefined);
-  }, [close]);
+    return () => reject(new Error('Modal unmounted'));
+  }, [reject]);
 
   const component = showModal ? (
     <Overlay>
