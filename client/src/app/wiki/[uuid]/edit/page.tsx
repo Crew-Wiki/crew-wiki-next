@@ -4,7 +4,7 @@ import PostHeader from '@components/document/Write/PostHeader';
 import TitleInputField from '@components/document/Write/TitleInputField';
 import TuiEditor from '@components/document/TuiEditor';
 import {useParams} from 'next/navigation';
-import {act, useEffect} from 'react';
+import {useEffect} from 'react';
 import {useDocument} from '@store/document';
 import {LatestWikiDocument} from '@type/Document.type';
 import {useGetLatestDocumentByUUID} from '@hooks/fetch/useGetLatestDocumentByUUID';
