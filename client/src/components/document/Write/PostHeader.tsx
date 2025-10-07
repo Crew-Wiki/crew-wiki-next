@@ -94,9 +94,6 @@ const RequestButton = ({mode}: ModeProps) => {
     } else {
       putDocument(document);
     }
-
-    router.push(`${URLS.wiki}/${uuid}`);
-    router.refresh();
   };
 
   const onSubmit = async () => {

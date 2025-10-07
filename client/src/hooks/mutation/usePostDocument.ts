@@ -19,6 +19,7 @@ export const usePostDocument = () => {
       trackDocumentCreate(document.title, document.documentUUID);
       addTitle(document.title, document.documentUUID);
       router.push(`${URLS.wiki}/${document.documentUUID}`);
+      router.refresh();
     },
   });
 
