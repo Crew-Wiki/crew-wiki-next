@@ -42,6 +42,13 @@ export const useModal = <T,>(
     [onClose, reject],
   );
 
+  const handleClickDimmedLayer = (event: MouseEvent) => {
+    event.stopPropagation();
+    if (closeOnClickDimmedLayer && event.target === event.currentTarget) {
+      close(undefined);
+    }
+  };
+
   useEffect(
     function cleanupPromise() {
       return () => reject(new Error('Modal unmounted'));
@@ -68,16 +75,7 @@ export const useModal = <T,>(
   const component = showModal ? (
     <Overlay>
       <HideScroll>
-        <DimmedLayer
-          onClick={(event: MouseEvent) => {
-            event.stopPropagation();
-            if (closeOnClickDimmedLayer && event.target === event.currentTarget) {
-              close(undefined);
-            }
-          }}
-        >
-          {modal}
-        </DimmedLayer>
+        <DimmedLayer onClick={handleClickDimmedLayer}>{modal}</DimmedLayer>
       </HideScroll>
     </Overlay>
   ) : null;
