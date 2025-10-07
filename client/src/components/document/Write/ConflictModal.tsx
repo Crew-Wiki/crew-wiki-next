@@ -1,11 +1,12 @@
+'use client';
+
 import {Modal} from '@components/common/Modal/Modal';
 import TuiEditor from '../TuiEditor';
 import Button from '@components/common/Button';
-import {Dispatch, SetStateAction} from 'react';
 
 type ConflictModalProps = {
   initialContent: string;
-  setContent: Dispatch<SetStateAction<string>>;
+  setContent: (value: string) => void;
   closeModal: VoidFunction;
   handleResolve: VoidFunction;
   isResolved: boolean;
