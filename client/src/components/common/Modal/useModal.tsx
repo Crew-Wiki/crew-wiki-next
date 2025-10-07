@@ -8,10 +8,14 @@ import {DimmedLayer} from './DimmedLayer';
 
 export type ModalOption = {
   closeOnClickDimmedLayer?: boolean;
+  closeOnESCInput?: boolean;
   onClose?: VoidFunction;
 };
 
-export const useModal = <T,>(modal: ReactNode, {closeOnClickDimmedLayer = true, onClose}: ModalOption = {}) => {
+export const useModal = <T,>(
+  modal: ReactNode,
+  {closeOnClickDimmedLayer = true, closeOnESCInput = false, onClose}: ModalOption = {},
+) => {
   const [showModal, setShowModal] = useState(false);
   const {getPromise, resolve, reject} = useManualPromise<T | undefined>();
 
@@ -38,9 +42,28 @@ export const useModal = <T,>(modal: ReactNode, {closeOnClickDimmedLayer = true, 
     [onClose, reject],
   );
 
-  useEffect(() => {
-    return () => reject(new Error('Modal unmounted'));
-  }, [reject]);
+  useEffect(
+    function cleanupPromise() {
+      return () => reject(new Error('Modal unmounted'));
+    },
+    [reject],
+  );
+
+  useEffect(
+    function attachESCKeyEvent() {
+      if (!closeOnESCInput) return;
+
+      const handleKeyboard = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          close(undefined);
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyboard);
+      return () => document.removeEventListener('keydown', handleKeyboard);
+    },
+    [closeOnESCInput, close],
+  );
 
   const component = showModal ? (
     <Overlay>
