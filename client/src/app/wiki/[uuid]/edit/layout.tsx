@@ -7,8 +7,10 @@ export async function generateMetadata({params}: UUIDParams): Promise<Metadata> 
   const document = await getDocumentByUUIDServer(uuid);
 
   return {
-    title: `${document?.title} 편집하기`,
-    description: `${document?.title}의 새로운 정보(논란)를 공유해주세요!`,
+    title: document ? `${document.title} 편집하기` : '편집하기',
+    description: document
+      ? `${document?.title}의 새로운 정보(논란)를 공유해주세요!`
+      : '새로운 정보(논란)를 공유해주세요!',
   };
 }
 
