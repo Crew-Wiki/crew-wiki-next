@@ -6,6 +6,7 @@ import {ConflictModal} from './ConflictModal';
 import {useDocument} from '@store/document';
 import {getDocumentByUUIDClient} from '@apis/client/document';
 import {createConflictText} from '@utils/createConflictText';
+import {useFetch} from '@hooks/useFetch';
 
 interface ConflictModalProps {
   handleSubmit: (contents: string) => Promise<void>;
@@ -18,6 +19,7 @@ export const useConflictModal = ({handleSubmit}: ConflictModalProps) => {
   });
 
   const [isResolved, setIsResolved] = useState(false);
+  const {refetch: fetchData, isLoading} = useFetch(() => getDocumentByUUIDClient(uuid), {enabled: false});
 
   useEffect(() => {
     const hasConflictMarkers = /<<<<<|──────────────/.test(conflict.content);
@@ -31,7 +33,7 @@ export const useConflictModal = ({handleSubmit}: ConflictModalProps) => {
   const handleResolve = async (resolvedContent: string) => {
     try {
       // 재충돌 방지
-      const newLatest = await getDocumentByUUIDClient(uuid);
+      const newLatest = await fetchData();
 
       // 충돌 시 새 버전과 새로 불러온 버전이 다르다면 다시 충돌상황
       if (newLatest && conflict.version !== newLatest.latestVersion) {
@@ -53,7 +55,7 @@ export const useConflictModal = ({handleSubmit}: ConflictModalProps) => {
 
   const handleConflictCheck = async () => {
     try {
-      const latest = await getDocumentByUUIDClient(uuid);
+      const latest = await fetchData();
 
       if (latest && originalVersion !== latest.latestVersion) {
         const conflictText = createConflictText(latest.contents, values.contents);
@@ -88,5 +90,5 @@ export const useConflictModal = ({handleSubmit}: ConflictModalProps) => {
     {closeOnClickDimmedLayer: false},
   );
 
-  return {modal, handleConflictCheck};
+  return {modal, handleConflictCheck, isLoading};
 };

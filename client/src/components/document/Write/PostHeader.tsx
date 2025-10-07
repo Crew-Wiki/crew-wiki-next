@@ -22,7 +22,6 @@ const RequestButton = ({mode}: ModeProps) => {
 
   const {postDocument, isPostPending} = usePostDocument();
   const {putDocument, isPutPending} = usePutDocument();
-  const isPending = isPostPending || isPutPending || isImageUploadPending;
 
   const handleSubmit = async (contents: string) => {
     const document: PostDocumentContent = {
@@ -40,7 +39,11 @@ const RequestButton = ({mode}: ModeProps) => {
     }
   };
 
-  const {modal: conflictModal, handleConflictCheck} = useConflictModal({
+  const {
+    modal: conflictModal,
+    handleConflictCheck,
+    isLoading: isLoadingGetLatestDocumentData,
+  } = useConflictModal({
     handleSubmit,
   });
 
@@ -51,6 +54,8 @@ const RequestButton = ({mode}: ModeProps) => {
       await handleSubmit(values.contents);
     }
   };
+
+  const isPending = isPostPending || isPutPending || isImageUploadPending || isLoadingGetLatestDocumentData;
 
   return (
     <>
