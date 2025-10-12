@@ -51,9 +51,9 @@ export const useModal = <T,>(
 
   useEffect(
     function cleanupPromise() {
-      return () => reject(new Error('Modal unmounted'));
+      return () => resolve(undefined);
     },
-    [reject],
+    [resolve],
   );
 
   useEffect(
