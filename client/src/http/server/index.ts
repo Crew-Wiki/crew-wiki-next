@@ -40,6 +40,14 @@ export const requestPutServer = async <T>({headers = {}, ...args}: ServerHttpMet
   return response.data;
 };
 
+export const requestDeleteServer = async ({headers = {}, ...args}: ServerHttpMethodArgs): Promise<void> => {
+  await request({
+    ...args,
+    method: 'DELETE',
+    headers,
+  });
+};
+
 const prepareRequest = ({baseUrl, method, endpoint, headers, body, queryParams, next, cache}: ServerHttpArgs) => {
   let url = `${baseUrl}${endpoint}`;
   if (queryParams) url += `?${objectToQueryString(queryParams)}`;
