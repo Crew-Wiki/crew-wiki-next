@@ -83,10 +83,10 @@ export default function LoginForm() {
             name="loginId"
             value={adminForm.loginId}
             onChange={handleInputChange}
-            className={`w-full rounded-lg border px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:border-error-400 focus:outline-none focus:ring-2 focus:ring-error-400/20 ${
+            className={`w-full rounded-lg border px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:outline-none focus:ring-2 ${
               adminForm.loginId && !isValid.loginId
                 ? 'border-error-error focus:border-error-error focus:ring-error-error/20'
-                : 'border-grayscale-200'
+                : 'border-grayscale-200 focus:border-primary-primary focus:ring-primary-primary/20'
             }`}
             placeholder="아이디를 입력하세요"
             autoComplete="off"
@@ -107,10 +107,10 @@ export default function LoginForm() {
             name="password"
             value={adminForm.password}
             onChange={handleInputChange}
-            className={`w-full rounded-lg border px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:border-error-400 focus:outline-none focus:ring-2 focus:ring-error-400/20 ${
+            className={`w-full rounded-lg border px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:outline-none focus:ring-2 ${
               adminForm.password && !isValid.password
                 ? 'border-error-error focus:border-error-error focus:ring-error-error/20'
-                : 'border-grayscale-200'
+                : 'border-grayscale-200 focus:border-primary-primary focus:ring-primary-primary/20'
             }`}
             placeholder="비밀번호를 입력하세요"
             autoComplete="new-password"
