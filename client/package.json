@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint",
     "prettier:write": "prettier --write \"src/**/*.{ts,tsx}\"",
     "deploy": "pm2 start ecosystem.config.js --env production"
   },
@@ -31,7 +31,6 @@
     "zustand": "^5.0.5"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
