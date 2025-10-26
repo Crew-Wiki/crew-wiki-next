@@ -14,4 +14,7 @@ export const URLS = {
   daemoon: isProduction ? DAEMOON.production : DAEMOON.development,
   logs: 'logs',
   specificLog: 'log/:logId',
-};
+  admin: '/admin',
+  dashboard: '/dashboard',
+  documents: '/documents',
+} as const;
