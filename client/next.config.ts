@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
       permanent: true,
     },
   ],
+  typedRoutes: true,
 };
 
 export default withSentryConfig(nextConfig, {
