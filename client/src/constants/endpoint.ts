@@ -12,4 +12,5 @@ export const ENDPOINT = {
   postAdminLogin: '/admin/login',
   getPresignedUrl: '/upload',
   postViewsFlush: '/document/views/flush',
+  deleteDocument: (uuid: string) => `/admin/documents/${uuid}`,
 } as const;
