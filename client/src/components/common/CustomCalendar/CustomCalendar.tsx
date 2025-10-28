@@ -55,7 +55,6 @@ const CustomCalendar = ({
   };
 
   const handleNextMonthClick = () => {
-    if (!isClickableNextDays) return;
     changeMonth(1);
   };
 
@@ -160,43 +159,48 @@ const CustomCalendar = ({
       {isOpen && (
         <div className="absolute top-full z-10 mt-2 w-full rounded-xl bg-white p-4 shadow-lg max-[768px]:p-6">
           <div className="mb-4 flex items-center justify-between">
-            <button
-              onClick={handlePrevMonthClick}
-              className="rounded-full p-2 transition-colors active:bg-primary-container md:hover:bg-primary-container"
-              aria-label="이전 달"
-            >
-              <Image
-                src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/chevron-left-icon.svg`}
-                width={24}
-                height={24}
-                alt="chevron left icon"
-                className="h-6 w-6"
-              />
-            </button>
+            <div className="flex-1">
+              <button
+                onClick={handlePrevMonthClick}
+                className="rounded-full p-2 transition-colors active:bg-primary-container md:hover:bg-primary-container"
+                aria-label="이전 달"
+              >
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/chevron-left-icon.svg`}
+                  width={24}
+                  height={24}
+                  alt="chevron left icon"
+                  className="h-6 w-6"
+                />
+              </button>
+            </div>
             <div
               onClick={handleResetToToday}
-              className="cursor-pointer rounded-lg p-1 active:bg-grayscale-50 md:hover:bg-grayscale-50"
+              className="flex-1 cursor-pointer rounded-lg p-1 active:bg-grayscale-50 md:hover:bg-grayscale-50"
             >
               <h2 className="max-[768px]:text-md text-center text-lg font-bold text-grayscale-800">
                 {`${displayDate.getFullYear()}년 ${displayDate.getMonth() + 1}월`}
               </h2>
             </div>
-            <button
-              onClick={handleNextMonthClick}
-              className={twMerge(
-                'rounded-full p-2 transition-colors active:bg-primary-container md:hover:bg-primary-container',
-                isClickableNextDays ? '' : 'disabled cursor-default active:bg-transparent md:hover:bg-transparent',
+            <div className="flex flex-1 justify-end">
+              {!isClickableNextDays &&
+              displayDate.getMonth() === new Date().getMonth() &&
+              displayDate.getFullYear() === new Date().getFullYear() ? null : (
+                <button
+                  onClick={handleNextMonthClick}
+                  className="rounded-full p-2 transition-colors active:bg-primary-container md:hover:bg-primary-container"
+                  aria-label="다음 달"
+                >
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/chevron-right-icon.svg`}
+                    width={24}
+                    height={24}
+                    alt="chevron right icon"
+                    className="h-6 w-6"
+                  />
+                </button>
               )}
-              aria-label="다음 달"
-            >
-              <Image
-                src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/chevron-right-icon.svg`}
-                width={24}
-                height={24}
-                alt="chevron right icon"
-                className="h-6 w-6"
-              />
-            </button>
+            </div>
           </div>
 
           <div className="mb-2 grid grid-cols-7 gap-1 text-center font-pretendard text-sm text-grayscale-500">
