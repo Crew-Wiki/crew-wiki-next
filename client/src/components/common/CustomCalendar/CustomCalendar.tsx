@@ -49,6 +49,11 @@ const CustomCalendar = ({
     setIsOpen(prev => !prev);
   };
 
+  const handleResetToToday = () => {
+    const today = new Date();
+    setDisplayDate(today);
+  };
+
   const calendarDays = useMemo(() => {
     const year = displayDate.getFullYear();
     const month = displayDate.getMonth();
@@ -147,9 +152,14 @@ const CustomCalendar = ({
                 className="h-6 w-6"
               />
             </button>
-            <h2 className="max-[768px]:text-md text-center text-lg font-bold text-grayscale-800">
-              {`${displayDate.getFullYear()}년 ${displayDate.getMonth() + 1}월`}
-            </h2>
+            <div
+              onClick={handleResetToToday}
+              className="cursor-pointer rounded-lg p-1 active:bg-grayscale-50 md:hover:bg-grayscale-50"
+            >
+              <h2 className="max-[768px]:text-md text-center text-lg font-bold text-grayscale-800">
+                {`${displayDate.getFullYear()}년 ${displayDate.getMonth() + 1}월`}
+              </h2>
+            </div>
             <button
               onClick={() => changeMonth(1)}
               className="rounded-full p-2 transition-colors active:bg-primary-container md:hover:bg-primary-container"
