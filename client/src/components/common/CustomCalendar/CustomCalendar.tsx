@@ -10,10 +10,18 @@ type CustomCalendarProps = {
   className?: string;
   placeholder?: string;
   invalid?: boolean;
+  isClickableNextDays: boolean;
   onChange: (date: Date | null) => void;
 };
 
-const CustomCalendar = ({value, className, placeholder, invalid, onChange}: CustomCalendarProps) => {
+const CustomCalendar = ({
+  value,
+  className,
+  placeholder,
+  invalid = false,
+  isClickableNextDays,
+  onChange,
+}: CustomCalendarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [displayDate, setDisplayDate] = useState(value || new Date());
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -62,9 +70,16 @@ const CustomCalendar = ({value, className, placeholder, invalid, onChange}: Cust
       const selectedClasses = isSelected
         ? 'bg-primary text-white font-bold bg-primary-primary'
         : 'text-grayscale-700 active:bg-primary-container md:hover:bg-primary-container';
-      const classes = `${baseClasses} ${isSelected ? selectedClasses : `${todayClasses} ${selectedClasses}`}`;
+      const isFutureDate = date > new Date();
+      const isClickable = isClickableNextDays || !isFutureDate;
+      console.log(isClickable);
+      const disabledClasses = !isClickable
+        ? 'text-grayscale-300 cursor-default active:bg-transparent md:hover:bg-transparent'
+        : '';
+      const classes = `${baseClasses} ${isSelected ? selectedClasses : `${todayClasses} ${selectedClasses}`} ${disabledClasses}`;
 
       const handleDateChange = (day: number) => {
+        if (!isClickable) return;
         const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), day);
 
         if (value && formatDate(newDate) === formatDate(value)) {
