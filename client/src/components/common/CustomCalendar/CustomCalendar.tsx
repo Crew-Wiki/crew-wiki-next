@@ -54,6 +54,15 @@ const CustomCalendar = ({
     setDisplayDate(today);
   };
 
+  const handleNextMonthClick = () => {
+    if (!isClickableNextDays) return;
+    changeMonth(1);
+  };
+
+  const handlePrevMonthClick = () => {
+    changeMonth(-1);
+  };
+
   const calendarDays = useMemo(() => {
     const year = displayDate.getFullYear();
     const month = displayDate.getMonth();
@@ -61,8 +70,21 @@ const CustomCalendar = ({
     const lastDateOfMonth = new Date(year, month + 1, 0).getDate();
     const days: JSX.Element[] = [];
 
+    const isPrevMonthDate =
+      value && (value.getFullYear() < year || (value.getFullYear() === year && value.getMonth() < month));
+    const isNextMonthDate =
+      value && (value.getFullYear() > year || (value.getFullYear() === year && value.getMonth() > month));
+
+    const handleOtherMonthDateClick = () => {
+      if (isPrevMonthDate) {
+        changeMonth(-1);
+      } else if (isNextMonthDate) {
+        changeMonth(1);
+      }
+    };
+
     for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`prev-${i}`} className="h-10 w-10" />);
+      days.push(<div key={`prev-${i}`} className="h-10 w-10" onClick={handleOtherMonthDateClick} />);
     }
 
     for (let day = 1; day <= lastDateOfMonth; day++) {
@@ -103,7 +125,7 @@ const CustomCalendar = ({
     }
 
     return days;
-  }, [displayDate, value]);
+  }, [displayDate, value, isClickableNextDays, onChange]);
 
   return (
     <div ref={wrapperRef} className="relative w-full">
@@ -139,7 +161,7 @@ const CustomCalendar = ({
         <div className="absolute top-full z-10 mt-2 w-full rounded-xl bg-white p-4 shadow-lg max-[768px]:p-6">
           <div className="mb-4 flex items-center justify-between">
             <button
-              onClick={() => changeMonth(-1)}
+              onClick={handlePrevMonthClick}
               className="rounded-full p-2 transition-colors active:bg-primary-container md:hover:bg-primary-container"
               aria-label="이전 달"
             >
@@ -160,8 +182,11 @@ const CustomCalendar = ({
               </h2>
             </div>
             <button
-              onClick={() => changeMonth(1)}
-              className="rounded-full p-2 transition-colors active:bg-primary-container md:hover:bg-primary-container"
+              onClick={handleNextMonthClick}
+              className={twMerge(
+                'rounded-full p-2 transition-colors active:bg-primary-container md:hover:bg-primary-container',
+                isClickableNextDays ? '' : 'disabled cursor-default active:bg-transparent md:hover:bg-transparent',
+              )}
               aria-label="다음 달"
             >
               <Image
