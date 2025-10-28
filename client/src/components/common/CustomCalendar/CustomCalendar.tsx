@@ -67,23 +67,28 @@ const CustomCalendar = ({
     const month = displayDate.getMonth();
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     const lastDateOfMonth = new Date(year, month + 1, 0).getDate();
+    const lastDayOfPrevMonth = new Date(year, month, 0).getDate();
     const days: JSX.Element[] = [];
 
-    const isPrevMonthDate =
-      value && (value.getFullYear() < year || (value.getFullYear() === year && value.getMonth() < month));
-    const isNextMonthDate =
-      value && (value.getFullYear() > year || (value.getFullYear() === year && value.getMonth() > month));
-
-    const handleOtherMonthDateClick = () => {
-      if (isPrevMonthDate) {
-        changeMonth(-1);
-      } else if (isNextMonthDate) {
-        changeMonth(1);
-      }
+    const handlePrevMonthDateClick = () => {
+      changeMonth(-1);
     };
 
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`prev-${i}`} className="h-10 w-10" onClick={handleOtherMonthDateClick} />);
+    const handleNextMonthDateClick = () => {
+      changeMonth(1);
+    };
+
+    for (let i = firstDayOfMonth - 1; i >= 0; i--) {
+      const day = lastDayOfPrevMonth - i;
+      days.push(
+        <div
+          key={`prev-${day}`}
+          className="flex h-10 w-10 cursor-pointer select-none items-center justify-center rounded-full text-sm text-grayscale-300"
+          onClick={handlePrevMonthDateClick}
+        >
+          {day}
+        </div>,
+      );
     }
 
     for (let day = 1; day <= lastDateOfMonth; day++) {
@@ -118,6 +123,30 @@ const CustomCalendar = ({
 
       days.push(
         <div key={day} onClick={() => handleDateChange(day)} className={classes}>
+          {day}
+        </div>,
+      );
+    }
+    if (
+      !isClickableNextDays &&
+      displayDate.getMonth() === new Date().getMonth() &&
+      displayDate.getFullYear() === new Date().getFullYear()
+    ) {
+      return days;
+    }
+
+    const totalDaysRendered = firstDayOfMonth + lastDateOfMonth;
+    const totalSlots = Math.ceil(totalDaysRendered / 7) * 7;
+    const remainingDays = totalSlots - totalDaysRendered;
+
+    for (let i = 1; i <= remainingDays; i++) {
+      const day = i;
+      days.push(
+        <div
+          key={`next-${day}`}
+          className="flex h-10 w-10 cursor-pointer select-none items-center justify-center rounded-full text-sm text-grayscale-300"
+          onClick={handleNextMonthDateClick}
+        >
           {day}
         </div>,
       );
