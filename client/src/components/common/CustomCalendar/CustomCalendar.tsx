@@ -73,11 +73,10 @@ const CustomCalendar = ({
       const baseClasses = 'flex items-center justify-center h-10 w-10 text-sm rounded-full cursor-pointer select-none';
       const todayClasses = isToday ? 'font-bold bg-grayscale-50' : '';
       const selectedClasses = isSelected
-        ? 'bg-primary text-white font-bold bg-primary-primary'
+        ? 'bg-primary text-white font-bold'
         : 'text-grayscale-700 active:bg-primary-container md:hover:bg-primary-container';
       const isFutureDate = date > new Date();
       const isClickable = isClickableNextDays || !isFutureDate;
-      console.log(isClickable);
       const disabledClasses = !isClickable
         ? 'text-grayscale-300 cursor-default active:bg-transparent md:hover:bg-transparent'
         : '';
