@@ -30,18 +30,6 @@ const CustomCalendar = ({value, className, placeholder, invalid, onChange}: Cust
     };
   }, []);
 
-  const handleDateChange = (day: number) => {
-    const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), day);
-
-    if (value && formatDate(newDate) === formatDate(value)) {
-      onChange(null);
-    } else {
-      onChange(newDate);
-    }
-
-    setIsOpen(false);
-  };
-
   const changeMonth = (offset: number) => {
     setDisplayDate(prev => {
       const newDate = new Date(prev.getFullYear(), prev.getMonth() + offset, 1);
@@ -75,6 +63,18 @@ const CustomCalendar = ({value, className, placeholder, invalid, onChange}: Cust
         ? 'bg-primary text-white font-bold bg-primary-primary'
         : 'text-grayscale-700 active:bg-primary-container md:hover:bg-primary-container';
       const finalClasses = `${baseClasses} ${isSelected ? selectedClasses : `${todayClasses} ${selectedClasses}`}`;
+
+      const handleDateChange = (day: number) => {
+        const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), day);
+
+        if (value && formatDate(newDate) === formatDate(value)) {
+          onChange(null);
+        } else {
+          onChange(newDate);
+        }
+
+        setIsOpen(false);
+      };
 
       days.push(
         <div key={day} onClick={() => handleDateChange(day)} className={finalClasses}>
