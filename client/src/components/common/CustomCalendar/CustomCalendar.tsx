@@ -132,7 +132,7 @@ const CustomCalendar = ({value, className, placeholder, invalid, onChange}: Cust
                 className="h-6 w-6"
               />
             </button>
-            <h2 className="text-center text-lg font-bold text-grayscale-800 max-[768px]:text-sm">
+            <h2 className="max-[768px]:text-md text-center text-lg font-bold text-grayscale-800">
               {`${displayDate.getFullYear()}년 ${displayDate.getMonth() + 1}월`}
             </h2>
             <button
