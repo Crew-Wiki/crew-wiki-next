@@ -5,14 +5,14 @@ import Image from 'next/image';
 import {JSX, useEffect, useMemo, useRef, useState} from 'react';
 import {twMerge} from 'tailwind-merge';
 
-type CustomCalendarProps = {
+interface CustomCalendarProps {
   value: Date | null;
   className?: string;
   placeholder?: string;
   invalid?: boolean;
   isClickableNextDays: boolean;
   onChange: (date: Date | null) => void;
-};
+}
 
 const CustomCalendar = ({
   value,
