@@ -150,16 +150,14 @@ const CustomCalendar = ({value, className, placeholder, invalid, onChange}: Cust
             </button>
           </div>
 
-          <div>
-            <div className="mb-2 grid grid-cols-7 gap-1 text-center font-pretendard text-sm text-grayscale-500">
-              {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
-                <div key={day} className={`${i === 0 ? 'text-error-error' : ''} ${i === 6 ? 'text-primary-700' : ''}`}>
-                  {day}
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-7 place-items-center gap-1">{calendarDays}</div>
+          <div className="mb-2 grid grid-cols-7 gap-1 text-center font-pretendard text-sm text-grayscale-500">
+            {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
+              <div key={day} className={`${i === 0 ? 'text-error-error' : ''} ${i === 6 ? 'text-primary-700' : ''}`}>
+                {day}
+              </div>
+            ))}
           </div>
+          <div className="grid grid-cols-7 place-items-center gap-1">{calendarDays}</div>
         </div>
       )}
     </div>
