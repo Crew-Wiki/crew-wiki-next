@@ -62,7 +62,7 @@ const CustomCalendar = ({value, className, placeholder, invalid, onChange}: Cust
       const selectedClasses = isSelected
         ? 'bg-primary text-white font-bold bg-primary-primary'
         : 'text-grayscale-700 active:bg-primary-container md:hover:bg-primary-container';
-      const finalClasses = `${baseClasses} ${isSelected ? selectedClasses : `${todayClasses} ${selectedClasses}`}`;
+      const classes = `${baseClasses} ${isSelected ? selectedClasses : `${todayClasses} ${selectedClasses}`}`;
 
       const handleDateChange = (day: number) => {
         const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), day);
@@ -77,7 +77,7 @@ const CustomCalendar = ({value, className, placeholder, invalid, onChange}: Cust
       };
 
       days.push(
-        <div key={day} onClick={() => handleDateChange(day)} className={finalClasses}>
+        <div key={day} onClick={() => handleDateChange(day)} className={classes}>
           {day}
         </div>,
       );
