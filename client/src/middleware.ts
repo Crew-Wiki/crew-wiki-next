@@ -1,24 +1,21 @@
 import {NextResponse} from 'next/server';
 import type {NextRequest} from 'next/server';
+import {URLS} from '@constants/urls';
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const {pathname} = new URL(request.url);
 
-  if (!pathname.startsWith('/admin')) {
+  if (!pathname.startsWith(URLS.admin)) {
     return NextResponse.next();
   }
 
-  if (pathname !== '/admin/login' && !token) {
-    return NextResponse.redirect(new URL('/admin/login', request.url));
+  if (pathname !== URLS.login && !token) {
+    return NextResponse.redirect(new URL(URLS.login, request.url));
   }
 
-  if (pathname !== '/admin/login' && !token) {
-    return NextResponse.redirect(new URL('/admin/dashboard', request.url));
-  }
-
-  if (pathname === '/admin/login' && token) {
-    return NextResponse.redirect(new URL('/admin/documents', request.url));
+  if (pathname === URLS.login && token) {
+    return NextResponse.redirect(new URL(URLS.documents, request.url));
   }
 
   return NextResponse.next();
