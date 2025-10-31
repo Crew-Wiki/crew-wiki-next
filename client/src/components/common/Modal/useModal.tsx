@@ -2,7 +2,7 @@
 
 import {useCallback, useEffect, useState, type ReactNode, MouseEvent} from 'react';
 import {useManualPromise} from './useManualPromise';
-import {Overlay} from './Overlay';
+import {ModalPortal} from './ModalPortal';
 import {HideScroll} from './HideScroll';
 import {Backdrop} from './Backdrop';
 
@@ -73,11 +73,11 @@ export const useModal = <T,>(
   );
 
   const component = showModal ? (
-    <Overlay>
+    <ModalPortal>
       <HideScroll>
         <Backdrop onClick={handleClickBackdrop}>{modal}</Backdrop>
       </HideScroll>
-    </Overlay>
+    </ModalPortal>
   ) : null;
 
   return {

@@ -3,9 +3,9 @@
 import {PropsWithChildren, useEffect} from 'react';
 import {createPortal} from 'react-dom';
 
-type OverlayProps = PropsWithChildren;
+type ModalPortalProps = PropsWithChildren;
 
-export const Overlay = ({children}: OverlayProps) => {
+export const ModalPortal = ({children}: ModalPortalProps) => {
   const target = document.getElementById('modal-root');
 
   useEffect(() => {
