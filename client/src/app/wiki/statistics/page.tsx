@@ -3,6 +3,7 @@
 import Button from '@components/common/Button';
 import {Modal} from '@components/common/Modal/Modal';
 import {useModal} from '@components/common/Modal/useModal';
+import {Chip} from '@components/common/Chip';
 
 const Page = () => {
   const modal = useModal<boolean>(
@@ -37,6 +38,7 @@ const Page = () => {
         <Button style="secondary" size="m" onClick={handleOpen}>
           모달 열기
         </Button>
+        <Chip text="크루위키부흥위원회" />
       </div>
       {modal.component}
     </section>

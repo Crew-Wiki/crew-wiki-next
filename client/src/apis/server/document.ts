@@ -9,7 +9,7 @@ import {
   WikiDocumentLogDetail,
   WikiDocumentLogSummary,
 } from '@type/Document.type';
-import {requestGetServer, requestPostServer, requestPutServer} from '@http/server';
+import {requestGetServer, requestPostServer, requestPutServer, requestDeleteServer} from '@http/server';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
 import {ViewCountByUUID} from '@type/viewCount.type';
@@ -111,3 +111,12 @@ export const postViewsFlush = async (viewCount: ViewCountByUUID) => {
     body: viewCount,
   });
 };
+
+export const deleteDocumentServer = async (uuid: string) => {
+  const response = await requestDeleteServer({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.deleteDocument(uuid),
+  });
+
+  return response;
+}

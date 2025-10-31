@@ -7,11 +7,16 @@
 ### Frontend
 + [쿠키](https://github.com/jinhokim98)
 + [토다리](https://github.com/Todari)
++ [프룬](https://github.com/chosim-dvlpr)
++ [루나](https://github.com/ShinjungOh) 
 
 ### Backend
 + [폴라](https://github.com/jinchiim)
 + [메이슨](https://github.com/masonkimseoul)
 + [리브](https://github.com/Minjoo522)
++ [밍트](https://github.com/Starlight258)
++ [칼리](https://github.com/2Jin1031)
++ [체체](https://github.com/CheChe903)
 
 
 ## 기능
