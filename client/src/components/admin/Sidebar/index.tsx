@@ -1,12 +1,14 @@
 'use client';
 
+import {URLS} from '@constants/urls';
+import {Route} from 'next';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {twMerge} from 'tailwind-merge';
 
 interface MenuItem {
   label: string;
-  href: string;
+  href: Route;
   icon: string;
 }
 
@@ -14,8 +16,8 @@ const Index = () => {
   const pathname = usePathname();
 
   const menuItems: MenuItem[] = [
-    {label: '대시보드', href: '/admin/dashboard', icon: '📊'},
-    {label: '문서 관리', href: '/admin/documents', icon: '📄'},
+    {label: '대시보드', href: `${URLS.admin}${URLS.dashboard}`, icon: '📊'},
+    {label: '문서 관리', href: `${URLS.admin}${URLS.documents}`, icon: '📄'},
   ];
 
   const isActive = (href: string) => pathname === href;

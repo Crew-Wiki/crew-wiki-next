@@ -3,12 +3,12 @@ import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
-import type {UUIDLogParams} from '@type/PageParams.type';
+import type {UUIDLogParams, UUIDParams} from '@type/PageParams.type';
 import {generateLogPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
 
-export async function generateMetadata({params}: UUIDLogParams): Promise<Metadata> {
+export async function generateMetadata({params}: UUIDParams): Promise<Metadata> {
   const {uuid} = await params;
   return await generateLogPageMetadata(uuid);
 }
