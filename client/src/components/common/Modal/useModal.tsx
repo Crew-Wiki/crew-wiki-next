@@ -4,17 +4,17 @@ import {useCallback, useEffect, useState, type ReactNode, MouseEvent} from 'reac
 import {useManualPromise} from './useManualPromise';
 import {Overlay} from './Overlay';
 import {HideScroll} from './HideScroll';
-import {DimmedLayer} from './DimmedLayer';
+import {Backdrop} from './Backdrop';
 
 export type ModalOption = {
-  closeOnClickDimmedLayer?: boolean;
+  closeOnClickBackdrop?: boolean;
   closeOnESCInput?: boolean;
   onClose?: VoidFunction;
 };
 
 export const useModal = <T,>(
   modal: ReactNode,
-  {closeOnClickDimmedLayer = true, closeOnESCInput = false, onClose}: ModalOption = {},
+  {closeOnClickBackdrop = true, closeOnESCInput = false, onClose}: ModalOption = {},
 ) => {
   const [showModal, setShowModal] = useState(false);
   const {getPromise, resolve, reject} = useManualPromise<T | undefined>();
@@ -42,9 +42,9 @@ export const useModal = <T,>(
     [onClose, reject],
   );
 
-  const handleClickDimmedLayer = (event: MouseEvent) => {
+  const handleClickBackdrop = (event: MouseEvent) => {
     event.stopPropagation();
-    if (closeOnClickDimmedLayer && event.target === event.currentTarget) {
+    if (closeOnClickBackdrop && event.target === event.currentTarget) {
       close(undefined);
     }
   };
@@ -75,7 +75,7 @@ export const useModal = <T,>(
   const component = showModal ? (
     <Overlay>
       <HideScroll>
-        <DimmedLayer onClick={handleClickDimmedLayer}>{modal}</DimmedLayer>
+        <Backdrop onClick={handleClickBackdrop}>{modal}</Backdrop>
       </HideScroll>
     </Overlay>
   ) : null;

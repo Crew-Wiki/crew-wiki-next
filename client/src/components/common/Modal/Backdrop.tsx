@@ -2,12 +2,12 @@
 
 import {MouseEvent, PropsWithChildren} from 'react';
 
-type DimmedLayerProps = PropsWithChildren<{
+type BackdropProps = PropsWithChildren<{
   opacity?: number;
   onClick: (event: MouseEvent) => void;
 }>;
 
-export const DimmedLayer = ({children, opacity = 0.32, onClick}: DimmedLayerProps) => {
+export const Backdrop = ({children, opacity = 0.32, onClick}: BackdropProps) => {
   return (
     <div
       style={{backgroundColor: `rgba(0, 0, 0, ${opacity})`}}
