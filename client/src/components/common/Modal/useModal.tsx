@@ -2,16 +2,20 @@
 
 import {useCallback, useEffect, useState, type ReactNode, MouseEvent} from 'react';
 import {useManualPromise} from './useManualPromise';
-import {Overlay} from './Overlay';
+import {ModalPortal} from './ModalPortal';
 import {HideScroll} from './HideScroll';
-import {DimmedLayer} from './DimmedLayer';
+import {Backdrop} from './Backdrop';
 
 export type ModalOption = {
-  closeOnClickDimmedLayer?: boolean;
+  closeOnClickBackdrop?: boolean;
+  closeOnESCInput?: boolean;
   onClose?: VoidFunction;
 };
 
-export const useModal = <T,>(modal: ReactNode, {closeOnClickDimmedLayer = true, onClose}: ModalOption = {}) => {
+export const useModal = <T,>(
+  modal: ReactNode,
+  {closeOnClickBackdrop = true, closeOnESCInput = true, onClose}: ModalOption = {},
+) => {
   const [showModal, setShowModal] = useState(false);
   const {getPromise, resolve, reject} = useManualPromise<T | undefined>();
 
@@ -38,25 +42,42 @@ export const useModal = <T,>(modal: ReactNode, {closeOnClickDimmedLayer = true, 
     [onClose, reject],
   );
 
-  useEffect(() => {
-    return () => reject(new Error('Modal unmounted'));
-  }, [reject]);
+  const handleClickBackdrop = (event: MouseEvent) => {
+    event.stopPropagation();
+    if (closeOnClickBackdrop && event.target === event.currentTarget) {
+      close(undefined);
+    }
+  };
+
+  useEffect(
+    function cleanupPromise() {
+      return () => resolve(undefined);
+    },
+    [resolve],
+  );
+
+  useEffect(
+    function attachESCKeyEvent() {
+      if (!closeOnESCInput) return;
+
+      const handleKeyboard = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          close(undefined);
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyboard);
+      return () => document.removeEventListener('keydown', handleKeyboard);
+    },
+    [closeOnESCInput, close],
+  );
 
   const component = showModal ? (
-    <Overlay>
+    <ModalPortal>
       <HideScroll>
-        <DimmedLayer
-          onClick={(event: MouseEvent) => {
-            event.stopPropagation();
-            if (closeOnClickDimmedLayer && event.target === event.currentTarget) {
-              close(undefined);
-            }
-          }}
-        >
-          {modal}
-        </DimmedLayer>
+        <Backdrop onClick={handleClickBackdrop}>{modal}</Backdrop>
       </HideScroll>
-    </Overlay>
+    </ModalPortal>
   ) : null;
 
   return {
