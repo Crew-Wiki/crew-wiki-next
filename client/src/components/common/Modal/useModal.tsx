@@ -14,7 +14,7 @@ export type ModalOption = {
 
 export const useModal = <T,>(
   modal: ReactNode,
-  {closeOnClickBackdrop = true, closeOnESCInput = false, onClose}: ModalOption = {},
+  {closeOnClickBackdrop = true, closeOnESCInput = true, onClose}: ModalOption = {},
 ) => {
   const [showModal, setShowModal] = useState(false);
   const {getPromise, resolve, reject} = useManualPromise<T | undefined>();
