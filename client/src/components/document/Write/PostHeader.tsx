@@ -8,10 +8,8 @@ import {getBytes} from '@utils/getBytes';
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
 import {PostDocumentContent} from '@type/Document.type';
-
-type ModeProps = {
-  mode: 'post' | 'edit';
-};
+import {useConflictModal} from './useConflictModal';
+import {ModeProps} from './type';
 
 const RequestButton = ({mode}: ModeProps) => {
   const uuid = useDocument(state => state.uuid);
@@ -24,25 +22,48 @@ const RequestButton = ({mode}: ModeProps) => {
 
   const {postDocument, isPostPending} = usePostDocument();
   const {putDocument, isPutPending} = usePutDocument();
-  const isPending = isPostPending || isPutPending || isImageUploadPending;
 
-  const onSubmit = async () => {
+  const handleSubmit = async (contents: string) => {
     const document: PostDocumentContent = {
       uuid,
       title: values.title,
-      contents: values.contents,
+      contents,
       writer: values.writer,
-      documentBytes: getBytes(values.contents),
+      documentBytes: getBytes(contents),
     };
 
-    if (mode === 'post') await postDocument(document);
-    if (mode === 'edit') await putDocument(document);
+    if (mode === 'post') {
+      postDocument(document);
+    } else {
+      putDocument(document);
+    }
   };
 
+  const {
+    modal: conflictModal,
+    handleConflictCheck,
+    isLoading: isLoadingGetLatestDocumentData,
+  } = useConflictModal({
+    handleSubmit,
+  });
+
+  const onSubmit = async () => {
+    if (mode === 'edit') {
+      await handleConflictCheck();
+    } else {
+      await handleSubmit(values.contents);
+    }
+  };
+
+  const isPending = isPostPending || isPutPending || isImageUploadPending || isLoadingGetLatestDocumentData;
+
   return (
-    <Button style="primary" size="xs" disabled={!canSubmit || isPending} onClick={onSubmit}>
-      작성완료
-    </Button>
+    <>
+      <Button style="primary" size="xs" disabled={!canSubmit || isPending} onClick={onSubmit}>
+        작성완료
+      </Button>
+      {conflictModal.component}
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import {isProduction} from '../utils/nodeEnv';
+import {isProduction} from '@utils/nodeEnv';
 
 const DAEMOON = {
   production: '30a6c25d-4b88-11f0-99c4-0a270fc3fae1',
@@ -15,6 +15,7 @@ export const URLS = {
   logs: 'logs',
   specificLog: 'log/:logId',
   admin: '/admin',
-  dashboard: '/dashboard',
-  documents: '/documents',
-} as const;
+  login: '/admin/login',
+  dashboard: '/admin/dashboard',
+  documents: '/admin/documents',
+};
