@@ -24,14 +24,14 @@ const toolbar = [
 type TuiEditorProps = {
   saveMarkdown?: (markdown: string) => void;
   initialValue: string;
+  onChange: (value: string) => void;
 };
 
-function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
+function TuiEditor({initialValue, saveMarkdown, onChange}: TuiEditorProps) {
   const isDesktop = typeof window !== 'undefined' ? window.innerWidth >= 768 : false;
   const editorRef = useRef<EditorType | null>(null);
   const uuid = useDocument(state => state.uuid);
 
-  const onChange = useDocument(action => action.onChange);
   const {uploadImageAndReplaceUrl} = useUploadImage(uuid);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ function TuiEditor({initialValue, saveMarkdown}: TuiEditorProps) {
 
     const instance = editorRef.current.getInstance();
     const markdown = instance.getMarkdown();
-    onChange(markdown, 'contents');
+    onChange(markdown);
 
     if (saveMarkdown) {
       const saveMarkDownThrottle = makeThrottle(() => saveMarkdown(markdown), MARKDOWN_THROTTLE_TIME);

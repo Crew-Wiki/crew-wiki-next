@@ -2,12 +2,12 @@
 
 import {getDocumentByUUIDClient} from '@apis/client/document';
 import {useFetch} from '@hooks/useFetch';
-import {WikiDocument} from '@type/Document.type';
+import {LatestWikiDocument} from '@type/Document.type';
 import {useCallback} from 'react';
 
-export const useGetDocumentByUUID = (uuid: string) => {
+export const useGetLatestDocumentByUUID = (uuid: string) => {
   const getData = useCallback(() => getDocumentByUUIDClient(uuid), [uuid]);
-  const {data} = useFetch<WikiDocument>(getData);
+  const {data} = useFetch<LatestWikiDocument>(getData);
 
   return {
     document: data,
