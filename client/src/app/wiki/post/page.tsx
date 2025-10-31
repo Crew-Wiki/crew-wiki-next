@@ -12,6 +12,7 @@ const Page = () => {
   const {saveMarkdown, initialValue} = usePostSaveMarkdown();
   const setInit = useDocument(action => action.setInit);
   const reset = useDocument(action => action.reset);
+  const onChange = useDocument(action => action.onChange);
 
   useEffect(() => {
     setInit(
@@ -30,7 +31,11 @@ const Page = () => {
     <section className="flex h-fit w-full flex-col gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-[768px]:gap-3 max-[768px]:p-4">
       <PostHeader mode="post" />
       <TitleInputField />
-      <TuiEditor initialValue={initialValue} saveMarkdown={saveMarkdown} />
+      <TuiEditor
+        initialValue={initialValue}
+        saveMarkdown={saveMarkdown}
+        onChange={value => onChange(value, 'contents')}
+      />
     </section>
   );
 };
