@@ -119,4 +119,4 @@ export const deleteDocumentServer = async (uuid: string) => {
   });
 
   return response;
-}
+};

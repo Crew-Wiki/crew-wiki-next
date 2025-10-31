@@ -21,7 +21,7 @@ export default function AdminDocumentsPage() {
     return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
   };
 
-  const filteredDocuments = filterDocumentsByTitle(documents, value)
+  const filteredDocuments = filterDocumentsByTitle(documents, value);
   const totalPages = Math.ceil(filteredDocuments.length / PAGE_SIZE);
   const paginatedDocuments = filteredDocuments.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
@@ -144,7 +144,9 @@ export default function AdminDocumentsPage() {
                   </td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
-                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{latestEditDate}</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">
+                    {latestEditDate}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
                       <Button
