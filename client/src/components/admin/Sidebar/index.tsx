@@ -1,6 +1,6 @@
 'use client';
 
-import {URLS} from '@constants/urls';
+import {route} from '@constants/route';
 import {Route} from 'next';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
@@ -16,8 +16,8 @@ const Index = () => {
   const pathname = usePathname();
 
   const menuItems: MenuItem[] = [
-    {label: '대시보드', href: `${URLS.admin}${URLS.dashboard}`, icon: '📊'},
-    {label: '문서 관리', href: `${URLS.admin}${URLS.documents}`, icon: '📄'},
+    {label: '대시보드', href: route.goAdminDashboard(), icon: '📊'},
+    {label: '문서 관리', href: route.goAdminDocument(), icon: '📄'},
   ];
 
   const isActive = (href: string) => pathname === href;

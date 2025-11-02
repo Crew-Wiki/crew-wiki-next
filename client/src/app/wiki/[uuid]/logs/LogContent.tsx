@@ -1,4 +1,4 @@
-import {URLS} from '@constants/urls';
+import {route} from '@constants/route';
 import {WikiDocumentLogSummary} from '@type/Document.type';
 import timeConverter from '@utils/TimeConverter';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ export const LogContent = ({uuid, summary}: LogContentProps) => {
 
   return (
     <Link
-      href={`${URLS.wiki}/${uuid}/log/${id}`}
+      href={route.goWikilog(uuid, id)}
       passHref
       className="text-md flex w-full items-center justify-center gap-2 rounded-2xl border border-primary-100 px-2 py-4 font-pretendard text-grayscale-800 md:gap-8"
     >

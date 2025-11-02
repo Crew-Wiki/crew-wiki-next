@@ -2,7 +2,7 @@
 
 import Button from '@components/common/Button';
 import DocumentTitle from '@components/document/layout/DocumentTitle';
-import {URLS} from '@constants/urls';
+import {route} from '@constants/route';
 import {useParams, useRouter} from 'next/navigation';
 
 const Error = () => {
@@ -10,7 +10,7 @@ const Error = () => {
   const router = useRouter();
 
   const goPostPage = () => {
-    router.push(`${URLS.wiki}${URLS.post}`);
+    router.push(route.goWikiWrite());
   };
 
   return (

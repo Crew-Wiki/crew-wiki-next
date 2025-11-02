@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@components/common/Button';
-import {URLS} from '@constants/urls';
+import {route} from '@constants/route';
 import * as Sentry from '@sentry/nextjs';
 import {useRouter} from 'next/navigation';
 import {useEffect} from 'react';
@@ -14,7 +14,7 @@ export default function GlobalError({error}: {error: Error & {digest?: string}})
   }, [error]);
 
   const goToMain = () => {
-    router.push(`${URLS.wiki}/${URLS.daemoon}`);
+    router.push(route.goDaemoon());
   };
 
   return (

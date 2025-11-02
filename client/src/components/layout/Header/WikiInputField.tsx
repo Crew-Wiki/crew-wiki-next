@@ -1,6 +1,5 @@
 'use client';
 
-import {URLS} from '@constants/urls';
 import {twMerge} from 'tailwind-merge';
 import {useInput} from '@components/common/Input/useInput';
 import Image from 'next/image';
@@ -8,6 +7,7 @@ import {useRouter} from 'next/navigation';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useTrie} from '@store/trie';
 import useAmplitude from '@hooks/useAmplitude';
+import {route} from '@constants/route';
 
 interface WikiInputProps {
   className?: string;
@@ -31,13 +31,13 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
 
     if (targetUUID !== 'search-icon' && targetUUID !== undefined) {
       trackDocumentSearch(value, targetUUID);
-      router.push(`${URLS.wiki}/${targetUUID}`);
+      router.push(route.goWiki(targetUUID));
     } else if (data.length !== 0) {
       trackDocumentSearch(value, data[0]?.uuid ?? 'not_found');
-      router.push(`${URLS.wiki}/${data[0]?.uuid}`);
+      router.push(route.goWiki(data[0]?.uuid));
     } else {
       trackDocumentSearch(value, 'not_found');
-      router.push(`${URLS.wiki}/${value}`);
+      router.push(route.goWiki(value));
     }
 
     setValue('');
