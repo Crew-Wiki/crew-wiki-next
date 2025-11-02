@@ -2,8 +2,7 @@
 
 import Button from '@components/common/Button';
 import DocumentTitle from '@components/document/layout/DocumentTitle';
-import {URLS} from '@constants/urls';
-import {Route} from 'next';
+import {route} from '@constants/route';
 import {useParams, useRouter} from 'next/navigation';
 
 const NotFound = () => {
@@ -11,7 +10,7 @@ const NotFound = () => {
   const router = useRouter();
 
   const goPostPage = () => {
-    router.push(`${URLS.wiki}${URLS.post}` as Route);
+    router.push(route.goWikiWrite());
   };
 
   return (

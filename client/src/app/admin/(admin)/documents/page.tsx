@@ -8,6 +8,7 @@ import {WikiDocumentExpand} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {URLS} from '@constants/urls';
 import {Route} from 'next';
+import {route} from '@constants/route';
 
 export default function AdminDocumentsPage() {
   const {value, onChange} = useInput({});
@@ -139,7 +140,7 @@ export default function AdminDocumentsPage() {
                 <tr key={document.uuid} className="hover:bg-grayscale-50">
                   <td
                     className="px-6 py-4 font-pretendard text-sm text-grayscale-text hover:cursor-pointer hover:text-primary-primary hover:underline"
-                    onClick={() => router.push(`${URLS.wiki}/${document.uuid}` as Route)}
+                    onClick={() => router.push(route.goWiki(document.uuid))}
                   >
                     {document.title}
                   </td>
@@ -150,11 +151,7 @@ export default function AdminDocumentsPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
-                      <Button
-                        size="xxs"
-                        style="tertiary"
-                        onClick={() => router.push(`${URLS.wiki}/${document.uuid}${URLS.edit}` as Route)}
-                      >
+                      <Button size="xxs" style="tertiary" onClick={() => router.push(route.goWikiEdit(document.uuid))}>
                         편집
                       </Button>
                       <Button size="xxs" style="text" onClick={() => handleDelete(document.uuid, document.title)}>
