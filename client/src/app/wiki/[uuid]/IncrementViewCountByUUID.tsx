@@ -12,7 +12,9 @@ export const IncrementViewCountByUUID = ({uuid}: IncrementViewCountProps) => {
 
   useEffect(() => {
     if (uuid) postViewCount({uuid});
-  }, [postViewCount, uuid]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uuid]);
 
   return null;
 };
