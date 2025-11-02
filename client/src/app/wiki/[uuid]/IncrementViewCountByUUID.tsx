@@ -12,7 +12,7 @@ export const IncrementViewCountByUUID = ({uuid}: IncrementViewCountProps) => {
 
   useEffect(() => {
     if (uuid) postViewCount({uuid});
-  }, [uuid]);
+  }, [postViewCount, uuid]);
 
   return null;
 };
