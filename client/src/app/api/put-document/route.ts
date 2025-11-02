@@ -10,8 +10,8 @@ import {ApiResponseType} from '@type/http.type';
 const putDocument = async (document: PostDocumentContent) => {
   const response = await putDocumentServer(document);
 
-  revalidateTag(CACHE.tag.getDocumentsUUID);
   revalidateTag(CACHE.tag.getRecentlyDocuments);
+  revalidateTag(CACHE.tag.getDocumentByUUID(document.uuid));
   revalidateTag(CACHE.tag.getDocumentLogsByUUID(document.uuid));
 
   return response;
