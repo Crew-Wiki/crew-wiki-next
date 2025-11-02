@@ -16,8 +16,8 @@ const Index = () => {
   const pathname = usePathname();
 
   const menuItems: MenuItem[] = [
-    {label: '대시보드', href: `${URLS.admin}${URLS.dashboard}`, icon: '📊'},
-    {label: '문서 관리', href: `${URLS.admin}${URLS.documents}`, icon: '📄'},
+    {label: '대시보드', href: `${URLS.admin}${URLS.dashboard}` as Route, icon: '📊'},
+    {label: '문서 관리', href: `${URLS.admin}${URLS.documents}` as Route, icon: '📄'},
   ];
 
   const isActive = (href: string) => pathname === href;
