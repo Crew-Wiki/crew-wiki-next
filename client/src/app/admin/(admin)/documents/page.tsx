@@ -6,8 +6,6 @@ import {useInput} from '@components/common/Input/useInput';
 import {getAllDocumentsServer, deleteDocumentServer} from '@apis/server/document';
 import {WikiDocumentExpand} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
-import {URLS} from '@constants/urls';
-import {Route} from 'next';
 import {route} from '@constants/route';
 
 export default function AdminDocumentsPage() {
