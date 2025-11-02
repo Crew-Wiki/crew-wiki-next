@@ -1,5 +1,6 @@
 'use client';
 
+import {route} from '@constants/route';
 import {useRouter} from 'next/navigation';
 import {useState} from 'react';
 
@@ -60,7 +61,7 @@ export default function LoginForm() {
         return;
       }
 
-      router.replace('/admin/documents');
+      router.replace(route.goAdminDocument());
     } catch (error) {
       if (error instanceof Error) {
         console.error('로그인 중 네트워크 오류 발생:', error.message);
