@@ -7,6 +7,7 @@ import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 import {postDocumentClient} from '@apis/client/document';
 import {useTrie} from '@store/trie';
+import {Route} from 'next';
 
 export const usePostDocument = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ export const usePostDocument = () => {
     onSuccess: document => {
       trackDocumentCreate(document.title, document.documentUUID);
       addTitle(document.title, document.documentUUID);
-      router.push(`${URLS.wiki}/${document.documentUUID}`);
+      router.push(`${URLS.wiki}/${document.documentUUID}` as Route);
       router.refresh();
     },
   });

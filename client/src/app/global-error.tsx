@@ -3,6 +3,7 @@
 import Button from '@components/common/Button';
 import {URLS} from '@constants/urls';
 import * as Sentry from '@sentry/nextjs';
+import {Route} from 'next';
 import {useRouter} from 'next/navigation';
 import {useEffect} from 'react';
 
@@ -14,7 +15,7 @@ export default function GlobalError({error}: {error: Error & {digest?: string}})
   }, [error]);
 
   const goToMain = () => {
-    router.push(`${URLS.wiki}/${URLS.daemoon}`);
+    router.push(`${URLS.wiki}/${URLS.daemoon}` as Route);
   };
 
   return (

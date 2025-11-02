@@ -8,6 +8,7 @@ import {useRouter} from 'next/navigation';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useTrie} from '@store/trie';
 import useAmplitude from '@hooks/useAmplitude';
+import {Route} from 'next';
 
 interface WikiInputProps {
   className?: string;
@@ -31,13 +32,13 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
 
     if (targetUUID !== 'search-icon' && targetUUID !== undefined) {
       trackDocumentSearch(value, targetUUID);
-      router.push(`${URLS.wiki}/${targetUUID}`);
+      router.push(`${URLS.wiki}/${targetUUID}` as Route);
     } else if (data.length !== 0) {
       trackDocumentSearch(value, data[0]?.uuid ?? 'not_found');
-      router.push(`${URLS.wiki}/${data[0]?.uuid}`);
+      router.push(`${URLS.wiki}/${data[0]?.uuid}` as Route);
     } else {
       trackDocumentSearch(value, 'not_found');
-      router.push(`${URLS.wiki}/${value}`);
+      router.push(`${URLS.wiki}/${value}` as Route);
     }
 
     setValue('');

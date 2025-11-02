@@ -2,6 +2,7 @@
 
 import {getRandomDocumentClient} from '@apis/client/document';
 import {URLS} from '@constants/urls';
+import {Route} from 'next';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
@@ -12,7 +13,7 @@ export const useRandomButton = () => {
     const randomDocument = await getRandomDocumentClient();
     const randomUUID = randomDocument.documentUUID;
 
-    router.push(`${URLS.wiki}/${randomUUID}`);
+    router.push(`${URLS.wiki}/${randomUUID}` as Route);
   };
 
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768);

@@ -7,6 +7,7 @@ import {getAllDocumentsServer, deleteDocumentServer} from '@apis/server/document
 import {WikiDocumentExpand} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {URLS} from '@constants/urls';
+import {Route} from 'next';
 
 export default function AdminDocumentsPage() {
   const {value, onChange} = useInput({});
@@ -138,7 +139,7 @@ export default function AdminDocumentsPage() {
                 <tr key={document.uuid} className="hover:bg-grayscale-50">
                   <td
                     className="px-6 py-4 font-pretendard text-sm text-grayscale-text hover:cursor-pointer hover:text-primary-primary hover:underline"
-                    onClick={() => router.push(`${URLS.wiki}/${document.uuid}`)}
+                    onClick={() => router.push(`${URLS.wiki}/${document.uuid}` as Route)}
                   >
                     {document.title}
                   </td>
@@ -152,7 +153,7 @@ export default function AdminDocumentsPage() {
                       <Button
                         size="xxs"
                         style="tertiary"
-                        onClick={() => router.push(`${URLS.wiki}/${document.uuid}${URLS.edit}`)}
+                        onClick={() => router.push(`${URLS.wiki}/${document.uuid}${URLS.edit}` as Route)}
                       >
                         편집
                       </Button>
