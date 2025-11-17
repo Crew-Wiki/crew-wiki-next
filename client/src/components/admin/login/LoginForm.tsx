@@ -51,12 +51,10 @@ export default function LoginForm() {
       });
 
       if (!response.ok) {
-        if (response.status === 400 || response.status === 401) {
+        if (response.status === 400 || response.status === 401 || response.status === 404) {
           alert('아이디 또는 비밀번호가 올바르지 않습니다.');
         } else if (response.status >= 500) {
           alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-        } else {
-          alert(`알 수 없는 오류가 발생했습니다. 상태 코드: ${response.status}`);
         }
         return;
       }
