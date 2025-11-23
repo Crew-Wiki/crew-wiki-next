@@ -12,6 +12,10 @@ export const URLS = {
   edit: '/edit',
   post: '/post',
   daemoon: isProduction ? DAEMOON.production : DAEMOON.development,
-  logs: 'logs',
-  specificLog: 'log/:logId',
+  logs: '/logs',
+  specificLog: '/log/:logId',
+  admin: '/admin',
+  login: '/admin/login',
+  dashboard: '/admin/dashboard',
+  documents: '/admin/documents',
 };

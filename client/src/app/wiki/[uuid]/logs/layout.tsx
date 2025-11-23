@@ -1,9 +1,9 @@
 import {getDocumentByUUIDServer} from '@apis/server/document';
 import {LogsHeader} from './LogsHeader';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
-import {UUIDLogParams} from '@type/PageParams.type';
+import {UUIDParams} from '@type/PageParams.type';
 
-type Props = React.PropsWithChildren & UUIDLogParams;
+type Props = React.PropsWithChildren & UUIDParams;
 
 const Layout = async ({children, params}: Props) => {
   const {uuid} = await params;

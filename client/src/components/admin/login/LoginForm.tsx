@@ -1,5 +1,6 @@
 'use client';
 
+import {route} from '@constants/route';
 import {useRouter} from 'next/navigation';
 import {useState} from 'react';
 
@@ -60,7 +61,7 @@ export default function LoginForm() {
         return;
       }
 
-      router.replace('/admin/documents');
+      router.replace(route.goAdminDocument());
     } catch (error) {
       if (error instanceof Error) {
         console.error('로그인 중 네트워크 오류 발생:', error.message);
@@ -83,19 +84,10 @@ export default function LoginForm() {
             name="loginId"
             value={adminForm.loginId}
             onChange={handleInputChange}
-            className={`w-full rounded-lg border px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:border-error-400 focus:outline-none focus:ring-2 focus:ring-error-400/20 ${
-              adminForm.loginId && !isValid.loginId
-                ? 'border-error-error focus:border-error-error focus:ring-error-error/20'
-                : 'border-grayscale-200'
-            }`}
+            className="w-full rounded-lg border border-grayscale-200 px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:border-primary-primary focus:outline-none focus:ring-2 focus:ring-primary-primary/20"
             placeholder="아이디를 입력하세요"
             autoComplete="off"
           />
-          {adminForm.loginId && !isValid.loginId && (
-            <p className="mt-2 font-pretendard text-sm text-error-error">
-              아이디는 4~20자이며, 문자(영문자 또는 한글)를 반드시 포함해야 합니다.
-            </p>
-          )}
         </div>
         <div className="mb-8">
           <label htmlFor="password" className="mb-2 block font-pretendard text-sm font-medium text-grayscale-700">
@@ -107,19 +99,10 @@ export default function LoginForm() {
             name="password"
             value={adminForm.password}
             onChange={handleInputChange}
-            className={`w-full rounded-lg border px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:border-error-400 focus:outline-none focus:ring-2 focus:ring-error-400/20 ${
-              adminForm.password && !isValid.password
-                ? 'border-error-error focus:border-error-error focus:ring-error-error/20'
-                : 'border-grayscale-200'
-            }`}
+            className="w-full rounded-lg border border-grayscale-200 px-4 py-3 font-pretendard text-grayscale-800 transition-colors placeholder:text-grayscale-lightText focus:border-primary-primary focus:outline-none focus:ring-2 focus:ring-primary-primary/20"
             placeholder="비밀번호를 입력하세요"
             autoComplete="new-password"
           />
-          {adminForm.password && !isValid.password && (
-            <p className="mt-2 font-pretendard text-sm text-error-error">
-              비밀번호는 8자 이상이며, 문자(영문자 또는 한글), 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.
-            </p>
-          )}
         </div>
         <button
           type="submit"

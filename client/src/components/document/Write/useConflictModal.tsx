@@ -87,7 +87,7 @@ export const useConflictModal = ({handleSubmit}: ConflictModalProps) => {
       handleResolve={() => handleResolve(conflict.content)}
       isResolved={isResolved}
     />,
-    {closeOnClickDimmedLayer: false},
+    {closeOnClickBackdrop: false},
   );
 
   return {modal, handleConflictCheck, isLoading};

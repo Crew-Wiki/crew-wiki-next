@@ -2,6 +2,7 @@
 
 import useMutation from '@hooks/useMutation';
 import {postViewCount} from '@apis/client/viewCount';
+import {useCallback} from 'react';
 
 type Argument = {uuid: string};
 type Response = {message: string};
@@ -11,8 +12,15 @@ export const usePostViewCount = () => {
     mutationFn: ({uuid}: Argument) => postViewCount(uuid),
   });
 
+  const postViewCountCallback = useCallback(
+    (arg: Argument) => {
+      mutate(arg);
+    },
+    [mutate],
+  );
+
   return {
-    postViewCount: mutate,
+    postViewCount: postViewCountCallback,
     ...rest,
   };
 };

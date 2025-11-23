@@ -1,10 +1,10 @@
-import type {UUIDLogParams, UUIDParams} from '@type/PageParams.type';
+import type {UUIDParams} from '@type/PageParams.type';
 import {Metadata} from 'next';
 import {getDocumentLogsByUUIDServer} from '@apis/server/document';
 import {LogList} from './LogList';
 import {generateLogsPageMetadata} from '@utils/generateDocumentMetadata';
 
-export async function generateMetadata({params}: UUIDLogParams): Promise<Metadata> {
+export async function generateMetadata({params}: UUIDParams): Promise<Metadata> {
   const {uuid} = await params;
   return await generateLogsPageMetadata(uuid);
 }

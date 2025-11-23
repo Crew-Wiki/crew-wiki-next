@@ -11,7 +11,7 @@ export const useUploadImage = (uuid: string) => {
   const updateImageUploadPending = useDocument(action => action.updateImageUploadPending);
 
   const {mutate} = useMutation({
-    mutationFn: ({file, callback}: UploadImageArgs) => uploadImage(uuid, file),
+    mutationFn: ({file}: UploadImageArgs) => uploadImage(uuid, file),
     onMutate: () => {
       updateImageUploadPending(true);
     },

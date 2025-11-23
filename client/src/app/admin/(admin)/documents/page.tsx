@@ -6,7 +6,7 @@ import {useInput} from '@components/common/Input/useInput';
 import {getAllDocumentsServer, deleteDocumentServer} from '@apis/server/document';
 import {WikiDocumentExpand} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
-import {URLS} from '@constants/urls';
+import {route} from '@constants/route';
 
 export default function AdminDocumentsPage() {
   const {value, onChange} = useInput({});
@@ -21,7 +21,7 @@ export default function AdminDocumentsPage() {
     return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
   };
 
-  const filteredDocuments = filterDocumentsByTitle(documents, value)
+  const filteredDocuments = filterDocumentsByTitle(documents, value);
   const totalPages = Math.ceil(filteredDocuments.length / PAGE_SIZE);
   const paginatedDocuments = filteredDocuments.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
@@ -138,20 +138,18 @@ export default function AdminDocumentsPage() {
                 <tr key={document.uuid} className="hover:bg-grayscale-50">
                   <td
                     className="px-6 py-4 font-pretendard text-sm text-grayscale-text hover:cursor-pointer hover:text-primary-primary hover:underline"
-                    onClick={() => router.push(`${URLS.wiki}/${document.uuid}`)}
+                    onClick={() => router.push(route.goWiki(document.uuid))}
                   >
                     {document.title}
                   </td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
                   <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
-                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{latestEditDate}</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">
+                    {latestEditDate}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
-                      <Button
-                        size="xxs"
-                        style="tertiary"
-                        onClick={() => router.push(`${URLS.wiki}/${document.uuid}${URLS.edit}`)}
-                      >
+                      <Button size="xxs" style="tertiary" onClick={() => router.push(route.goWikiEdit(document.uuid))}>
                         편집
                       </Button>
                       <Button size="xxs" style="text" onClick={() => handleDelete(document.uuid, document.title)}>

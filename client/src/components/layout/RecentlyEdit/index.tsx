@@ -1,5 +1,5 @@
 import {getRecentlyDocumentsServer} from '@apis/server/document';
-import {URLS} from '@constants/urls';
+import {route} from '@constants/route';
 import timeConverter from '@utils/TimeConverter';
 import Link from 'next/link';
 
@@ -16,7 +16,7 @@ const RecentlyEdit = async () => {
           <Link
             key={`recently-${document.id}`}
             className="border-b border-grayscale-100 px-2.5 py-2 font-pretendard text-xs font-normal text-grayscale-800 last:border-0"
-            href={`${URLS.wiki}/${document.uuid}`}
+            href={route.goWiki(document.uuid)}
           >
             {`[${timeConverter(document.generateTime, 'YYYY.MM.DD')}] ${document.title}`}
           </Link>

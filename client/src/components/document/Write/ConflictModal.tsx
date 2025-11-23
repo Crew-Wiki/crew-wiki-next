@@ -4,13 +4,13 @@ import {Modal} from '@components/common/Modal/Modal';
 import TuiEditor from '../TuiEditor';
 import Button from '@components/common/Button';
 
-type ConflictModalProps = {
+interface ConflictModalProps {
   initialContent: string;
   setContent: (value: string) => void;
   closeModal: VoidFunction;
   handleResolve: VoidFunction;
   isResolved: boolean;
-};
+}
 
 export const ConflictModal = ({
   initialContent,

@@ -1,7 +1,7 @@
 'use client';
 
 import {getRandomDocumentClient} from '@apis/client/document';
-import {URLS} from '@constants/urls';
+import {route} from '@constants/route';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
@@ -12,7 +12,7 @@ export const useRandomButton = () => {
     const randomDocument = await getRandomDocumentClient();
     const randomUUID = randomDocument.documentUUID;
 
-    router.push(`${URLS.wiki}/${randomUUID}`);
+    router.push(route.goWiki(randomUUID));
   };
 
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768);

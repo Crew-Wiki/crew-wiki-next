@@ -19,7 +19,7 @@ const Page = () => {
       </div>
     </Modal>,
     {
-      closeOnClickDimmedLayer: true,
+      closeOnClickBackdrop: true,
       onClose: () => {
         console.log('모달 종료');
       },
