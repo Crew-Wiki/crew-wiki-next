@@ -1,5 +1,6 @@
 'use client';
 
+import {requestPostClientWithoutResponse} from '@http/client';
 import {route} from '@constants/route';
 import {Route} from 'next';
 import Link from 'next/link';
@@ -25,15 +26,10 @@ const Index = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/post-admin-logout', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+      await requestPostClientWithoutResponse({
+        baseUrl: '',
+        endpoint: '/api/post-admin-logout',
       });
-
-      if (!response.ok) {
-        alert('로그아웃에 실패했습니다.');
-        return;
-      }
 
       router.replace(route.goAdminLogin());
     } catch (error) {
