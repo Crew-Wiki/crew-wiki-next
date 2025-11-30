@@ -49,9 +49,11 @@ export const requestDeleteServer = async ({headers = {}, ...args}: ServerHttpMet
 
   const response = await executeRequest({url, requestInit});
 
-  if (response && response.status !== 204) {
-    await response.json();
+  if (response.status === 204) {
+    return;
   }
+
+  await response.json();
 };
 
 const prepareRequest = ({baseUrl, method, endpoint, headers, body, queryParams, next, cache}: ServerHttpArgs) => {
