@@ -25,6 +25,10 @@ const Index = () => {
   const isActive = (href: string) => pathname === href;
 
   const handleLogout = async () => {
+    if (!confirm('정말 로그아웃 하시겠어요?')) {
+      return;
+    }
+
     try {
       await requestPostClientWithoutResponse({
         baseUrl: '',

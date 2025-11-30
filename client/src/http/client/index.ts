@@ -47,7 +47,10 @@ export const requestPutClientWithoutResponse = async ({headers = {}, ...args}: C
   });
 };
 
-export const requestPostClientWithoutResponse = async ({headers = {}, ...args}: ClientHttpMethodArgs): Promise<void> => {
+export const requestPostClientWithoutResponse = async ({
+  headers = {},
+  ...args
+}: ClientHttpMethodArgs): Promise<void> => {
   await requestWithoutResponse({
     ...args,
     method: 'POST',
