@@ -1,8 +1,8 @@
 'use client';
 
 import {ENDPOINT} from '@constants/endpoint';
-import {requestGetClient, requestPostClient, requestPutClient} from '@http/client';
-import {PostDocumentContent, WikiDocument, WikiDocumentLogSummary} from '@type/Document.type';
+import {requestGetClient, requestPostClient, requestPutClient, requestDeleteClient} from '@http/client';
+import {LatestWikiDocument, PostDocumentContent, WikiDocument, WikiDocumentLogSummary} from '@type/Document.type';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 
 export const getDocumentByTitleClient = async (title: string) => {
@@ -15,7 +15,7 @@ export const getDocumentByTitleClient = async (title: string) => {
 };
 
 export const getDocumentByUUIDClient = async (uuid: string) => {
-  const response = await requestGetClient<WikiDocument>({
+  const response = await requestGetClient<LatestWikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getDocumentByUUID(uuid),
   });
@@ -80,10 +80,18 @@ export const putDocumentClient = async (document: PostDocumentContent) => {
 };
 
 export const getDocumentTitleListClient = async () => {
-  const response = await requestGetClient<string[]>({
+  const response = await requestGetClient<TitleAndUUID[]>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: '/api/get-document-title-list',
   });
 
   return response;
+};
+
+export const deleteDocumentClient = async (uuid: string) => {
+  await requestDeleteClient({
+    baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
+    endpoint: '/api/delete-document',
+    queryParams: {uuid},
+  });
 };

@@ -1,7 +1,5 @@
-// ISR : cache 시간 어떻게 가져갈 지 논의
-
 import {PaginationParams} from '@type/General.type';
-import {allDocumentsParams, recentlyParams} from './params';
+import {recentlyParams} from './params';
 
 export const generatePaginationCacheTags = (
   {pageNumber, pageSize, sort, sortDirection}: PaginationParams,

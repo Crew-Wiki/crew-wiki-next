@@ -47,6 +47,25 @@ export const requestPutClientWithoutResponse = async ({headers = {}, ...args}: C
   });
 };
 
+export const requestPostClientWithoutResponse = async ({
+  headers = {},
+  ...args
+}: ClientHttpMethodArgs): Promise<void> => {
+  await requestWithoutResponse({
+    ...args,
+    method: 'POST',
+    headers,
+  });
+};
+
+export const requestDeleteClient = async ({headers = {}, ...args}: ClientHttpMethodArgs): Promise<void> => {
+  await requestWithoutResponse({
+    ...args,
+    method: 'DELETE',
+    headers,
+  });
+};
+
 const prepareRequest = ({baseUrl, method, endpoint, headers, body, queryParams}: ClientHttpArgs) => {
   let url = `${baseUrl}${endpoint}`;
   if (queryParams) url += `?${objectToQueryString(queryParams)}`;

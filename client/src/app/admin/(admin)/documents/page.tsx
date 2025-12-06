@@ -1,33 +1,99 @@
 'use client';
 
 import Button from '@components/common/Button';
-import {useState} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
-
-interface Document {
-  id: number;
-  title: string;
-  views: number;
-  edits: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import {getAllDocumentsServer} from '@apis/server/document';
+import {deleteDocumentClient} from '@apis/client/document';
+import {WikiDocumentExpand} from '@type/Document.type';
+import {useRouter} from 'next/navigation';
+import {route} from '@constants/route';
 
 export default function AdminDocumentsPage() {
-  const {value, directlyChangeValue: setValue, onChange} = useInput({});
+  const {value, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  // 더미 데이터
-  const documents: Document[] = Array.from({length: 10}, (_, index) => ({
-    id: index + 1,
-    title: '루나',
-    views: 47,
-    edits: 3,
-    createdAt: '2025.04.03',
-    updatedAt: '2025.05.07',
-  }));
+  const PAGE_SIZE = 10;
 
-  const totalPages = 8;
+  const filterDocumentsByTitle = (docs: WikiDocumentExpand[], searchValue: string) => {
+    return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
+  };
+
+  const filteredDocuments = filterDocumentsByTitle(documents, value);
+  const totalPages = Math.ceil(filteredDocuments.length / PAGE_SIZE);
+  const paginatedDocuments = filteredDocuments.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  const pageNumbers = useMemo(() => {
+    const currentGroup = Math.floor((currentPage - 1) / 10);
+    const startPage = currentGroup * 10 + 1;
+    const endPage = Math.min(startPage + 9, totalPages);
+
+    return Array.from({length: endPage - startPage + 1}, (_, index) => startPage + index);
+  }, [currentPage, totalPages]);
+
+  const getDeleteConfirmMessage = (title: string) => {
+    return `"${title}" 문서를 정말 삭제하시겠어요?\n이 작업은 되돌릴 수 없어요.`;
+  };
+
+  const handleClickPrevPageGroup = () => {
+    const currentGroup = Math.floor((currentPage - 1) / 10);
+    if (currentGroup > 0) {
+      setCurrentPage(currentGroup * 10);
+    }
+  };
+
+  const handleClickNextPageGroup = () => {
+    const currentGroup = Math.floor((currentPage - 1) / 10);
+    const nextGroupFirstPage = (currentGroup + 1) * 10 + 1;
+    if (nextGroupFirstPage <= totalPages) {
+      setCurrentPage(nextGroupFirstPage);
+    }
+  };
+
+  const handleDelete = async (uuid: string, title: string) => {
+    const confirmMessage = getDeleteConfirmMessage(title);
+
+    if (confirm(confirmMessage)) {
+      try {
+        await deleteDocumentClient(uuid);
+        const updatedDocs = documents.filter(document => document.uuid !== uuid);
+        setDocuments(updatedDocs);
+        alert('문서가 삭제되었습니다.');
+      } catch (error) {
+        console.error('문서 삭제 실패:', error);
+        alert('문서 삭제에 실패했습니다.');
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const allDocs = await getAllDocumentsServer();
+        setDocuments(allDocs);
+      } catch (error) {
+        console.error('문서를 불러오는데 실패했습니다:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDocuments();
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [value]);
+
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="text-grayscale-lightText">문서를 불러오는 중...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,8 +106,7 @@ export default function AdminDocumentsPage() {
           placeholder="검색할 문서의 제목을 입력하세요."
           value={value}
           onChange={onChange}
-          className="flex-1 rounded-lg border border-grayscale-200 px-4 py-2 font-pretendard text-sm
-          text-grayscale-800 placeholder:text-grayscale-lightText focus:border-primary-primary focus:outline-none"
+          className="flex-1 rounded-lg border border-grayscale-200 px-4 py-2 font-pretendard text-sm text-grayscale-800 placeholder:text-grayscale-lightText focus:border-primary-primary focus:outline-none"
         />
       </div>
 
@@ -53,7 +118,6 @@ export default function AdminDocumentsPage() {
               <th className="px-6 py-3 text-left font-pretendard text-sm font-medium text-grayscale-700">문서 제목</th>
               <th className="px-6 py-3 text-center font-pretendard text-sm font-medium text-grayscale-700">조회수</th>
               <th className="px-6 py-3 text-center font-pretendard text-sm font-medium text-grayscale-700">수정수</th>
-              <th className="px-6 py-3 text-center font-pretendard text-sm font-medium text-grayscale-700">생성일</th>
               <th className="px-6 py-3 text-center font-pretendard text-sm font-medium text-grayscale-700">
                 최근 편집일
               </th>
@@ -61,25 +125,42 @@ export default function AdminDocumentsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-grayscale-100">
-            {documents.map(document => (
-              <tr key={document.id} className="hover:bg-grayscale-50">
-                <td className="px-6 py-4 font-pretendard text-sm text-grayscale-text">{document.title}</td>
-                <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{document.views}</td>
-                <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{document.edits}</td>
-                <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{document.createdAt}</td>
-                <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">{document.updatedAt}</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center justify-center gap-2">
-                    <Button size="xxs" style="tertiary" onClick={() => console.log('편집', document.id)}>
-                      편집
-                    </Button>
-                    <Button size="xxs" style="text" onClick={() => console.log('문서 삭제', document.id)}>
-                      문서 삭제
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {paginatedDocuments.map(document => {
+              const latestEditDate = new Date(document.generateTime)
+                .toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+                .replace(/\. /g, '.')
+                .replace(/\.$/, '');
+
+              return (
+                <tr key={document.uuid} className="hover:bg-grayscale-50">
+                  <td
+                    className="px-6 py-4 font-pretendard text-sm text-grayscale-text hover:cursor-pointer hover:text-primary-primary hover:underline"
+                    onClick={() => router.push(route.goWiki(document.uuid))}
+                  >
+                    {document.title}
+                  </td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">-</td>
+                  <td className="px-6 py-4 text-center font-pretendard text-sm text-grayscale-text">
+                    {latestEditDate}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-center gap-2">
+                      <Button size="xxs" style="tertiary" onClick={() => router.push(route.goWikiEdit(document.uuid))}>
+                        편집
+                      </Button>
+                      <Button size="xxs" style="text" onClick={() => handleDelete(document.uuid, document.title)}>
+                        문서 삭제
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -87,13 +168,20 @@ export default function AdminDocumentsPage() {
       {/* 페이지네이션 */}
       <div className="flex items-center justify-center gap-1">
         <button
-          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+          onClick={() => setCurrentPage(1)}
           className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
           disabled={currentPage === 1}
         >
+          처음
+        </button>
+        <button
+          onClick={handleClickPrevPageGroup}
+          className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
+          disabled={currentPage <= 10}
+        >
           이전
         </button>
-        {Array.from({length: totalPages}, (_, i) => i + 1).map(page => (
+        {pageNumbers.map(page => (
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
@@ -105,11 +193,18 @@ export default function AdminDocumentsPage() {
           </button>
         ))}
         <button
-          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+          onClick={handleClickNextPageGroup}
+          className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
+          disabled={Math.floor((currentPage - 1) / 10) >= Math.floor((totalPages - 1) / 10)}
+        >
+          다음
+        </button>
+        <button
+          onClick={() => setCurrentPage(totalPages)}
           className="rounded px-3 py-1 font-pretendard text-sm text-grayscale-500 hover:bg-grayscale-100"
           disabled={currentPage === totalPages}
         >
-          다음
+          끝
         </button>
       </div>
     </div>

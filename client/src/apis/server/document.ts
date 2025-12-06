@@ -9,9 +9,10 @@ import {
   WikiDocumentLogDetail,
   WikiDocumentLogSummary,
 } from '@type/Document.type';
-import {requestGetServer, requestPostServer, requestPutServer} from '@http/server';
+import {requestGetServer, requestPostServer, requestPutServer, requestDeleteServer} from '@http/server';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
+import {ViewCountByUUID} from '@type/viewCount.type';
 import {TitleAndUUID} from '@apis/client/document';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
@@ -98,6 +99,29 @@ export const putDocumentServer = async (document: PostDocumentContent) => {
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.updateDocument,
     body: document,
+  });
+
+  return response;
+};
+
+export const postViewsFlush = async (viewCount: ViewCountByUUID) => {
+  await requestPostServer({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.postViewsFlush,
+    body: viewCount,
+  });
+};
+
+export const deleteDocumentServer = async (uuid: string, cookieHeader?: string | null) => {
+  const headers: Record<string, string> = {};
+  if (cookieHeader) {
+    headers['Cookie'] = cookieHeader;
+  }
+
+  const response = await requestDeleteServer({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.deleteDocument(uuid),
+    headers,
   });
 
   return response;

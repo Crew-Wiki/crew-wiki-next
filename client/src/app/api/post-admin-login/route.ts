@@ -1,6 +1,7 @@
 import {NextResponse} from 'next/server';
 import {postAdminLogin} from '@apis/server/admin';
 import {cookies} from 'next/headers';
+import {ApiResponseType} from '@type/http.type';
 
 export const POST = async (request: Request) => {
   try {
@@ -54,6 +55,11 @@ export const POST = async (request: Request) => {
     return NextResponse.json({message: '로그인 성공'});
   } catch (error) {
     console.error('로그인 처리 중 서버 오류:', error);
-    return NextResponse.json({error: '로그인 처리 중 오류'}, {status: 500});
+    const response: ApiResponseType<null> = {
+      data: null,
+      code: 'ERROR',
+      message: error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.',
+    };
+    return NextResponse.json(response, {status: 500});
   }
 };

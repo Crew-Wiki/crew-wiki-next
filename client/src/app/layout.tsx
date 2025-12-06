@@ -48,7 +48,10 @@ export default function RootLayout({
       className={`${pretendard.variable} scroll-pt-[50vh] scroll-smooth`}
       style={{backgroundColor: '#f3f4f6'}}
     >
-      <body className={bm.variable}>{children}</body>
+      <body className={bm.variable}>
+        {children}
+        <div id="modal-root"></div>
+      </body>
     </html>
   );
 }

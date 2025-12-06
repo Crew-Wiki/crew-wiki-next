@@ -6,5 +6,7 @@ declare namespace NodeJS {
     NEXT_PUBLIC_IMAGE_S3_DOMAIN: string;
     NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN: string;
     NEXT_PUBLIC_CDN_DOMAIN: string;
+    VIEW_DATA_FILE_PATH: string;
+    VIEW_DATA_FLUSH_THRESHOLD: string;
   }
 }
