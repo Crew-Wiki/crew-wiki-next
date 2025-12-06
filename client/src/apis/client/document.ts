@@ -1,7 +1,7 @@
 'use client';
 
 import {ENDPOINT} from '@constants/endpoint';
-import {requestGetClient, requestPostClient, requestPutClient} from '@http/client';
+import {requestGetClient, requestPostClient, requestPutClient, requestDeleteClient} from '@http/client';
 import {LatestWikiDocument, PostDocumentContent, WikiDocument, WikiDocumentLogSummary} from '@type/Document.type';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 
@@ -86,4 +86,12 @@ export const getDocumentTitleListClient = async () => {
   });
 
   return response;
+};
+
+export const deleteDocumentClient = async (uuid: string) => {
+  await requestDeleteClient({
+    baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
+    endpoint: '/api/delete-document',
+    queryParams: {uuid},
+  });
 };
