@@ -87,19 +87,19 @@ const Index = () => {
         <button
           type="button"
           className="flex w-full items-center gap-3 rounded-lg px-4 py-3 font-pretendard text-sm text-grayscale-700 transition-colors hover:bg-grayscale-100"
+          onClick={onClickDeleteCacheButton}
+        >
+          캐시 삭제
+        </button>
+        <button
+          type="button"
+          className="flex w-full items-center gap-3 rounded-lg px-4 py-3 font-pretendard text-sm text-grayscale-700 transition-colors hover:bg-grayscale-100"
           onClick={() => {
             // TODO: 로그아웃 기능 구현
             console.log('로그아웃');
           }}
         >
           로그아웃
-        </button>
-        <button
-          type="button"
-          className="flex w-full items-center gap-3 rounded-lg px-4 py-3 font-pretendard text-sm text-grayscale-700 transition-colors hover:bg-grayscale-100"
-          onClick={onClickDeleteCacheButton}
-        >
-          캐시 삭제
         </button>
       </div>
       {deleteCacheConfirm}
