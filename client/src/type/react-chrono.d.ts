@@ -1,4 +1,4 @@
-declare module '@type/react-chrono' {
+declare module 'react-chrono' {
   import { ReactNode } from 'react';
 
   export interface TimelineItem {
@@ -47,6 +47,7 @@ declare module '@type/react-chrono' {
     mode?: 'VERTICAL' | 'VERTICAL_ALTERNATING' | 'HORIZONTAL';
     cardHeight?: number;
     cardWidth?: number;
+    itemWidth?: number;
     scrollable?: boolean | { scrollbar: boolean };
     theme?: Theme;
     fontSizes?: FontSizes;
@@ -61,7 +62,9 @@ declare module '@type/react-chrono' {
     onItemSelected?: (data: any) => void;
     textDensity?: 'LOW' |'HIGH';
     enableLayoutSwitch?: boolean;
-    disableToolbar: boolean;
+    disableToolbar?: boolean;
+    showAllCardsHorizontal?: boolean;
+    mediaHeight?: number;
     children?: ReactNode;
   }
 
