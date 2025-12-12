@@ -10,7 +10,7 @@ import Button from '@components/common/Button';
 import {useModal} from '@components/common/Modal/useModal';
 import EventAddModal from '@components/group/EventAddModal';
 import {GroupDocumentResponse} from '@type/Group.type';
-import {OrganizationEvent} from '@type/Event.type';
+import {OrganizationEvent, EventFormData} from '@type/Event.type';
 import markdownToHtml from '@utils/markdownToHtml';
 import {processHtmlContent} from '@utils/processHtmlContent';
 import TOC from '@components/document/TOC/TOC';
@@ -23,10 +23,36 @@ const GroupPage = () => {
   const [loading, setLoading] = useState(true);
   const [htmlContents, setHtmlContents] = useState<string>('');
 
-  const handleAddEvent = (data: {date: Date; title: string; contents: string}) => {
-    // TODO: 실제 API 연동
-    console.log('이벤트 추가:', data);
-    closeModal();
+  const handleAddEvent = async (data: {date: Date; title: string; contents: string}) => {
+    const year = data.date.getFullYear();
+    const month = String(data.date.getMonth() + 1).padStart(2, '0');
+    const day = String(data.date.getDate()).padStart(2, '0');
+    const occurredAt = `${year}-${month}-${day}`;
+
+    const eventData: EventFormData = {
+      title: data.title,
+      contents: data.contents,
+      writer: groupDocument?.writer || '익명',
+      occurredAt,
+      organizationDocumentUuid: uuid as string,
+    };
+
+    try {
+      const response = await fetch('/api/post-organization-event', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(eventData),
+      });
+
+      if (response.ok) {
+        closeModal();
+        window.location.reload();
+      } else {
+        console.error('이벤트 추가 실패');
+      }
+    } catch (error) {
+      console.error('이벤트 추가 중 오류:', error);
+    }
   };
 
   const {
