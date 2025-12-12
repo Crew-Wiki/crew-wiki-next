@@ -16,6 +16,7 @@ export const ENDPOINT = {
 
   // Organization Event
   postOrganizationEvent: '/organization-events',
+  putOrganizationEvent: (uuid: string) => `/organization-events/${uuid}`,
   deleteOrganizationEvent: (uuid: string) => `/organization-events/${uuid}`,
 
   // Admin Auth
