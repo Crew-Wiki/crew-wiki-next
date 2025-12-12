@@ -7,6 +7,8 @@ import DocumentFooter from '@components/document/layout/DocumentFooter';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
 import Timeline from '@components/group/Timeline';
 import Button from '@components/common/Button';
+import {useModal} from '@components/common/Modal/useModal';
+import EventAddModal from '@components/group/EventAddModal';
 import {GroupDocumentResponse} from '@type/Group.type';
 import {OrganizationEvent} from '@type/Event.type';
 import markdownToHtml from '@utils/markdownToHtml';
@@ -20,6 +22,18 @@ const GroupPage = () => {
   const [events, setEvents] = useState<OrganizationEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [htmlContents, setHtmlContents] = useState<string>('');
+
+  const handleAddEvent = (data: {date: Date; title: string; contents: string}) => {
+    // TODO: 실제 API 연동
+    console.log('이벤트 추가:', data);
+    closeModal();
+  };
+
+  const {
+    open: openModal,
+    close: closeModal,
+    component: modalComponent,
+  } = useModal(<EventAddModal onCancel={() => closeModal()} onSubmit={handleAddEvent} />);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -165,7 +179,7 @@ const GroupPage = () => {
             <h1 id="3" className="font-bm text-2xl text-grayscale-text">
               타임라인
             </h1>
-            <Button style="primary" size="xs">
+            <Button style="primary" size="xs" onClick={openModal}>
               이벤트 추가
             </Button>
           </div>
@@ -173,6 +187,7 @@ const GroupPage = () => {
         </div>
       </section>
       <DocumentFooter generateTime={groupDocument.generateTime} />
+      {modalComponent}
     </div>
   );
 };

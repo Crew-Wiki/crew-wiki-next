@@ -32,4 +32,3 @@ export interface GroupEvent {
   imageUrl?: string;
   occurredAt: string;
 }
-

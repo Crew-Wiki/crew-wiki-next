@@ -1,5 +1,5 @@
 declare module 'react-chrono' {
-  import { ReactNode } from 'react';
+  import {ReactNode} from 'react';
 
   export interface TimelineItem {
     title?: string;
@@ -48,7 +48,7 @@ declare module 'react-chrono' {
     cardHeight?: number;
     cardWidth?: number;
     itemWidth?: number;
-    scrollable?: boolean | { scrollbar: boolean };
+    scrollable?: boolean | {scrollbar: boolean};
     theme?: Theme;
     fontSizes?: FontSizes;
     classNames?: ClassNames;
@@ -59,8 +59,8 @@ declare module 'react-chrono' {
     lineWidth?: number;
     activeItemIndex?: number;
     onScrollEnd?: () => void;
-    onItemSelected?: (data: any) => void;
-    textDensity?: 'LOW' |'HIGH';
+    onItemSelected?: (data: unknown) => void;
+    textDensity?: 'LOW' | 'HIGH';
     enableLayoutSwitch?: boolean;
     disableToolbar?: boolean;
     showAllCardsHorizontal?: boolean;
