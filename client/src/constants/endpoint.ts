@@ -14,6 +14,11 @@ export const ENDPOINT = {
   postViewsFlush: '/document/views/flush',
   deleteDocument: (uuid: string) => `/admin/documents/${uuid}`,
 
+  // Organization Document
+  getOrganizationDocumentByUUID: (uuid: string) => `/organization/uuid/${uuid}`,
+  postOrganizationDocument: '/organization',
+  putOrganizationDocument: '/organization',
+
   // Organization Event
   postOrganizationEvent: '/organization-events',
   putOrganizationEvent: (uuid: string) => `/organization-events/${uuid}`,
