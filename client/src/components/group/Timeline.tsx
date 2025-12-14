@@ -8,6 +8,8 @@ interface TimelineProps {
   events: OrganizationEvent[];
 }
 
+// TODO: 이미지 없을 때 기본 fallback 이미지 표시하기
+
 const Timeline = ({events}: TimelineProps) => {
   const timelineItems = events.map(event => ({
     title: event.occurredAt,
@@ -123,6 +125,11 @@ const Timeline = ({events}: TimelineProps) => {
           & [class*='TimelineMain'],
           & [class*='TimelineHorizontalWrapper'] {
             max-width: none !important;
+          }
+
+          /* 점과 수평선 정렬 */
+          & [class*='Outline-sc'] {
+            margin-top: -30px !important;
           }
 
           /* 카드 간의 가로 간격 */

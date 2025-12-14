@@ -10,6 +10,8 @@ interface EventAddModalProps {
   onSubmit: (data: {date: Date; title: string; contents: string; writer: string}) => void;
 }
 
+// TODO: 이미지 첨부 기능 추가 (이미지 업로드 UI 필요)
+
 const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
   const [date, setDate] = useState<Date | null>(null);
   const [writer, setWriter] = useState('');
