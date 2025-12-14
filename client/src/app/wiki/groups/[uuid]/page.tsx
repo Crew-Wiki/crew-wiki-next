@@ -23,7 +23,7 @@ const GroupPage = () => {
   const [loading, setLoading] = useState(true);
   const [htmlContents, setHtmlContents] = useState<string>('');
 
-  const handleAddEvent = async (data: {date: Date; title: string; contents: string}) => {
+  const handleAddEvent = async (data: {date: Date; title: string; contents: string; writer: string}) => {
     const year = data.date.getFullYear();
     const month = String(data.date.getMonth() + 1).padStart(2, '0');
     const day = String(data.date.getDate()).padStart(2, '0');
@@ -32,7 +32,7 @@ const GroupPage = () => {
     const eventData: EventFormData = {
       title: data.title,
       contents: data.contents,
-      writer: groupDocument?.writer || '익명',
+      writer: data.writer,
       occurredAt,
       organizationDocumentUuid: uuid as string,
     };

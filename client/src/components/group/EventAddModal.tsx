@@ -7,13 +7,18 @@ import CustomCalendar from '@components/common/CustomCalendar';
 
 interface EventAddModalProps {
   onCancel: () => void;
-  onSubmit: (data: {date: Date; title: string; contents: string}) => void;
+  onSubmit: (data: {date: Date; title: string; contents: string; writer: string}) => void;
 }
 
 const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
   const [date, setDate] = useState<Date | null>(null);
+  const [writer, setWriter] = useState('');
   const [title, setTitle] = useState('');
   const [contents, setContents] = useState('');
+
+  const handleWriterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWriter(e.target.value);
+  };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -30,11 +35,11 @@ const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
   };
 
   const handleSubmit = () => {
-    if (!date || !title.trim() || !contents.trim()) return;
-    onSubmit({date, title: title.trim(), contents: contents.trim()});
+    if (!date || !writer.trim() || !title.trim() || !contents.trim()) return;
+    onSubmit({date, writer: writer.trim(), title: title.trim(), contents: contents.trim()});
   };
 
-  const isValid = date && title.trim() && contents.trim();
+  const isValid = date && writer.trim() && title.trim() && contents.trim();
 
   return (
     <Modal className="w-[450px]">
@@ -48,6 +53,17 @@ const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
             onChange={setDate}
             isClickableNextDays={true}
             placeholder="날짜를 선택해주세요"
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-base font-bold text-grayscale-600">편집자</label>
+          <input
+            type="text"
+            value={writer}
+            onChange={handleWriterChange}
+            placeholder="편집자"
+            className="w-full rounded-lg border border-grayscale-200 px-4 py-3 text-sm text-grayscale-text placeholder:text-grayscale-400 focus:border-primary-primary focus:outline-none"
           />
         </div>
 
