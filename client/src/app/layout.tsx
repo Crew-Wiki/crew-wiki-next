@@ -47,6 +47,7 @@ export default function RootLayout({
       lang="ko"
       className={`${pretendard.variable} scroll-pt-[50vh] scroll-smooth`}
       style={{backgroundColor: '#f3f4f6'}}
+      data-version="3.1.3"
     >
       <body className={bm.variable}>
         {children}
