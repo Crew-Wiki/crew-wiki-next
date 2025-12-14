@@ -2,11 +2,11 @@
 
 import React from 'react';
 import {Chrono} from 'react-chrono';
-import {OrganizationEvent} from '@type/Event.type';
+import {OrganizationEventResponse} from '@type/Group.type';
 import './Timeline.css';
 
 interface TimelineProps {
-  events: OrganizationEvent[];
+  events: OrganizationEventResponse[];
 }
 
 // TODO: 이미지 없을 때 기본 fallback 이미지 표시하기
@@ -17,15 +17,6 @@ const Timeline = ({events}: TimelineProps) => {
     cardTitle: event.title,
     cardSubtitle: event.writer,
     cardDetailedText: event.contents,
-    media: event.imageUrl
-      ? {
-          source: {
-            url: event.imageUrl,
-          },
-          type: 'IMAGE',
-          name: event.title,
-        }
-      : undefined,
   }));
 
   if (events.length === 0) {

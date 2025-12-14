@@ -6,19 +6,13 @@ import markdownToHtml from '@utils/markdownToHtml';
 import {processHtmlContent} from '@utils/processHtmlContent';
 import TOC from '@components/document/TOC/TOC';
 import '@components/document/layout/toastui-editor-viewer.css';
-import {getMockGroupDocument, mockEvents} from '@app/wiki/groups/[uuid]/mockData';
+import {getOrganizationDocumentByUUIDServer} from '@apis/server/organizationDocument';
 
 const GroupPage = async ({params}: {params: Promise<{uuid: string}>}) => {
   const {uuid} = await params;
 
-  // TODO: 실제 API 연동
-  // const [groupResponse, eventsResponse] = await Promise.all([
-  //   getGroupDocumentByUUIDServer(uuid),
-  //   getOrganizationEventsByDocumentUUID(uuid)
-  // ]);
+  const groupDocument = await getOrganizationDocumentByUUIDServer(uuid);
 
-  const groupDocument = getMockGroupDocument(uuid);
-  const events = mockEvents;
   const html = await markdownToHtml(groupDocument.contents);
   const htmlContents = processHtmlContent(html);
 
@@ -36,7 +30,7 @@ const GroupPage = async ({params}: {params: Promise<{uuid: string}>}) => {
         <TOC headTags={extractHeadings(htmlContents)} />
         <div className="toastui-editor-contents" dangerouslySetInnerHTML={{__html: htmlContents}} />
 
-        <TimelineSection events={events} organizationDocumentUuid={uuid as string} />
+        <TimelineSection events={groupDocument.organizationEventResponses} organizationDocumentUuid={uuid} />
       </section>
       <DocumentFooter generateTime={groupDocument.generateTime} />
     </div>

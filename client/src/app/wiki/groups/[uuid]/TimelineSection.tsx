@@ -4,7 +4,8 @@ import dynamic from 'next/dynamic';
 import Button from '@components/common/Button';
 import {useModal} from '@components/common/Modal/useModal';
 import EventAddModal from '@components/group/EventAddModal';
-import {OrganizationEvent, EventFormData} from '@type/Event.type';
+import {EventFormData} from '@type/Event.type';
+import {OrganizationEventResponse} from '@type/Group.type';
 
 // react-chrono 라이브러리 때문에 hydration 오류가 발생(라이브러리가 내부적으로 브라우저 전용 API를 사용해서 서버 렌더링 결과와 클라이언트 렌더링 결과가 다름)
 // Timeline 컴포넌트를 동적 import해서 SSR을 비활성화
@@ -18,7 +19,7 @@ const Timeline = dynamic(() => import('@components/group/Timeline'), {
 });
 
 interface TimelineSectionProps {
-  events: OrganizationEvent[];
+  events: OrganizationEventResponse[];
   organizationDocumentUuid: string;
 }
 
