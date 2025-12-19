@@ -1,16 +1,18 @@
 {
   "name": "client",
-  "version": "0.1.0",
+  "version": "3.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:release": "node scripts/build-with-version.mjs",
     "start": "next start",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
     "prettier:write": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prettier:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "deploy": "pm2 start ecosystem.config.js --env production"
+    "deploy": "pm2 start ecosystem.config.js --env production",
+    "prepare:release": "node scripts/prepare-release.mjs"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.11",
