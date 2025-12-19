@@ -150,7 +150,7 @@ rl.question('다음 배포 버전을 입력해주세요 ex) X.Y.Z : ', version =
         --repo ${FULL_REPO} \
         --base main \
         --head develop \
-        --title "v${version}" \
+        --title "v${version} 배포" \
         --body-file "${RELEASE_NOTES_TMP}"`,
     );
 
