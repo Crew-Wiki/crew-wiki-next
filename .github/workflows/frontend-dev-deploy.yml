@@ -1,26 +1,147 @@
 name: frontend-dev-deploy
 
 on:
-  workflow_dispatch: # 직접 실행 시에만 동작
+  push:
+    branches:
+      - develop
+    paths:
+      - 'client/**'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
+      - name: Checkout Source
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
         with:
-          host: ${{ secrets.SSH_DEV_HOST }}
-          username: ${{ secrets.SSH_DEV_USERNAME }}
-          key: ${{ secrets.SSH_DEV_KEY }}
-          port: ${{ secrets.SSH_DEV_PORT }}
-          script: |
-            cd ${{ secrets.EC2_DEV_DEPLOY_DIR }}
-            source ~/.bashrc
-            source ~/.nvm/nvm.sh
+          node-version: '22.16.0'
+          # cache: 'yarn' # act 테스트 시 주석 처리
+
+      # act 테스트시에만 yarn 설치
+      - name: Install Yarn
+        run: npm install yarn
+
+      - name: Install Dependencies & Build
+        working-directory: ./client
+        env:
+          NEXT_PUBLIC_CDN_DOMAIN: ${{ secrets.NEXT_PUBLIC_CDN_DOMAIN }}
+          VIEW_DATA_FILE_PATH: ${{ secrets.VIEW_DATA_FILE_PATH }}
+          VIEW_DATA_FLUSH_THRESHOLD: ${{ secrets.VIEW_DATA_FLUSH_THRESHOLD }}
+          NEXT_PUBLIC_BACKEND_SERVER_BASE_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL }}
+          NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL: ${{ secrets.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL }}
+          NEXT_PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY }}
+          NEXT_PUBLIC_IMAGE_S3_DOMAIN: ${{ secrets.NEXT_PUBLIC_IMAGE_S3_DOMAIN }}
+          NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN: ${{ secrets.NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN }}
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          echo "🚧 Installing dependencies..."
+          yarn install --frozen-lockfile
+
+          echo "🏗️ Building Next.js..."
+          yarn build
+
+      - name: Compress Build Output Only
+        working-directory: ./client
+        run: |
+          echo "📦 Compressing .next..."
+          tar -czf next-build.tar.gz .next
+
+      - name: Transfer Build to Dev Server
+        working-directory: ./client
+        run: |
+          echo "🔑 Setting up SSH key..."
+          printf "%s\n" "${{ secrets.SSH_DEV_KEY }}" > private_key.pem
+          sed -i 's/\r$//' private_key.pem
+          chmod 600 private_key.pem
+
+          echo "🚀 Sending .next build via SCP..."
+          scp -o StrictHostKeyChecking=no -i private_key.pem -P ${{ secrets.SSH_DEV_PORT }} \
+            next-build.tar.gz \
+            ${{ secrets.SSH_DEV_USERNAME }}@${{ secrets.SSH_DEV_HOST }}:${{ secrets.EC2_DEV_DEPLOY_DIR }}
+
+          echo "🧹 Cleaning up..."
+          rm private_key.pem
+
+      - name: Deploy on EC2
+        working-directory: ./client
+        run: |
+          echo "🔑 Setting up SSH key..."
+          printf "%s\n" "${{ secrets.SSH_DEV_KEY }}" > private_key.pem
+          sed -i 's/\r$//' private_key.pem
+          chmod 600 private_key.pem
+
+          echo "📜 Creating deployment script..."
+          cat <<'EOF' > deploy_script.sh
+            # 디버깅 환경 정보 출력
+            echo "=== 환경 정보 ==="
+            echo "현재 사용자: $(whoami)"
+            echo "홈 디렉토리: $HOME"
+            echo "Node 버전: $(node --version 2>/dev/null || echo 'Node 없음')"
+            echo "Yarn 경로: $(which yarn 2>/dev/null || echo 'Yarn 없음')"
+            echo "PM2 경로: $(which pm2 2>/dev/null || echo 'PM2 없음')"
+            echo "=================="
+
+            # 배포 디렉토리로 이동 및 존재 확인
+            cd ${{ secrets.EC2_DEV_DEPLOY_DIR }} || {
+              echo "❌ 배포 디렉토리를 찾을 수 없습니다: ${{ secrets.EC2_DEV_DEPLOY_DIR }}"
+              exit 1
+            }
+            echo "📍 현재 위치: $(pwd)"
+
+            echo "🔄 Pulling latest code from Git..."
+            # git 충돌 방지를 위한 강제 덮어쓰기
+            git fetch origin develop
+            git reset --hard origin/develop
+            
+            echo "📂 Extracting .next build..."
+            rm -rf .next
+            tar -xzf next-build.tar.gz
+            rm next-build.tar.gz
+
+            echo "📥 Setting up Node environment..."
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 22.16.0
-            git pull origin develop
-            yarn install
-            yarn build
-            pm2 restart ecosystem.config.js --env development --update-env
+
+            if ! command -v yarn &> /dev/null; then
+              echo "⚠️  yarn을 찾을 수 없습니다. npm으로 yarn 설치 중..."
+              npm install -g yarn
+            fi
+            
+            yarn install --frozen-lockfile
+
+            echo "🚀 Checking PM2..."
+            if ! command -v yarn &> /dev/null; then
+              echo "⚠️  yarn을 찾을 수 없습니다. npm으로 yarn 설치 중..."
+              npm install -g yarn
+            fi
+
+            echo "🚀 Restarting PM2..."
+            pm2 reload ecosystem.config.js --env development --update-env
+            
+            echo "✅ Deployment Complete!"
+          EOF
+
+          echo "🚀 Executing deployment on EC2..."
+          ssh -o StrictHostKeyChecking=no -i private_key.pem -p ${{ secrets.SSH_DEV_PORT }} \
+            ${{ secrets.SSH_DEV_USERNAME }}@${{ secrets.SSH_DEV_HOST }} \
+            "bash -s" < deploy_script.sh
+
+          echo "🧹 Cleaning up..."
+          rm private_key.pem deploy_script.sh
+      # [Act 전용] 빌드 결과 확인 단계
+      - name: Verify Build (Act Test)
+        if: env.ACT # act 환경에서만 실행
+        working-directory: ./client
+        run: |
+          echo "✅ Act 테스트 완료!"
+          echo "📦 빌드 파일 확인:"
+          ls -lh next-build.tar.gz
+          echo ""
+          echo "📁 .next 디렉토리 구조:"
+          tar -tzf next-build.tar.gz | head -20
