@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
@@ -156,7 +154,7 @@ rl.question('다음 배포 버전을 입력해주세요 ex) X.Y.Z : ', version =
 
     fs.unlinkSync(RELEASE_NOTES_TMP);
 
-    console.log('\n🎉 릴리즈 PR 생성 완료 (env 버전 전략)');
+    console.log('\n🎉 릴리즈 PR 생성 완료');
     console.log(`ℹ️ 배포 시 yarn build:release 실행 필요`);
   } finally {
     rl.close();
