@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - develop
-    paths:
-      - 'client/**'
 
 jobs:
   deploy:
@@ -115,8 +113,6 @@ jobs:
             pm2 update 2>/dev/null || true
             pm2 reload ecosystem.config.js --env development --update-env || \
             pm2 start ecosystem.config.js --env development
-            
-            echo "✅ Deployment Complete!"
           EOF
 
           echo "🚀 Executing deployment on EC2..."
