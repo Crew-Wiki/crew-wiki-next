@@ -8,6 +8,7 @@ import {EventFormData} from '@type/Event.type';
 import {OrganizationEventResponse} from '@type/Group.type';
 import {useRouter} from 'next/navigation';
 import {formatDateDashed} from '@utils/date';
+import {requestPostClientWithoutResponse} from '@http/client';
 
 // react-chrono 라이브러리 때문에 hydration 오류가 발생(라이브러리가 내부적으로 브라우저 전용 API를 사용해서 서버 렌더링 결과와 클라이언트 렌더링 결과가 다름)
 // Timeline 컴포넌트를 동적 import해서 SSR을 비활성화
@@ -39,22 +40,14 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
       organizationDocumentUuid,
     };
 
-    try {
-      const response = await fetch('/api/post-organization-event', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(eventData),
-      });
+    await requestPostClientWithoutResponse({
+      baseUrl: '',
+      endpoint: '/api/post-organization-event',
+      body: eventData,
+    });
 
-      if (response.ok) {
-        closeModal();
-        router.refresh();
-      } else {
-        console.error('이벤트 추가 실패');
-      }
-    } catch (error) {
-      console.error('이벤트 추가 중 오류:', error);
-    }
+    closeModal();
+    router.refresh();
   };
 
   const {
