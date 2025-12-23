@@ -112,10 +112,16 @@ export const postViewsFlush = async (viewCount: ViewCountByUUID) => {
   });
 };
 
-export const deleteDocumentServer = async (uuid: string) => {
+export const deleteDocumentServer = async (uuid: string, cookieHeader?: string | null) => {
+  const headers: Record<string, string> = {};
+  if (cookieHeader) {
+    headers['Cookie'] = cookieHeader;
+  }
+
   const response = await requestDeleteServer({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.deleteDocument(uuid),
+    headers,
   });
 
   return response;

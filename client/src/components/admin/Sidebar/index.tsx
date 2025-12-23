@@ -3,11 +3,12 @@
 import {route} from '@constants/route';
 import {Route} from 'next';
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
+import {usePathname, useRouter} from 'next/navigation';
 import {twMerge} from 'tailwind-merge';
 import {useModal} from '@components/common/Modal/useModal';
 import {Modal} from '@components/common/Modal/Modal';
 import {deleteFrontendServerCache} from '@apis/client/admin';
+import {requestPostClientWithoutResponse} from '@http/client';
 
 interface MenuItem {
   label: string;
@@ -17,6 +18,7 @@ interface MenuItem {
 
 const Index = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const menuItems: MenuItem[] = [
     {label: '대시보드', href: route.goAdminDashboard(), icon: '📊'},
@@ -62,6 +64,24 @@ const Index = () => {
     }
   };
 
+  const handleLogout = async () => {
+    if (!confirm('정말 로그아웃 하시겠어요?')) {
+      return;
+    }
+
+    try {
+      await requestPostClientWithoutResponse({
+        baseUrl: '',
+        endpoint: '/api/post-admin-logout',
+      });
+
+      router.replace(route.goAdminLogin());
+    } catch (error) {
+      console.error('로그아웃 중 오류 발생:', error);
+      alert('로그아웃 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <aside className="flex h-full w-64 flex-col bg-grayscale-50 shadow-lg">
       <nav className="flex-1 p-4">
@@ -94,10 +114,7 @@ const Index = () => {
         <button
           type="button"
           className="flex w-full items-center gap-3 rounded-lg px-4 py-3 font-pretendard text-sm text-grayscale-700 transition-colors hover:bg-grayscale-100"
-          onClick={() => {
-            // TODO: 로그아웃 기능 구현
-            console.log('로그아웃');
-          }}
+          onClick={handleLogout}
         >
           로그아웃
         </button>
