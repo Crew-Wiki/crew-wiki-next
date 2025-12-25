@@ -16,9 +16,7 @@ export const LogList = ({uuid, initialData, totalPage}: LogListParams) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {logs?.map(log => (
-        <LogContent key={log.id} uuid={uuid} summary={log} />
-      ))}
+      {logs?.map(log => <LogContent key={log.id} uuid={uuid} summary={log} />)}
       <InfiniteScrollObserver key={uuid} callback={fetchNextPage} />
     </div>
   );

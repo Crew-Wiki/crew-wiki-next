@@ -40,14 +40,19 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
       organizationDocumentUuid,
     };
 
-    await requestPostClientWithoutResponse({
-      baseUrl: '',
-      endpoint: '/api/post-organization-event',
-      body: eventData,
-    });
+    try {
+      await requestPostClientWithoutResponse({
+        baseUrl: '',
+        endpoint: '/api/post-organization-event',
+        body: eventData,
+      });
 
-    closeModal();
-    router.refresh();
+      closeModal();
+      router.refresh();
+    } catch (error) {
+      console.error('이벤트 추가 실패:', error);
+      alert('이벤트 추가에 실패했습니다.');
+    }
   };
 
   const {

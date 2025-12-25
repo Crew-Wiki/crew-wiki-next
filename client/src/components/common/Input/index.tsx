@@ -1,9 +1,7 @@
 import {twMerge} from 'tailwind-merge';
 
-interface InputProps<T extends string | number | readonly string[] | undefined> extends Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  'onChange' | 'value'
-> {
+interface InputProps<T extends string | number | readonly string[] | undefined>
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
   input: T;
   handleChangeInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
