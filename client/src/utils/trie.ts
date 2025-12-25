@@ -4,6 +4,7 @@ class Node {
   child: Map<string, Node> = new Map();
   uuid?: string;
   title?: string;
+  documentType?: 'CREW' | 'ORGANIZATION';
   isEnd: boolean = false;
 }
 
@@ -12,10 +13,10 @@ export class Trie {
 
   constructor(data: TitleAndUUID[] = []) {
     this.root = new Node();
-    data.forEach(({title, uuid}) => this.add(title, uuid));
+    data.forEach(({title, uuid, documentType}) => this.add(title, uuid, documentType));
   }
 
-  add(title: string, uuid: string): void {
+  add(title: string, uuid: string, documentType: 'CREW' | 'ORGANIZATION' = 'CREW'): void {
     let currentNode = this.root;
 
     for (const char of title) {
@@ -26,6 +27,7 @@ export class Trie {
     }
     currentNode.uuid = uuid;
     currentNode.title = title;
+    currentNode.documentType = documentType;
     currentNode.isEnd = true;
   }
 
@@ -44,8 +46,8 @@ export class Trie {
   }
 
   private searchFunc(node: Node, prefix: string, results: TitleAndUUID[]) {
-    if (node.isEnd && node.uuid && node.title) {
-      results.push({title: node.title, uuid: node.uuid});
+    if (node.isEnd && node.uuid && node.title && node.documentType) {
+      results.push({title: node.title, uuid: node.uuid, documentType: node.documentType});
     }
     for (const [char, child] of node.child) this.searchFunc(child, prefix + char, results);
   }
@@ -72,8 +74,8 @@ export class Trie {
     return node.child.size === 0 && !node.isEnd;
   }
 
-  update(oldTitle: string, newTitle: string, uuid: string): void {
+  update(oldTitle: string, newTitle: string, uuid: string, documentType: 'CREW' | 'ORGANIZATION' = 'CREW'): void {
     this.delete(oldTitle, uuid);
-    this.add(newTitle, uuid);
+    this.add(newTitle, uuid, documentType);
   }
 }

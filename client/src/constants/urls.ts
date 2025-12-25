@@ -8,6 +8,7 @@ const DAEMOON = {
 export const URLS = {
   main: '/',
   wiki: '/wiki',
+  wikiGroups: '/wiki/groups',
   docs: ':title',
   edit: '/edit',
   post: '/post',

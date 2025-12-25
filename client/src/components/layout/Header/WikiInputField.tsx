@@ -22,19 +22,24 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const searchTitle = useTrie(action => action.searchTitle);
   const data = searchTitle(value);
 
+  const getRouteByDocumentType = (uuid: string, documentType?: string) => {
+    return documentType === 'ORGANIZATION' ? route.goWikiGroup(uuid) : route.goWiki(uuid);
+  };
+
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (value?.trim() === '') return;
 
     const submitter = (event.nativeEvent as SubmitEvent).submitter;
     const targetUUID = submitter?.id;
+    const targetDocumentType = submitter?.dataset?.documentType;
 
     if (targetUUID !== 'search-icon' && targetUUID !== undefined) {
       trackDocumentSearch(value, targetUUID);
-      router.push(route.goWiki(targetUUID));
+      router.push(getRouteByDocumentType(targetUUID, targetDocumentType));
     } else if (data.length !== 0) {
       trackDocumentSearch(value, data[0]?.uuid ?? 'not_found');
-      router.push(route.goWiki(data[0]?.uuid));
+      router.push(getRouteByDocumentType(data[0]?.uuid, data[0]?.documentType));
     } else {
       trackDocumentSearch(value, 'not_found');
       router.push(route.goWiki(value));
