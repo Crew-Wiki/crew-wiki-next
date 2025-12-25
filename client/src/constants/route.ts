@@ -3,6 +3,7 @@ import {URLS} from './urls';
 
 export const route = {
   goWiki: (uuid: string) => `${URLS.wiki}/${uuid}` as Route,
+  goWikiGroup: (uuid: string) => `${URLS.wikiGroups}/${uuid}` as Route,
   goWikiEdit: (uuid: string) => `${URLS.wiki}/${uuid}${URLS.edit}` as Route,
   goWikiLogs: (uuid: string) => `${URLS.wiki}/${uuid}${URLS.logs}` as Route,
   goWikilog: (uuid: string, id: number) => `${URLS.wiki}/${uuid}/log/${id}` as Route,

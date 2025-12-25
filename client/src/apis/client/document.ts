@@ -35,6 +35,7 @@ export const getRandomDocumentClient = async () => {
 export type TitleAndUUID = {
   title: string;
   uuid: string;
+  documentType: 'CREW' | 'ORGANIZATION';
 };
 
 export const getSearchDocumentClient = async (query: string) => {

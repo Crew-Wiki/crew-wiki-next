@@ -17,7 +17,7 @@ export const usePostDocument = () => {
     mutationFn: postDocumentClient,
     onSuccess: document => {
       trackDocumentCreate(document.title, document.documentUUID);
-      addTitle(document.title, document.documentUUID);
+      addTitle(document.title, document.documentUUID, 'CREW');
       router.push(route.goWiki(document.documentUUID));
       router.refresh();
     },
