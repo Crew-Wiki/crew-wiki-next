@@ -1,3 +1,8 @@
+export interface Organization {
+  title: string;
+  uuid: string;
+}
+
 export interface GroupDocument {
   id: string;
   title: string;
