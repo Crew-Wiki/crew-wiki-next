@@ -1,3 +1,10 @@
+export interface EventInput {
+  date: Date;
+  title: string;
+  contents: string;
+  writer: string;
+}
+
 export interface OrganizationEvent {
   id: number;
   uuid: string;

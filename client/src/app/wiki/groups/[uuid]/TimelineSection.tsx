@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Button from '@components/common/Button';
 import {useModal} from '@components/common/Modal/useModal';
 import EventAddModal from '@components/group/EventAddModal';
-import {EventFormData} from '@type/Event.type';
+import {EventInput, EventFormData} from '@type/Event.type';
 import {OrganizationEventResponse} from '@type/Group.type';
 import {useRouter} from 'next/navigation';
 import {formatDateDashed} from '@utils/date';
@@ -29,7 +29,7 @@ interface TimelineSectionProps {
 const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProps) => {
   const router = useRouter();
 
-  const handleAddEvent = async (data: {date: Date; title: string; contents: string; writer: string}) => {
+  const handleAddEvent = async (data: EventInput) => {
     const occurredAt = formatDateDashed(data.date);
 
     const eventData: EventFormData = {
