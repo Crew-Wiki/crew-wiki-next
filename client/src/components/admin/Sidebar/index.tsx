@@ -31,7 +31,7 @@ const Index = () => {
 
     try {
       await requestPostClientWithoutResponse({
-        baseUrl: '',
+        baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
         endpoint: '/api/post-admin-logout',
       });
 
