@@ -1,6 +1,6 @@
 'use client';
 
-import {formatDateDotted, isSameDate} from '@utils/date';
+import {formatDate, isSameDate} from '@utils/date';
 import {JSX, useEffect, useMemo, useRef, useState} from 'react';
 import CalendarPopup from './CalendarPopUp';
 import CalendarInput from './CalendarInput';
@@ -154,7 +154,7 @@ const CustomCalendar = ({
   return (
     <div ref={wrapperRef} className="relative w-full">
       <CalendarInput
-        value={value ? formatDateDotted(value) : ''}
+        value={value ? formatDate(value, '.') : ''}
         placeholder={placeholder}
         className={className}
         invalid={invalid}
