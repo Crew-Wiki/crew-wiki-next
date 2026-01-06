@@ -7,11 +7,11 @@ export const createConflictText = (remoteContent: string, localContent: string):
 
   const flush = () => {
     if (buffer.local || buffer.remote) {
-      result += `<<<<<<< 내 버전
+      result += `≪≪≪≪≪≪≪ 내 버전
 ${buffer.local ?? ''}
 -=-=-=-=-=-=-=-=
 ${buffer.remote ?? ''}
-<<<<<<< 최신 버전
+≫≫≫≫≫≫≫ 최신 버전
 `;
       buffer = {};
     }
