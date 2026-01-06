@@ -3,8 +3,12 @@
 import {route} from '@constants/route';
 import {Route} from 'next';
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
+import {usePathname, useRouter} from 'next/navigation';
 import {twMerge} from 'tailwind-merge';
+import {useModal} from '@components/common/Modal/useModal';
+import {Modal} from '@components/common/Modal/Modal';
+import {deleteFrontendServerCache} from '@apis/client/admin';
+import {requestPostClientWithoutResponse} from '@http/client';
 
 interface MenuItem {
   label: string;
@@ -14,6 +18,7 @@ interface MenuItem {
 
 const Index = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const menuItems: MenuItem[] = [
     {label: '대시보드', href: route.goAdminDashboard(), icon: '📊'},
@@ -21,6 +26,61 @@ const Index = () => {
   ];
 
   const isActive = (href: string) => pathname === href;
+
+  const {
+    open: openDeleteCacheConfirm,
+    close: closeDeleteCacheConfirm,
+    component: deleteCacheConfirm,
+  } = useModal<boolean>(
+    <Modal>
+      <div className="gap1 flex flex-col gap-8">
+        <p className="font-pretendard text-lg">정말 캐시를 삭제하시겠습니까?</p>
+        <div className="flex w-full flex-row justify-between gap-3">
+          <button
+            className="flex-1 rounded-xl bg-primary-300 px-2 py-3 text-white"
+            type="button"
+            onClick={() => closeDeleteCacheConfirm(true)}
+          >
+            삭제
+          </button>
+          <button
+            className="flex-1 rounded-xl bg-neutral-300 px-2 py-3"
+            type="button"
+            onClick={() => closeDeleteCacheConfirm(false)}
+          >
+            취소
+          </button>
+        </div>
+      </div>
+    </Modal>,
+    {closeOnClickBackdrop: false},
+  );
+
+  const onClickDeleteCacheButton = async () => {
+    const shouldDeleteCache = await openDeleteCacheConfirm();
+    if (shouldDeleteCache) {
+      await deleteFrontendServerCache();
+      alert('성공적으로 캐시 데이터를 삭제했습니다.');
+    }
+  };
+
+  const handleLogout = async () => {
+    if (!confirm('정말 로그아웃 하시겠어요?')) {
+      return;
+    }
+
+    try {
+      await requestPostClientWithoutResponse({
+        baseUrl: '',
+        endpoint: '/api/post-admin-logout',
+      });
+
+      router.replace(route.goAdminLogin());
+    } catch (error) {
+      console.error('로그아웃 중 오류 발생:', error);
+      alert('로그아웃 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <aside className="flex h-full w-64 flex-col bg-grayscale-50 shadow-lg">
@@ -47,14 +107,19 @@ const Index = () => {
         <button
           type="button"
           className="flex w-full items-center gap-3 rounded-lg px-4 py-3 font-pretendard text-sm text-grayscale-700 transition-colors hover:bg-grayscale-100"
-          onClick={() => {
-            // TODO: 로그아웃 기능 구현
-            console.log('로그아웃');
-          }}
+          onClick={onClickDeleteCacheButton}
+        >
+          캐시 삭제
+        </button>
+        <button
+          type="button"
+          className="flex w-full items-center gap-3 rounded-lg px-4 py-3 font-pretendard text-sm text-grayscale-700 transition-colors hover:bg-grayscale-100"
+          onClick={handleLogout}
         >
           로그아웃
         </button>
       </div>
+      {deleteCacheConfirm}
     </aside>
   );
 };

@@ -39,10 +39,40 @@ export const requestPutClient = async <T>({headers = {}, ...args}: ClientHttpMet
   return response.data;
 };
 
+export const requestDeleteClientWithoutResponse = async <T>({
+  headers = {},
+  ...args
+}: ClientHttpMethodArgs): Promise<void> => {
+  await requestWithoutResponse({
+    ...args,
+    method: 'DELETE',
+    headers,
+  });
+};
+
 export const requestPutClientWithoutResponse = async ({headers = {}, ...args}: ClientHttpMethodArgs): Promise<void> => {
   await requestWithoutResponse({
     ...args,
     method: 'PUT',
+    headers,
+  });
+};
+
+export const requestPostClientWithoutResponse = async ({
+  headers = {},
+  ...args
+}: ClientHttpMethodArgs): Promise<void> => {
+  await requestWithoutResponse({
+    ...args,
+    method: 'POST',
+    headers,
+  });
+};
+
+export const requestDeleteClient = async ({headers = {}, ...args}: ClientHttpMethodArgs): Promise<void> => {
+  await requestWithoutResponse({
+    ...args,
+    method: 'DELETE',
     headers,
   });
 };

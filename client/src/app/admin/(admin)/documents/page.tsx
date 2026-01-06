@@ -3,7 +3,8 @@
 import Button from '@components/common/Button';
 import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
-import {getAllDocumentsServer, deleteDocumentServer} from '@apis/server/document';
+import {getAllDocumentsServer} from '@apis/server/document';
+import {deleteDocumentClient} from '@apis/client/document';
 import {WikiDocumentExpand} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {route} from '@constants/route';
@@ -57,7 +58,7 @@ export default function AdminDocumentsPage() {
 
     if (confirm(confirmMessage)) {
       try {
-        await deleteDocumentServer(uuid);
+        await deleteDocumentClient(uuid);
         const updatedDocs = documents.filter(document => document.uuid !== uuid);
         setDocuments(updatedDocs);
         alert('문서가 삭제되었습니다.');

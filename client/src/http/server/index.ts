@@ -41,11 +41,19 @@ export const requestPutServer = async <T>({headers = {}, ...args}: ServerHttpMet
 };
 
 export const requestDeleteServer = async ({headers = {}, ...args}: ServerHttpMethodArgs): Promise<void> => {
-  await request({
+  const {url, requestInit} = prepareRequest({
     ...args,
     method: 'DELETE',
     headers,
   });
+
+  const response = await executeRequest({url, requestInit});
+
+  if (response.status === 204) {
+    return;
+  }
+
+  await response.json();
 };
 
 const prepareRequest = ({baseUrl, method, endpoint, headers, body, queryParams, next, cache}: ServerHttpArgs) => {
