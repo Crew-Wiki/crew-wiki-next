@@ -4,6 +4,7 @@ import {ENDPOINT} from '@constants/endpoint';
 import {requestGetClient, requestPostClient, requestPutClient, requestDeleteClient} from '@http/client';
 import {LatestWikiDocument, PostDocumentContent, WikiDocument, WikiDocumentLogSummary} from '@type/Document.type';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
+import {Organization} from '@type/Group.type';
 
 export const getDocumentByTitleClient = async (title: string) => {
   const response = await requestGetClient<WikiDocument>({
@@ -95,4 +96,13 @@ export const deleteDocumentClient = async (uuid: string) => {
     endpoint: '/api/delete-document',
     queryParams: {uuid},
   });
+};
+
+export const getOrganizationDocumentsByDocumentUUIDClient = async (uuid: string) => {
+  const response = await requestGetClient<Organization[]>({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
+  });
+
+  return response;
 };

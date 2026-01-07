@@ -14,6 +14,7 @@ import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
 import {ViewCountByUUID} from '@type/viewCount.type';
 import {TitleAndUUID} from '@apis/client/document';
+import {Organization} from '@type/Group.type';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
   const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
@@ -122,6 +123,16 @@ export const deleteDocumentServer = async (uuid: string, cookieHeader?: string |
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.deleteDocument(uuid),
     headers,
+  });
+
+  return response;
+};
+
+export const getOrganizationDocumentsByDocumentUUIDServer = async (uuid: string) => {
+  const response = await requestGetServer<Organization[]>({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
+    next: {revalidate: CACHE.time.basicRevalidate},
   });
 
   return response;
