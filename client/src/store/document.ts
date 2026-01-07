@@ -19,6 +19,7 @@ type State = {
   isImageUploadPending: boolean;
   originalVersion: number;
   organizations: Organization[];
+  originalOrganizations: Organization[];
 };
 
 type Validators = {
@@ -62,6 +63,7 @@ const initialValue: State = {
   isImageUploadPending: false,
   originalVersion: 0,
   organizations: [],
+  originalOrganizations: [],
 };
 
 export const useDocument = create<State & Action>(set => ({
@@ -81,6 +83,7 @@ export const useDocument = create<State & Action>(set => ({
       uuid: uuid ? uuid : crypto.randomUUID(),
       originalVersion: version ? version : 0,
       organizations: organizations ?? [],
+      originalOrganizations: organizations ?? [],
     });
   },
 
