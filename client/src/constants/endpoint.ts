@@ -16,6 +16,7 @@ export const ENDPOINT = {
 
   // Organization Document
   getOrganizationDocumentByUUID: (uuid: string) => `/organization/uuid/${uuid}`,
+  getOrganizationDocumentsByDocumentUUID: (uuid: string) => `/document/${uuid}/organization-documents`,
   postOrganizationDocument: '/organization',
   putOrganizationDocument: '/organization',
 
