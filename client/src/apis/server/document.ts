@@ -29,13 +29,17 @@ export const getDocumentsServerWithPagination = async (params: PaginationParams)
 
 // 전체 문서의 UUID와 제목을 불러오기 위한 목적
 export const getDocumentsUUIDServer = async () => {
-  const response = await requestGetServer<TitleAndUUID[]>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: `${ENDPOINT.getDocumentSearch}?keyWord=`,
-    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentsUUID]},
-  });
+  try {
+    const response = await requestGetServer<TitleAndUUID[]>({
+      baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+      endpoint: `${ENDPOINT.getDocumentSearch}?keyWord=`,
+      next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentsUUID]},
+    });
 
-  return response;
+    return response;
+  } catch {
+    return [];
+  }
 };
 
 export const getDocumentByUUIDServer = async (uuid: string) => {
