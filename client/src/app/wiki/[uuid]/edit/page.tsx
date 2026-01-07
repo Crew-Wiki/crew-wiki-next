@@ -5,7 +5,7 @@ import TitleInputField from '@components/document/Write/TitleInputField';
 import TuiEditor from '@components/document/TuiEditor';
 import OrganizationInputField from '@components/document/Write/OrganizationInputField';
 import {useParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {useDocument} from '@store/document';
 import {LatestWikiDocument} from '@type/Document.type';
 import {useGetLatestDocumentByUUID} from '@hooks/fetch/useGetLatestDocumentByUUID';
@@ -19,11 +19,12 @@ const EditPage = ({document}: EditPageProps) => {
   const setInit = useDocument(action => action.setInit);
   const reset = useDocument(action => action.reset);
   const onChange = useDocument(action => action.onChange);
-
-  const [selectedOrganizations, setSelectedOrganizations] = useState<Organization[]>([]);
+  const organizations = useDocument(state => state.organizations);
+  const addOrganization = useDocument(action => action.addOrganization);
+  const removeOrganization = useDocument(action => action.removeOrganization);
 
   const handleSelectOrganization = (organization: Organization) => {
-    setSelectedOrganizations(prev => [...prev, organization]);
+    addOrganization(organization);
   };
 
   const handleAddOrganization = (title: string) => {
@@ -32,11 +33,11 @@ const EditPage = ({document}: EditPageProps) => {
       uuid: crypto.randomUUID(),
     };
 
-    setSelectedOrganizations(prev => [...prev, newOrganization]);
+    addOrganization(newOrganization);
   };
 
   const handleRemoveOrganization = (uuid: string) => {
-    setSelectedOrganizations(prev => prev.filter(org => org.uuid !== uuid));
+    removeOrganization(uuid);
   };
 
   useEffect(() => {
@@ -48,6 +49,7 @@ const EditPage = ({document}: EditPageProps) => {
       },
       document.documentUUID,
       document.latestVersion,
+      document.organizations,
     );
 
     return () => reset();
@@ -58,7 +60,7 @@ const EditPage = ({document}: EditPageProps) => {
       <PostHeader mode="edit" />
       <TitleInputField />
       <OrganizationInputField
-        selectedOrganizations={selectedOrganizations}
+        selectedOrganizations={organizations}
         onSelect={handleSelectOrganization}
         onAdd={handleAddOrganization}
         onRemove={handleRemoveOrganization}

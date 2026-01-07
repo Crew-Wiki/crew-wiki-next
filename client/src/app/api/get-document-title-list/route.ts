@@ -9,7 +9,7 @@ export const GET = async () => {
   const documents = await getDocumentsUUIDServer();
 
   const response: ApiResponseType<TitleAndUUID[]> = {
-    data: documents.map(({title, uuid}) => ({title, uuid})),
+    data: documents.map(({title, uuid, documentType}) => ({title, uuid, documentType})),
     code: 'SUCCESS',
   };
 

@@ -1,4 +1,5 @@
 import {SORT_OPTIONS} from '@constants/popular';
+import {Organization} from './Group.type';
 
 export interface WikiDocument {
   documentId: number;
@@ -7,6 +8,7 @@ export interface WikiDocument {
   contents: string;
   writer: string;
   generateTime: string;
+  organizations: Organization[];
 }
 
 export interface LatestWikiDocument extends WikiDocument {
@@ -74,4 +76,5 @@ export interface PostDocumentContent {
   writer: string;
   documentBytes: number;
   uuid: string;
+  organizations: Organization[];
 }
