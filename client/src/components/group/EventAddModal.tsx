@@ -4,10 +4,11 @@ import {useState} from 'react';
 import {Modal} from '@components/common/Modal/Modal';
 import Button from '@components/common/Button';
 import CustomCalendar from '@components/common/CustomCalendar';
+import {EventInput} from '@type/Event.type';
 
 interface EventAddModalProps {
   onCancel: () => void;
-  onSubmit: (data: {date: Date; title: string; contents: string; writer: string}) => void;
+  onSubmit: (data: EventInput) => void;
 }
 
 // TODO: 이미지 첨부 기능 추가 (이미지 업로드 UI 필요)

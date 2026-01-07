@@ -4,10 +4,10 @@ import dynamic from 'next/dynamic';
 import Button from '@components/common/Button';
 import {useModal} from '@components/common/Modal/useModal';
 import EventAddModal from '@components/group/EventAddModal';
-import {EventFormData} from '@type/Event.type';
+import {EventInput, EventFormData} from '@type/Event.type';
 import {OrganizationEventResponse} from '@type/Group.type';
 import {useRouter} from 'next/navigation';
-import {formatDateDashed} from '@utils/date';
+import {formatDate} from '@utils/date';
 import {requestPostClientWithoutResponse} from '@http/client';
 
 // react-chrono 라이브러리 때문에 hydration 오류가 발생(라이브러리가 내부적으로 브라우저 전용 API를 사용해서 서버 렌더링 결과와 클라이언트 렌더링 결과가 다름)
@@ -29,8 +29,8 @@ interface TimelineSectionProps {
 const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProps) => {
   const router = useRouter();
 
-  const handleAddEvent = async (data: {date: Date; title: string; contents: string; writer: string}) => {
-    const occurredAt = formatDateDashed(data.date);
+  const handleAddEvent = async (data: EventInput) => {
+    const occurredAt = formatDate(data.date, '-');
 
     const eventData: EventFormData = {
       title: data.title,
@@ -42,7 +42,7 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
 
     try {
       await requestPostClientWithoutResponse({
-        baseUrl: '',
+        baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
         endpoint: '/api/post-organization-event',
         body: eventData,
       });

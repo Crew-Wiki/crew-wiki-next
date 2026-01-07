@@ -3,6 +3,7 @@
 import React from 'react';
 import {Chrono} from 'react-chrono';
 import {OrganizationEventResponse} from '@type/Group.type';
+import {colors} from '@constants/colors';
 import './Timeline.css';
 
 interface TimelineProps {
@@ -35,14 +36,14 @@ const Timeline = ({events}: TimelineProps) => {
         cardHeight={120}
         scrollable={{scrollbar: true}}
         theme={{
-          primary: '#25B4B9', // primary-primary
-          secondary: '#F5F5F5', // grayscale-50
-          cardBgColor: '#FFFFFF',
-          titleColor: '#1A1A1A', // grayscale-text
-          titleColorActive: '#25B4B9',
-          cardTitleColor: '#1A1A1A',
-          cardSubtitleColor: '#888888', // grayscale-500
-          cardDetailsColor: '#555555', // grayscale-600
+          primary: colors.primary.primary,
+          secondary: colors.grayscale[50],
+          cardBgColor: colors.white,
+          titleColor: colors.grayscale.text,
+          titleColorActive: colors.primary.primary,
+          cardTitleColor: colors.grayscale.text,
+          cardSubtitleColor: colors.grayscale[500],
+          cardDetailsColor: colors.grayscale[600],
         }}
         fontSizes={{
           title: '0.875rem',
