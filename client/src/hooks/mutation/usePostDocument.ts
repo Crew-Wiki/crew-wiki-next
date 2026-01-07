@@ -8,11 +8,12 @@ import {postDocumentClient} from '@apis/client/document';
 import {postOrganizationDocumentClient} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {route} from '@constants/route';
+import {GroupDocumentResponse} from '@type/Group.type';
 
 const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
   const savedDocument = await postDocumentClient(document);
 
-  await Promise.all(
+  const createdOrganizations = await Promise.all(
     document.organizations.map(org =>
       postOrganizationDocumentClient({
         title: org.title,
@@ -25,7 +26,7 @@ const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
     ),
   );
 
-  return savedDocument;
+  return {savedDocument, createdOrganizations};
 };
 
 export const usePostDocument = () => {
@@ -33,15 +34,18 @@ export const usePostDocument = () => {
   const addTitle = useTrie(state => state.addTitle);
   const {trackDocumentCreate} = useAmplitude();
 
-  const {mutate, isPending} = useMutation<PostDocumentContent, WikiDocument>({
+  const {mutate, isPending} = useMutation<
+    PostDocumentContent,
+    {savedDocument: WikiDocument; createdOrganizations: GroupDocumentResponse[]}
+  >({
     mutationFn: postDocumentWithOrganizations,
-    onSuccess: (document, variables) => {
-      trackDocumentCreate(document.title, document.documentUUID);
-      addTitle(document.title, document.documentUUID, 'CREW');
-      variables.organizations.forEach(org => {
-        addTitle(org.title, org.uuid, 'ORGANIZATION');
+    onSuccess: ({savedDocument, createdOrganizations}) => {
+      trackDocumentCreate(savedDocument.title, savedDocument.documentUUID);
+      addTitle(savedDocument.title, savedDocument.documentUUID, 'CREW');
+      createdOrganizations.forEach(org => {
+        addTitle(org.title, org.organizationDocumentUuid, 'ORGANIZATION');
       });
-      router.push(route.goWiki(document.documentUUID));
+      router.push(route.goWiki(savedDocument.documentUUID));
       router.refresh();
     },
   });
