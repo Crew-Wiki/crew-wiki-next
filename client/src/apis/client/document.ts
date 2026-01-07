@@ -99,10 +99,14 @@ export const deleteDocumentClient = async (uuid: string) => {
 };
 
 export const getOrganizationDocumentsByDocumentUUIDClient = async (uuid: string) => {
-  const response = await requestGetClient<Organization[]>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
-  });
+  try {
+    const response = await requestGetClient<Organization[]>({
+      baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+      endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
+    });
 
-  return response;
+    return response;
+  } catch {
+    return [];
+  }
 };
