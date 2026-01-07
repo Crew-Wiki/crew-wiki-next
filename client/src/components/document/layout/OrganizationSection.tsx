@@ -17,9 +17,8 @@ const OrganizationSection = ({organizations}: OrganizationSectionProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      {/* TODO: CSS 검토 필요 */}
-      <h1 className="font-bm text-2xl text-grayscale-800">소속</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-bold leading-7 text-[#222]">소속</h1>
       <div className="flex flex-wrap gap-2">
         {organizations.map(organization => (
           <Chip
