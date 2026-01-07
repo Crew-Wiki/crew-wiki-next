@@ -31,14 +31,18 @@ const putDocumentWithOrganizations = async (document: PostDocumentContent) => {
 export const usePutDocument = () => {
   const router = useRouter();
   const updateTitle = useTrie(state => state.updateTitle);
+  const addTitle = useTrie(state => state.addTitle);
   const {trackDocumentUpdate} = useAmplitude();
 
   const {mutate, isPending} = useMutation<PostDocumentContent, WikiDocument>({
     mutationFn: putDocumentWithOrganizations,
-    onSuccess: document => {
+    onSuccess: (document, variables) => {
       trackDocumentUpdate(document.title, document.documentUUID);
       // TODO: 문서 제목 업데이트 기능 추가 시 updateTitle에 변경 전 문서 제목을 넣어야 합니다
       updateTitle(document.title, document.title, document.documentUUID, 'CREW');
+      variables.organizations.forEach(org => {
+        addTitle(org.title, org.uuid, 'ORGANIZATION');
+      });
       router.push(route.goWiki(document.documentUUID));
       router.refresh();
     },

@@ -35,9 +35,12 @@ export const usePostDocument = () => {
 
   const {mutate, isPending} = useMutation<PostDocumentContent, WikiDocument>({
     mutationFn: postDocumentWithOrganizations,
-    onSuccess: document => {
+    onSuccess: (document, variables) => {
       trackDocumentCreate(document.title, document.documentUUID);
       addTitle(document.title, document.documentUUID, 'CREW');
+      variables.organizations.forEach(org => {
+        addTitle(org.title, org.uuid, 'ORGANIZATION');
+      });
       router.push(route.goWiki(document.documentUUID));
       router.refresh();
     },

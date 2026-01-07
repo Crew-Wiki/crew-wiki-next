@@ -129,11 +129,15 @@ export const deleteDocumentServer = async (uuid: string, cookieHeader?: string |
 };
 
 export const getOrganizationDocumentsByDocumentUUIDServer = async (uuid: string) => {
-  const response = await requestGetServer<Organization[]>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
-    next: {revalidate: CACHE.time.basicRevalidate},
-  });
+  try {
+    const response = await requestGetServer<Organization[]>({
+      baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+      endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
+      next: {revalidate: CACHE.time.basicRevalidate},
+    });
 
-  return response;
+    return response;
+  } catch {
+    return [];
+  }
 };
