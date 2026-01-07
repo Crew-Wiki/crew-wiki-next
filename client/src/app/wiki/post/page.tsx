@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import PostHeader from '@components/document/Write/PostHeader';
 import TitleInputField from '@components/document/Write/TitleInputField';
 import OrganizationInputField from '@components/document/Write/OrganizationInputField';
@@ -14,11 +14,12 @@ const Page = () => {
   const setInit = useDocument(action => action.setInit);
   const reset = useDocument(action => action.reset);
   const onChange = useDocument(action => action.onChange);
-
-  const [selectedOrganizations, setSelectedOrganizations] = useState<Organization[]>([]);
+  const organizations = useDocument(state => state.organizations);
+  const addOrganization = useDocument(action => action.addOrganization);
+  const removeOrganization = useDocument(action => action.removeOrganization);
 
   const handleSelectOrganization = (organization: Organization) => {
-    setSelectedOrganizations(prev => [...prev, organization]);
+    addOrganization(organization);
   };
 
   const handleAddOrganization = (title: string) => {
@@ -27,11 +28,11 @@ const Page = () => {
       uuid: crypto.randomUUID(),
     };
 
-    setSelectedOrganizations(prev => [...prev, newOrganization]);
+    addOrganization(newOrganization);
   };
 
   const handleRemoveOrganization = (uuid: string) => {
-    setSelectedOrganizations(prev => prev.filter(org => org.uuid !== uuid));
+    removeOrganization(uuid);
   };
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const Page = () => {
       <PostHeader mode="post" />
       <TitleInputField />
       <OrganizationInputField
-        selectedOrganizations={selectedOrganizations}
+        selectedOrganizations={organizations}
         onSelect={handleSelectOrganization}
         onAdd={handleAddOrganization}
         onRemove={handleRemoveOrganization}
