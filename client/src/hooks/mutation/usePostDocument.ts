@@ -5,8 +5,28 @@ import {PostDocumentContent, WikiDocument} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 import {postDocumentClient} from '@apis/client/document';
+import {postOrganizationDocumentClient} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {route} from '@constants/route';
+
+const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
+  const savedDocument = await postDocumentClient(document);
+
+  await Promise.all(
+    document.organizations.map(org =>
+      postOrganizationDocumentClient({
+        title: org.title,
+        contents: '',
+        writer: document.writer,
+        documentBytes: 0,
+        crewDocumentUuid: savedDocument.documentUUID,
+        organizationDocumentUuid: org.uuid,
+      }),
+    ),
+  );
+
+  return savedDocument;
+};
 
 export const usePostDocument = () => {
   const router = useRouter();
@@ -14,7 +34,7 @@ export const usePostDocument = () => {
   const {trackDocumentCreate} = useAmplitude();
 
   const {mutate, isPending} = useMutation<PostDocumentContent, WikiDocument>({
-    mutationFn: postDocumentClient,
+    mutationFn: postDocumentWithOrganizations,
     onSuccess: document => {
       trackDocumentCreate(document.title, document.documentUUID);
       addTitle(document.title, document.documentUUID, 'CREW');
