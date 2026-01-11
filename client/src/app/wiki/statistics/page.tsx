@@ -1,9 +1,9 @@
 'use client';
 
 import Button from '@components/common/Button';
-import {Modal} from '@components/common/Modal/Modal';
 import {useModal} from '@components/common/Modal/useModal';
 import {Chip} from '@components/common/Chip';
+import {Modal} from '@components/common/Modal/Modal';
 
 const Page = () => {
   const modal = useModal<boolean>(
