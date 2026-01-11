@@ -1,6 +1,6 @@
 'use client';
 
-import {formatDate} from '@utils/date';
+import {formatDate, isSameDate} from '@utils/date';
 import {JSX, useEffect, useMemo, useRef, useState} from 'react';
 import CalendarPopup from './CalendarPopUp';
 import CalendarInput from './CalendarInput';
@@ -82,8 +82,8 @@ const CustomCalendar = ({
 
     for (let day = 1; day <= lastDateOfMonth; day++) {
       const date = new Date(year, month, day);
-      const isToday = formatDate(date) === formatDate(new Date());
-      const isSelected = value && value.getFullYear() === year && value.getMonth() === month && value.getDate() === day;
+      const isToday = isSameDate(date, new Date());
+      const isSelected = value && isSameDate(date, value);
 
       const baseClasses = 'flex items-center justify-center h-10 w-10 text-sm rounded-full cursor-pointer select-none';
       const todayClasses = 'font-bold bg-grayscale-50';
@@ -108,7 +108,7 @@ const CustomCalendar = ({
         if (!isClickable) return;
         const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), selectedDay);
 
-        if (value && formatDate(newDate) === formatDate(value)) {
+        if (value && isSameDate(newDate, value)) {
           onChange(null);
         } else {
           onChange(newDate);
@@ -154,7 +154,7 @@ const CustomCalendar = ({
   return (
     <div ref={wrapperRef} className="relative w-full">
       <CalendarInput
-        value={value ? formatDate(value) : ''}
+        value={value ? formatDate(value, '.') : ''}
         placeholder={placeholder}
         className={className}
         invalid={invalid}
