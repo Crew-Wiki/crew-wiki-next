@@ -33,12 +33,15 @@ function TuiEditor({initialValue, saveMarkdown, onChange}: TuiEditorProps) {
   const uuid = useDocument(state => state.uuid);
 
   const {uploadImageAndReplaceUrl} = useUploadImage(uuid);
+  const isInitializedRef = useRef(false);
 
   useEffect(() => {
     if (!editorRef.current) return;
+    if (isInitializedRef.current) return;
 
     const instance = editorRef.current.getInstance();
     instance.setMarkdown(initialValue);
+    isInitializedRef.current = true;
   }, [editorRef, initialValue]);
 
   const imageHandler = async (blob: File | Blob, callback: HookCallback) => {
