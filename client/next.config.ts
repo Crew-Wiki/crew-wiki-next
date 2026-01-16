@@ -2,7 +2,7 @@ import {withSentryConfig} from '@sentry/nextjs';
 import type {NextConfig} from 'next';
 import {URLS} from '@constants/urls';
 
-const DOMAIN_HOSTNAME = process.env.NEXT_PUBLIC_CDN_DOMAIN.replace('https://', '');
+const DOMAIN_HOSTNAME = process.env.NEXT_PUBLIC_CDN_DOMAIN?.replace('https://', '') || '';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -43,8 +43,8 @@ export default withSentryConfig(nextConfig, {
 
   project: 'crew-wiki',
 
-  // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+  // Hide source maps upload logs
+  silent: true,
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
