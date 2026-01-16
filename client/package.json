@@ -11,7 +11,6 @@
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
     "prettier:write": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prettier:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "deploy": "pm2 start ecosystem.config.js --env production",
     "prepare:release": "node scripts/prepare-release.mjs",
     "prepare": "cd .. && husky client/.husky"
   },
