@@ -13,8 +13,16 @@ import {IncrementViewCountByUUID} from './IncrementViewCountByUUID';
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const documents = await getAllDocumentsServer();
-  return documents.map(({uuid}) => ({uuid}));
+  try {
+    const documents = await getAllDocumentsServer();
+
+    if (!documents || !Array.isArray(documents)) return [];
+
+    return documents.map(({uuid}) => ({uuid: String(uuid)}));
+  } catch (error) {
+    console.error('generateStaticParams 에러', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({params}: UUIDParams): Promise<Metadata> {

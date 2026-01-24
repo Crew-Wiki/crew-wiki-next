@@ -3,7 +3,7 @@
 import {requestDeleteClientWithoutResponse} from '@http/client';
 
 export const deleteFrontendServerCache = async () => {
-  await requestDeleteClientWithoutResponse<null>({
+  await requestDeleteClientWithoutResponse({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: '/api/delete-frontend-server-cache',
   });
