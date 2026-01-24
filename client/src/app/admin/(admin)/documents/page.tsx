@@ -3,7 +3,7 @@
 import Button from '@components/common/Button';
 import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
-import {getAllDocumentsServer} from '@apis/server/document';
+import {getAllDocumentsServer} from '@apis/server/document.fetch';
 import {deleteDocumentClient} from '@apis/client/document';
 import {WikiDocumentExpand} from '@type/Document.type';
 import {useRouter} from 'next/navigation';

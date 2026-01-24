@@ -1,4 +1,4 @@
-import {getDocumentByUUIDServer, getDocumentsUUIDServer} from '@apis/server/document';
+import {getDocumentByUUIDServer, getAllDocumentsServer} from '@apis/server/document.fetch';
 import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
@@ -13,7 +13,7 @@ import {IncrementViewCountByUUID} from './IncrementViewCountByUUID';
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const documents = await getDocumentsUUIDServer();
+  const documents = await getAllDocumentsServer();
   return documents.map(({uuid}) => ({uuid}));
 }
 

@@ -66,6 +66,7 @@ export type WikiDocumentExpand = Omit<WikiDocument, 'documentUUID' | 'documentId
   uuid: string;
   id: number;
   documentBytes: number;
+  viewCount: number;
 };
 
 export interface PostDocumentContent {

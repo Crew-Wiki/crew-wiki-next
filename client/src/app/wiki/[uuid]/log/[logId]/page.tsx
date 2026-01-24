@@ -1,4 +1,4 @@
-import {getSpecificDocumentLogServer} from '@apis/server/document';
+import {getSpecificDocumentLogServer} from '@apis/server/document.fetch';
 import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';

@@ -1,12 +1,12 @@
 'use server';
 
 import {TitleAndUUID} from '@apis/client/document';
-import {getDocumentsUUIDServer} from '@apis/server/document';
+import {getAllDocumentsServer} from '@apis/server/document.fetch';
 import {ApiResponseType} from '@type/http.type';
 import {NextResponse} from 'next/server';
 
 export const GET = async () => {
-  const documents = await getDocumentsUUIDServer();
+  const documents = await getAllDocumentsServer();
 
   const response: ApiResponseType<TitleAndUUID[]> = {
     data: documents.map(({title, uuid}) => ({title, uuid})),
