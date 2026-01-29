@@ -1,4 +1,5 @@
 import timeConverter from '@utils/TimeConverter';
+import {FEEDBACK_FORM} from '@constants/urls';
 
 interface DocumentFooterProps {
   generateTime: string;
@@ -13,7 +14,7 @@ const DocumentFooter = ({generateTime}: DocumentFooterProps) => {
       <p className="font-pretendard text-xs text-grayscale-800">
         질문, 제안, 오류 제보는{' '}
         <a
-          href="https://forms.gle/qZAy58hCLk2u2Zbj7"
+          href={FEEDBACK_FORM}
           target="_blank"
           rel="noopener noreferrer"
           className="font-medium text-primary-primary hover:underline"
