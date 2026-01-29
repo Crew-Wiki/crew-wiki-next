@@ -4,6 +4,7 @@ import Button from '@components/common/Button';
 import {useModal} from '@components/common/Modal/useModal';
 import {Chip} from '@components/common/Chip';
 import {Modal} from '@components/common/Modal/Modal';
+import DocumentFooter from '@components/document/layout/DocumentFooter';
 
 const Page = () => {
   const modal = useModal<boolean>(
@@ -40,6 +41,7 @@ const Page = () => {
         </Button>
         <Chip text="크루위키부흥위원회" />
       </div>
+      <DocumentFooter generateTime="2025-01-30T12:00:00" />
       {modal.component}
     </section>
   );
