@@ -1,7 +1,7 @@
 'use client';
 
 import {ENDPOINT} from '@constants/endpoint';
-import {requestGetClient, requestPostClient, requestPutClient} from '@http/client';
+import {requestDeleteClient, requestGetClient, requestPostClient, requestPutClient} from '@http/client';
 import {
   GroupDocumentResponse,
   OrganizationDocumentCreateRequest,
@@ -36,4 +36,11 @@ export const putOrganizationDocumentClient = async (request: OrganizationDocumen
   });
 
   return response;
+};
+
+export const deleteOrganizationFromDocumentClient = async (documentUuid: string, organizationDocumentUuid: string) => {
+  await requestDeleteClient({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.deleteOrganizationFromDocument(documentUuid, organizationDocumentUuid),
+  });
 };

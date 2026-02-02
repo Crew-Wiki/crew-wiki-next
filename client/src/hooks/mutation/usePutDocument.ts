@@ -5,7 +5,7 @@ import {PostDocumentContent, WikiDocument} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 import {putDocumentClient} from '@apis/client/document';
-import {postOrganizationDocumentClient} from '@apis/client/organization';
+import {deleteOrganizationFromDocumentClient, postOrganizationDocumentClient} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {useDocument} from '@store/document';
 import {route} from '@constants/route';
@@ -25,6 +25,10 @@ export const usePutDocument = () => {
       org => !originalOrganizations.some(original => original.uuid === org.uuid),
     );
 
+    const deletedOrganizations = originalOrganizations.filter(
+      original => !document.organizations.some(org => org.uuid === original.uuid),
+    );
+
     const createdOrganizations = await Promise.all(
       newOrganizations.map(org =>
         postOrganizationDocumentClient({
@@ -36,6 +40,10 @@ export const usePutDocument = () => {
           organizationDocumentUuid: org.uuid,
         }),
       ),
+    );
+
+    await Promise.all(
+      deletedOrganizations.map(org => deleteOrganizationFromDocumentClient(savedDocument.documentUUID, org.uuid)),
     );
 
     return {savedDocument, createdOrganizations};

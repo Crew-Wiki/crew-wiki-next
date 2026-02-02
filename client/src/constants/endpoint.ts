@@ -19,6 +19,8 @@ export const ENDPOINT = {
   getOrganizationDocumentsByDocumentUUID: (uuid: string) => `/document/${uuid}/organization-documents`,
   postOrganizationDocument: '/organization',
   putOrganizationDocument: '/organization',
+  deleteOrganizationFromDocument: (documentUuid: string, organizationDocumentUuid: string) =>
+    `/document/${documentUuid}/organization-documents/${organizationDocumentUuid}`,
 
   // Organization Event
   postOrganizationEvent: '/organization-events',
