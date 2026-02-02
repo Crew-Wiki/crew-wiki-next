@@ -6,14 +6,16 @@ import Link from 'next/link';
 type LogContentProps = {
   uuid: string;
   summary: WikiDocumentLogSummary;
+  documentType?: 'CREW' | 'ORGANIZATION';
 };
 
-export const LogContent = ({uuid, summary}: LogContentProps) => {
+export const LogContent = ({uuid, summary, documentType = 'CREW'}: LogContentProps) => {
   const {id, version, generateTime, documentBytes, writer} = summary;
+  const logHref = documentType === 'ORGANIZATION' ? route.goWikiGroupLog(uuid, id) : route.goWikiLog(uuid, id);
 
   return (
     <Link
-      href={route.goWikilog(uuid, id)}
+      href={logHref}
       passHref
       className="text-md flex w-full items-center justify-center gap-2 rounded-2xl border border-primary-100 px-2 py-4 font-pretendard text-grayscale-800 md:gap-8"
     >

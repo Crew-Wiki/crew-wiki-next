@@ -9,15 +9,16 @@ type LogListParams = {
   uuid: string;
   initialData: WikiDocumentLogSummary[];
   totalPage: number;
+  documentType?: 'CREW' | 'ORGANIZATION';
 };
 
-export const LogList = ({uuid, initialData, totalPage}: LogListParams) => {
+export const LogList = ({uuid, initialData, totalPage, documentType = 'CREW'}: LogListParams) => {
   const {logs, fetchNextPage} = useGetDocumentLogs(uuid, initialData, totalPage);
 
   return (
     <div className="flex flex-col gap-4">
       {logs?.map(log => (
-        <LogContent key={log.id} uuid={uuid} summary={log} />
+        <LogContent key={log.id} uuid={uuid} summary={log} documentType={documentType} />
       ))}
       <InfiniteScrollObserver key={uuid} callback={fetchNextPage} />
     </div>

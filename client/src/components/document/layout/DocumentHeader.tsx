@@ -11,6 +11,7 @@ interface DocumentHeaderProps {
 
 const DocumentHeader = ({title, uuid, documentType = 'CREW'}: DocumentHeaderProps) => {
   const editHref = documentType === 'ORGANIZATION' ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
+  const logsHref = documentType === 'ORGANIZATION' ? route.goWikiGroupLogs(uuid) : route.goWikiLogs(uuid);
 
   return (
     <header className="flex w-full justify-between max-md:flex-col-reverse max-md:gap-4">
@@ -21,14 +22,11 @@ const DocumentHeader = ({title, uuid, documentType = 'CREW'}: DocumentHeaderProp
             편집하기
           </Button>
         </Link>
-        {/* TODO: 조직문서에도 편집로그 기능 추가되면 수정 필요 */}
-        {documentType === 'CREW' && (
-          <Link href={route.goWikiLogs(uuid)}>
-            <Button style="tertiary" size="xs">
-              편집로그
-            </Button>
-          </Link>
-        )}
+        <Link href={logsHref}>
+          <Button style="tertiary" size="xs">
+            편집로그
+          </Button>
+        </Link>
         <Link href={route.goWikiWrite()}>
           <Button style="primary" size="xs">
             작성하기
