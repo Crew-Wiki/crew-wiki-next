@@ -9,7 +9,7 @@ type LogsHeaderProps = {
 export const LogsHeader = ({uuid}: LogsHeaderProps) => {
   return (
     <header className="flex w-full justify-between">
-      <h1 className="font-bm text-3xl text-grayscale-800">편집로그</h1>
+      <h1 className="font-bm text-3xl text-grayscale-800">편집기록</h1>
       <fieldset className="flex gap-2">
         <Link href={route.goWiki(uuid)} passHref>
           <Button style="tertiary" size="xs">

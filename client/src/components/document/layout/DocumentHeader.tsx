@@ -24,7 +24,7 @@ const DocumentHeader = ({title, uuid, documentType = 'CREW'}: DocumentHeaderProp
         </Link>
         <Link href={logsHref}>
           <Button style="tertiary" size="xs">
-            편집로그
+            편집기록
           </Button>
         </Link>
         <Link href={route.goWikiWrite()}>
