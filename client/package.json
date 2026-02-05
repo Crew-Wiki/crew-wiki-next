@@ -12,7 +12,9 @@
     "prettier:write": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prettier:check": "prettier --check \"src/**/*.{ts,tsx}\"",
     "prepare:release": "node scripts/prepare-release.mjs",
-    "prepare": "cd .. && husky client/.husky"
+    "prepare": "cd .. && husky client/.husky",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.11",
@@ -50,7 +52,11 @@
     "prettier-plugin-tailwindcss": "^0.6.12",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "storybook": "^10.2.6",
+    "@storybook/nextjs-vite": "^10.2.6",
+    "vite": "^7.3.1",
+    "eslint-plugin-storybook": "^10.2.6"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
