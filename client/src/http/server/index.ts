@@ -1,5 +1,3 @@
-'use server';
-
 import {objectToQueryString} from '@http/common';
 import {
   FetchType,
@@ -86,8 +84,8 @@ const createRequestInit = ({method, headers, body, cache, next}: ServerCreateReq
 
 const request = async <T>(args: ServerHttpArgs) => {
   const {url, requestInit} = prepareRequest(args);
-  const response = await executeRequest({url, requestInit});
 
+  const response = await executeRequest({url, requestInit});
   const data: T = await response!.json();
   return data;
 };

@@ -39,7 +39,7 @@ export const requestPutClient = async <T>({headers = {}, ...args}: ClientHttpMet
   return response.data;
 };
 
-export const requestDeleteClientWithoutResponse = async <T>({
+export const requestDeleteClientWithoutResponse = async ({
   headers = {},
   ...args
 }: ClientHttpMethodArgs): Promise<void> => {
