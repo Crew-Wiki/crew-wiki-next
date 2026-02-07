@@ -18,7 +18,7 @@ export async function generateStaticParams() {
 
     if (!documents || !Array.isArray(documents)) return [];
 
-    return documents.map(({uuid}) => ({uuid: String(uuid)}));
+    return documents.map(({uuid}) => ({uuid}));
   } catch (error) {
     console.error('generateStaticParams 에러', error);
     return [];
