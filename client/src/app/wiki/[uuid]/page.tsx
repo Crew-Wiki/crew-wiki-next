@@ -22,7 +22,7 @@ export async function generateStaticParams() {
 
     if (!documents || !Array.isArray(documents)) return [];
 
-    return documents.map(({uuid}) => ({uuid}));
+    return documents.filter(({documentType}) => documentType === 'CREW').map(({uuid}) => ({uuid}));
   } catch (error) {
     console.error('generateStaticParams 에러', error);
     return [];
