@@ -1,4 +1,4 @@
-import {getRecentlyDocumentsServer} from '@apis/server/document.fetch';
+import {getRecentlyDocumentsServer} from '@apis/server/document';
 import {route} from '@constants/route';
 import timeConverter from '@utils/TimeConverter';
 import Link from 'next/link';

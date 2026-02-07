@@ -1,4 +1,4 @@
-import {getDocumentByUUIDServer} from '@apis/server/document.fetch';
+import {getDocumentByUUIDServer} from '@apis/server/document';
 import {LogsHeader} from './LogsHeader';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import {UUIDParams} from '@type/PageParams.type';

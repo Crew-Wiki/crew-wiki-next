@@ -1,4 +1,4 @@
-import {getDocumentByUUIDServer} from '@apis/server/document.fetch';
+import {getDocumentByUUIDServer} from '@apis/server/document';
 import {Metadata} from 'next';
 
 export async function generateDocumentPageMetadata(uuid: string): Promise<Metadata> {

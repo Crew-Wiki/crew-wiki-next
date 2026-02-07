@@ -1,4 +1,4 @@
-import {getDocumentByUUIDServer} from '@apis/server/document.fetch';
+import {getDocumentByUUIDServer} from '@apis/server/document';
 import {UUIDParams} from '@type/PageParams.type';
 import {Metadata} from 'next';
 

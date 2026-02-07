@@ -1,6 +1,6 @@
 import type {UUIDParams} from '@type/PageParams.type';
 import {Metadata} from 'next';
-import {getDocumentLogsByUUIDServer} from '@apis/server/document.fetch';
+import {getDocumentLogsByUUIDServer} from '@apis/server/document';
 import {LogList} from './LogList';
 import {generateLogsPageMetadata} from '@utils/generateDocumentMetadata';
 

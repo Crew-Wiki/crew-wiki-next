@@ -1,7 +1,7 @@
 'use server';
 
 import {TitleAndUUID} from '@apis/client/document';
-import {getAllDocumentsServer} from '@apis/server/document.fetch';
+import {getAllDocumentsServer} from '@apis/server/document';
 import {ApiResponseType} from '@type/http.type';
 import {NextResponse} from 'next/server';
 
