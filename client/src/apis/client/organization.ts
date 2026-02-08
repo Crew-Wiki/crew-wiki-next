@@ -30,8 +30,8 @@ export const postOrganizationDocumentClient = async (request: OrganizationDocume
 
 export const putOrganizationDocumentClient = async (request: OrganizationDocumentUpdateRequest) => {
   const response = await requestPutClient<GroupDocumentResponse>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.putOrganizationDocument,
+    baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
+    endpoint: '/api/put-organization-document',
     body: request,
   });
 
