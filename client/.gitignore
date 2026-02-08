@@ -44,3 +44,6 @@ next-env.d.ts
 
 src/data/*
 !src/data/.gitkeep
+
+*storybook.log
+storybook-static

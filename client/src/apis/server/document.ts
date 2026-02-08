@@ -13,7 +13,6 @@ import {requestGetServer, requestPostServer, requestPutServer, requestDeleteServ
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
 import {ViewCountByUUID} from '@type/viewCount.type';
-import {TitleAndUUID} from '@apis/client/document';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
   const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
@@ -21,17 +20,6 @@ export const getDocumentsServerWithPagination = async (params: PaginationParams)
     endpoint: ENDPOINT.getDocuments,
     queryParams: params,
     next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocuments(params)]},
-  });
-
-  return response;
-};
-
-// 전체 문서의 UUID와 제목을 불러오기 위한 목적
-export const getDocumentsUUIDServer = async () => {
-  const response = await requestGetServer<TitleAndUUID[]>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: `${ENDPOINT.getDocumentSearch}?keyWord=`,
-    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentsUUID]},
   });
 
   return response;
