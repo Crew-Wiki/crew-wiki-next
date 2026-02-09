@@ -20,3 +20,5 @@ export const URLS = {
   dashboard: '/admin/dashboard',
   documents: '/admin/documents',
 };
+
+export const FEEDBACK_FORM = 'https://forms.gle/qZAy58hCLk2u2Zbj7';
