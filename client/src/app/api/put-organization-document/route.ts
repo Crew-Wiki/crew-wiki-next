@@ -23,7 +23,6 @@ export const PUT = async (request: NextRequest) => {
     const updatedDocument = await putOrganizationDocumentServer(documentData);
 
     revalidateTag(CACHE.tag.getOrganizationDocumentByUUID(documentData.uuid));
-    revalidateTag(CACHE.tag.getDocumentsUUID);
     revalidateTag(CACHE.tag.getRecentlyDocuments);
 
     const response: ApiResponseType<GroupDocumentResponse> = {
