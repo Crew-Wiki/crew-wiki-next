@@ -8,6 +8,7 @@ import {twMerge} from 'tailwind-merge';
 import {useModal} from '@components/common/Modal/useModal';
 import {Modal} from '@components/common/Modal/Modal';
 import {deleteFrontendServerCache} from '@apis/client/admin';
+import {CLIENT_ENDPOINT} from '@constants/endpoint';
 import {requestPostClientWithoutResponse} from '@http/client';
 
 interface MenuItem {
@@ -72,7 +73,7 @@ const Index = () => {
     try {
       await requestPostClientWithoutResponse({
         baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
-        endpoint: '/api/post-admin-logout',
+        endpoint: CLIENT_ENDPOINT.postAdminLogout,
       });
 
       router.replace(route.goAdminLogin());

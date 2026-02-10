@@ -1,6 +1,6 @@
 'use client';
 
-import {ENDPOINT} from '@constants/endpoint';
+import {CLIENT_ENDPOINT, ENDPOINT} from '@constants/endpoint';
 import {requestDeleteClient, requestGetClient, requestPostClient, requestPutClient} from '@http/client';
 import {
   GroupDocumentResponse,
@@ -31,7 +31,7 @@ export const postOrganizationDocumentClient = async (request: OrganizationDocume
 export const putOrganizationDocumentClient = async (request: OrganizationDocumentUpdateRequest) => {
   const response = await requestPutClient<GroupDocumentResponse>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
-    endpoint: '/api/put-organization-document',
+    endpoint: CLIENT_ENDPOINT.putOrganizationDocument,
     body: request,
   });
 

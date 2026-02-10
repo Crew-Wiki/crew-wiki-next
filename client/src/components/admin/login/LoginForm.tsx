@@ -1,5 +1,6 @@
 'use client';
 
+import {CLIENT_ENDPOINT} from '@constants/endpoint';
 import {route} from '@constants/route';
 import {useRouter} from 'next/navigation';
 import {useState} from 'react';
@@ -44,7 +45,7 @@ export default function LoginForm() {
     }
 
     try {
-      const response = await fetch('/api/post-admin-login', {
+      const response = await fetch(CLIENT_ENDPOINT.postAdminLogin, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(adminForm),

@@ -32,3 +32,23 @@ export const ENDPOINT = {
   postAdminLogout: '/auth/logout',
   getLoginCheck: '/auth/login/check',
 } as const;
+
+export const CLIENT_ENDPOINT = {
+  // Document
+  postDocument: '/api/post-document',
+  putDocument: '/api/put-document',
+  getDocumentTitleList: '/api/get-document-title-list',
+  deleteDocument: '/api/delete-document',
+
+  // Organization
+  putOrganizationDocument: '/api/put-organization-document',
+  postOrganizationEvent: '/api/post-organization-event',
+
+  // View Count
+  postViewCount: '/api/post-view-count',
+
+  // Admin
+  postAdminLogin: '/api/post-admin-login',
+  postAdminLogout: '/api/post-admin-logout',
+  deleteFrontendServerCache: '/api/delete-frontend-server-cache',
+} as const;
