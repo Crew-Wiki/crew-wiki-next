@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation';
 import {putOrganizationDocumentClient} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {route} from '@constants/route';
+import {DocumentType} from '@type/Document.type';
 import {GroupDocumentResponse, OrganizationDocumentUpdateRequest} from '@type/Group.type';
 
 export const usePutOrganizationDocument = () => {
@@ -14,7 +15,7 @@ export const usePutOrganizationDocument = () => {
   const {mutate, isPending} = useMutation<OrganizationDocumentUpdateRequest, GroupDocumentResponse>({
     mutationFn: putOrganizationDocumentClient,
     onSuccess: document => {
-      updateTitle(document.title, document.title, document.organizationDocumentUuid, 'ORGANIZATION');
+      updateTitle(document.title, document.title, document.organizationDocumentUuid, DocumentType.Organization);
       router.push(route.goWikiGroup(document.organizationDocumentUuid));
       router.refresh();
     },

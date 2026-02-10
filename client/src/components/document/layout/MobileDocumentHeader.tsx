@@ -1,15 +1,16 @@
 import Button from '@components/common/Button';
 import {route} from '@constants/route';
+import {DocumentType} from '@type/Document.type';
 import Link from 'next/link';
 
 interface MobileDocumentHeaderProps {
   uuid: string;
-  documentType?: 'CREW' | 'ORGANIZATION';
+  documentType?: DocumentType;
 }
 
-const MobileDocumentHeader = ({uuid, documentType = 'CREW'}: MobileDocumentHeaderProps) => {
-  const editHref = documentType === 'ORGANIZATION' ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
-  const logsHref = documentType === 'ORGANIZATION' ? route.goWikiGroupLogs(uuid) : route.goWikiLogs(uuid);
+const MobileDocumentHeader = ({uuid, documentType = DocumentType.Crew}: MobileDocumentHeaderProps) => {
+  const editHref = documentType === DocumentType.Organization ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
+  const logsHref = documentType === DocumentType.Organization ? route.goWikiGroupLogs(uuid) : route.goWikiLogs(uuid);
 
   return (
     <div className="md:hidden">

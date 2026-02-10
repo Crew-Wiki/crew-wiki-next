@@ -1,4 +1,5 @@
 import {TitleAndUUID} from '@apis/client/document';
+import {DocumentType} from '@type/Document.type';
 import {Trie} from '@utils/trie';
 import {create} from 'zustand';
 
@@ -9,8 +10,8 @@ type State = {
 
 type Action = {
   setInit: (titles: TitleAndUUID[]) => void;
-  addTitle: (title: string, uuid: string, documentType: 'CREW' | 'ORGANIZATION') => void;
-  updateTitle: (oldTitle: string, newTitle: string, uuid: string, documentType: 'CREW' | 'ORGANIZATION') => void;
+  addTitle: (title: string, uuid: string, documentType: DocumentType) => void;
+  updateTitle: (oldTitle: string, newTitle: string, uuid: string, documentType: DocumentType) => void;
   deleteTitle: (title: string, uuid: string) => void;
   searchTitle: (title: string) => TitleAndUUID[];
 };

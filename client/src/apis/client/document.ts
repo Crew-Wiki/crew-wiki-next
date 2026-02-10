@@ -2,7 +2,13 @@
 
 import {CLIENT_ENDPOINT, ENDPOINT} from '@constants/endpoint';
 import {requestGetClient, requestPostClient, requestPutClient, requestDeleteClient} from '@http/client';
-import {LatestWikiDocument, PostDocumentContent, WikiDocument, WikiDocumentLogSummary} from '@type/Document.type';
+import {
+  DocumentType,
+  LatestWikiDocument,
+  PostDocumentContent,
+  WikiDocument,
+  WikiDocumentLogSummary,
+} from '@type/Document.type';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {Organization} from '@type/Group.type';
 
@@ -36,7 +42,7 @@ export const getRandomDocumentClient = async () => {
 export type TitleAndUUID = {
   title: string;
   uuid: string;
-  documentType: 'CREW' | 'ORGANIZATION';
+  documentType: DocumentType;
 };
 
 export const getSearchDocumentClient = async (query: string) => {

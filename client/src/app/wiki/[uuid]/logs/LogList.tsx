@@ -2,17 +2,17 @@
 
 import {InfiniteScrollObserver} from '@components/common/InfinityScrollObserver';
 import {LogContent} from './LogContent';
-import {WikiDocumentLogSummary} from '@type/Document.type';
+import {DocumentType, WikiDocumentLogSummary} from '@type/Document.type';
 import {useGetDocumentLogs} from '@hooks/fetch/useGetDocumentLogs';
 
 type LogListParams = {
   uuid: string;
   initialData: WikiDocumentLogSummary[];
   totalPage: number;
-  documentType?: 'CREW' | 'ORGANIZATION';
+  documentType?: DocumentType;
 };
 
-export const LogList = ({uuid, initialData, totalPage, documentType = 'CREW'}: LogListParams) => {
+export const LogList = ({uuid, initialData, totalPage, documentType = DocumentType.Crew}: LogListParams) => {
   const {logs, fetchNextPage} = useGetDocumentLogs(uuid, initialData, totalPage);
 
   return (

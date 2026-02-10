@@ -1,7 +1,7 @@
 'use client';
 
 import useMutation from '@hooks/useMutation';
-import {PostDocumentContent, WikiDocument} from '@type/Document.type';
+import {DocumentType, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 import {postDocumentClient} from '@apis/client/document';
@@ -41,9 +41,9 @@ export const usePostDocument = () => {
     mutationFn: postDocumentWithOrganizations,
     onSuccess: ({savedDocument, createdOrganizations}) => {
       trackDocumentCreate(savedDocument.title, savedDocument.documentUUID);
-      addTitle(savedDocument.title, savedDocument.documentUUID, 'CREW');
+      addTitle(savedDocument.title, savedDocument.documentUUID, DocumentType.Crew);
       createdOrganizations.forEach(org => {
-        addTitle(org.title, org.organizationDocumentUuid, 'ORGANIZATION');
+        addTitle(org.title, org.organizationDocumentUuid, DocumentType.Organization);
       });
       router.push(route.goWiki(savedDocument.documentUUID));
       router.refresh();

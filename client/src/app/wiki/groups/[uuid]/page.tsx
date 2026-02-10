@@ -1,3 +1,4 @@
+import {DocumentType} from '@type/Document.type';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
@@ -24,12 +25,12 @@ const GroupPage = async ({params}: {params: Promise<{uuid: string}>}) => {
 
   return (
     <div className="flex w-full flex-col gap-6 max-[768px]:gap-2">
-      <MobileDocumentHeader uuid={groupDocument.organizationDocumentUuid} documentType="ORGANIZATION" />
+      <MobileDocumentHeader uuid={groupDocument.organizationDocumentUuid} documentType={DocumentType.Organization} />
       <section className="flex h-fit min-h-[864px] w-full flex-col gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-md:gap-2 max-md:p-4 max-[768px]:gap-2">
         <DocumentHeader
           title={groupDocument.title}
           uuid={groupDocument.organizationDocumentUuid}
-          documentType="ORGANIZATION"
+          documentType={DocumentType.Organization}
         />
         <TOC headTags={extractHeadings(htmlContents)} />
         <div className="toastui-editor-contents" dangerouslySetInnerHTML={{__html: htmlContents}} />

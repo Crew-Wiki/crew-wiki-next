@@ -8,6 +8,7 @@ import {Chip} from '@components/common/Chip';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useTrie} from '@store/trie';
 import {TitleAndUUID} from '@apis/client/document';
+import {DocumentType} from '@type/Document.type';
 import {Organization} from '@type/Group.type';
 
 interface OrganizationInputFieldProps {
@@ -24,8 +25,9 @@ const OrganizationInputField = ({selectedOrganizations, onSelect, onRemove, onAd
   const searchTitle = useTrie(state => state.searchTitle);
 
   const searchResults = searchTitle(value).filter(
-    (doc): doc is TitleAndUUID & {documentType: 'ORGANIZATION'} =>
-      doc.documentType === 'ORGANIZATION' && !selectedOrganizations.some(selected => selected.uuid === doc.uuid),
+    (doc): doc is TitleAndUUID & {documentType: DocumentType.Organization} =>
+      doc.documentType === DocumentType.Organization &&
+      !selectedOrganizations.some(selected => selected.uuid === doc.uuid),
   );
 
   const handleSelectOrganization = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,7 +45,7 @@ const OrganizationInputField = ({selectedOrganizations, onSelect, onRemove, onAd
     if (value.trim() === '') return;
 
     const existingOrganization = searchTitle(value).find(
-      doc => doc.documentType === 'ORGANIZATION' && doc.title === value,
+      doc => doc.documentType === DocumentType.Organization && doc.title === value,
     );
 
     if (existingOrganization) {

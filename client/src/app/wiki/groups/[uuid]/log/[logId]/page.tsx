@@ -1,3 +1,4 @@
+import {DocumentType} from '@type/Document.type';
 import {getSpecificDocumentLogServer} from '@apis/server/document';
 import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
@@ -20,9 +21,9 @@ const GroupLogPage = async ({params}: UUIDLogParams) => {
 
   return (
     <section className="flex w-full flex-col items-center gap-6">
-      <MobileDocumentHeader uuid={uuid} documentType="ORGANIZATION" />
+      <MobileDocumentHeader uuid={uuid} documentType={DocumentType.Organization} />
       <div className="flex h-fit w-full flex-col gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-[768px]:gap-2 max-[768px]:p-4">
-        <DocumentHeader title={document.title} uuid={uuid} documentType="ORGANIZATION" />
+        <DocumentHeader title={document.title} uuid={uuid} documentType={DocumentType.Organization} />
         <DocumentContents contents={contents} />
       </div>
       <DocumentFooter generateTime={document.generateTime} />

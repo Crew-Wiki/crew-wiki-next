@@ -1,6 +1,11 @@
 import {SORT_OPTIONS} from '@constants/popular';
 import {Organization} from './Group.type';
 
+export enum DocumentType {
+  Crew = 'CREW',
+  Organization = 'ORGANIZATION',
+}
+
 export interface WikiDocument {
   documentId: number;
   documentUUID: string;
@@ -69,7 +74,7 @@ export type WikiDocumentExpand = Omit<WikiDocument, 'documentUUID' | 'documentId
   id: number;
   documentBytes: number;
   viewCount: number;
-  documentType: 'CREW' | 'ORGANIZATION';
+  documentType: DocumentType;
 };
 
 export interface PostDocumentContent {

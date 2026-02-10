@@ -7,6 +7,7 @@ import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
+import {DocumentType} from '@type/Document.type';
 import type {UUIDParams} from '@type/PageParams.type';
 import {generateDocumentPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
@@ -22,7 +23,7 @@ export async function generateStaticParams() {
 
     if (!documents || !Array.isArray(documents)) return [];
 
-    return documents.filter(({documentType}) => documentType === 'CREW').map(({uuid}) => ({uuid}));
+    return documents.filter(({documentType}) => documentType === DocumentType.Crew).map(({uuid}) => ({uuid}));
   } catch (error) {
     console.error('generateStaticParams 에러', error);
     return [];

@@ -8,6 +8,7 @@ import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTe
 import {useTrie} from '@store/trie';
 import useAmplitude from '@hooks/useAmplitude';
 import {route} from '@constants/route';
+import {DocumentType} from '@type/Document.type';
 
 interface WikiInputProps {
   className?: string;
@@ -23,7 +24,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
   const data = searchTitle(value);
 
   const getRouteByDocumentType = (uuid: string, documentType?: string) => {
-    return documentType === 'ORGANIZATION' ? route.goWikiGroup(uuid) : route.goWiki(uuid);
+    return documentType === DocumentType.Organization ? route.goWikiGroup(uuid) : route.goWiki(uuid);
   };
 
   const onSubmit = (event: React.FormEvent) => {
