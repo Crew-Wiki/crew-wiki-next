@@ -23,6 +23,7 @@ const RelativeSearchTerms = ({
             id={uuid}
             data-title={title}
             data-document-type={documentType}
+            onMouseDown={e => e.preventDefault()}
             onClick={onClick}
             className="w-full cursor-pointer rounded-lg px-2 py-2 text-left font-pretendard text-base font-normal text-grayscale-800 hover:bg-primary-50"
             key={uuid}

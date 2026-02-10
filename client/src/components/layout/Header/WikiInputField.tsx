@@ -1,6 +1,7 @@
 'use client';
 
 import {twMerge} from 'tailwind-merge';
+import {useState} from 'react';
 import {useInput} from '@components/common/Input/useInput';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
@@ -12,11 +13,12 @@ import {DocumentType} from '@type/Document.type';
 
 interface WikiInputProps {
   className?: string;
-  handleSubmit: () => void;
+  onSubmit: () => void;
 }
 
-const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
+const WikiInputField = ({className, onSubmit}: WikiInputProps) => {
   const {value, directlyChangeValue: setValue, onChange} = useInput({});
+  const [showDropdown, setShowDropdown] = useState(true);
   const router = useRouter();
   const {trackDocumentSearch} = useAmplitude();
 
@@ -27,7 +29,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
     return documentType === DocumentType.Organization ? route.goWikiGroup(uuid) : route.goWiki(uuid);
   };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (value?.trim() === '') return;
 
@@ -47,12 +49,28 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
     }
 
     setValue('');
-    handleSubmit();
+    onSubmit();
+  };
+
+  const handleBlur = (e: React.FocusEvent) => {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setShowDropdown(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') setShowDropdown(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e);
+    setShowDropdown(true);
   };
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
       className={twMerge(
         'relative flex h-11 gap-2 rounded-xl border border-solid border-grayscale-200 bg-white px-4 py-2.5',
         className,
@@ -63,7 +81,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
         className="w-full font-pretendard text-base font-normal text-grayscale-800 outline-none placeholder:text-grayscale-lightText"
         placeholder="검색할 문서의 제목을 입력하세요."
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
       />
       <button type="submit" id="search-icon">
         <Image
@@ -74,7 +92,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
           alt="search"
         />
       </button>
-      {value.trim() !== '' && <RelativeSearchTerms searchTerms={data} />}
+      {showDropdown && value.trim() !== '' && <RelativeSearchTerms searchTerms={data} />}
     </form>
   );
 };

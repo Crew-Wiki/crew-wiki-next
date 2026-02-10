@@ -11,7 +11,7 @@ const RightHeader = ({onSubmit, toggleVisibility}: RightHeaderProps) => {
   return (
     <div className="flex items-center">
       <RandomButton />
-      <WikiInputField className="hidden w-80 md:flex" handleSubmit={onSubmit} />
+      <WikiInputField className="hidden w-80 md:flex" onSubmit={onSubmit} />
       <Image
         src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/search-circle.svg`}
         width={36}

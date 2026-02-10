@@ -57,8 +57,16 @@ function TuiEditor({initialValue, saveMarkdown, onChange}: TuiEditorProps) {
 
   const MARKDOWN_THROTTLE_TIME = 5000;
 
-  const {top, left, titles, onClick, recordRefStartPos, recordRefEndPose, showRelativeSearchTerms} =
-    useRelativeSearchTerms({editorRef});
+  const {
+    top,
+    left,
+    titles,
+    onClick,
+    recordRefStartPos,
+    recordRefEndPose,
+    showRelativeSearchTerms,
+    closeRelativeSearchTerms,
+  } = useRelativeSearchTerms({editorRef});
 
   const handleChange = useCallback(() => {
     if (!editorRef.current) return;
@@ -76,12 +84,16 @@ function TuiEditor({initialValue, saveMarkdown, onChange}: TuiEditorProps) {
     recordRefEndPose();
   }, [editorRef, makeThrottle, onChange, recordRefEndPose, recordRefStartPos, saveMarkdown]);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') closeRelativeSearchTerms();
+  };
+
   useEffect(() => {
     return cleanup;
   }, [cleanup]);
 
   return (
-    <div onClick={onClick}>
+    <div onKeyDown={handleKeyDown}>
       <DynamicLoadEditor
         ref={editorRef}
         initialValue={initialValue}
@@ -98,6 +110,7 @@ function TuiEditor({initialValue, saveMarkdown, onChange}: TuiEditorProps) {
         show={showRelativeSearchTerms}
         style={{top: `${top + 200}px`, left, width: 320}}
         searchTerms={titles ?? []}
+        onClick={onClick}
       />
     </div>
   );

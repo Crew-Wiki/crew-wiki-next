@@ -62,8 +62,13 @@ const OrganizationInputField = ({selectedOrganizations, onSelect, onRemove, onAd
     setShowDropdown(true);
   };
 
-  const handleInputBlur = () => {
-    setTimeout(() => setShowDropdown(false), 200);
+  const handleContainerBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    if (event.currentTarget.contains(event.relatedTarget)) return;
+    setShowDropdown(false);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') setShowDropdown(false);
   };
 
   return (
@@ -77,12 +82,11 @@ const OrganizationInputField = ({selectedOrganizations, onSelect, onRemove, onAd
       )}
 
       <div className="relative flex gap-2">
-        <div className="relative">
+        <div className="relative" onBlur={handleContainerBlur} onKeyDown={handleKeyDown}>
           <Input
             input={value}
             handleChangeInput={onChange}
             onFocus={handleInputFocus}
-            onBlur={handleInputBlur}
             placeholder="소속을 추가해 주세요"
             className="h-11 w-[280px] gap-2 rounded-xl border border-solid border-grayscale-200 bg-white px-4 py-2.5 focus:border-grayscale-200 active:border-grayscale-200"
           />
