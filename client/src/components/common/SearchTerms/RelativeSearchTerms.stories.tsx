@@ -19,9 +19,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     searchTerms: [
-      {title: '연관 검색어1', uuid: '1'},
-      {title: '연관 검색어2', uuid: '2'},
-      {title: '연관 검색어3', uuid: '3'},
+      {title: '연관 검색어1', uuid: '1', documentType: 'CREW'},
+      {title: '연관 검색어2', uuid: '2', documentType: 'CREW'},
+      {title: '연관 검색어3', uuid: '3', documentType: 'ORGANIZATION'},
     ],
     show: true,
   },
