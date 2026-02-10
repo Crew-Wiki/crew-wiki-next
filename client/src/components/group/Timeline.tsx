@@ -14,6 +14,7 @@ interface TimelineProps {
 
 const Timeline = ({events}: TimelineProps) => {
   const timelineItems = events.map(event => ({
+    id: event.organizationEventUuid,
     title: event.occurredAt,
     cardTitle: event.title,
     cardSubtitle: event.writer,
