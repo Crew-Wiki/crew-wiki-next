@@ -103,10 +103,10 @@ H1, H2, H3 태그를 인식해서 목차가 자동으로 생성되며, 목차를
 
 <table>
   <tr>
-    <td align="center"><img src="https://github.com/jinhokim98.png" width="120" alt="쿠키"><br><a href="https://github.com/jinhokim98">쿠키</a></td>
-    <td align="center"><img src="https://github.com/Todari.png" width="120" alt="토다리"><br><a href="https://github.com/Todari">토다리</a></td>
-    <td align="center"><img src="https://github.com/chosim-dvlpr.png" width="120" alt="프룬"><br><a href="https://github.com/chosim-dvlpr">프룬</a></td>
-    <td align="center"><img src="https://github.com/ShinjungOh.png" width="120" alt="루나"><br><a href="https://github.com/ShinjungOh">루나</a></td>
+    <td align="center"><img src="https://github.com/jinhokim98.png" width="120" alt="쿠키"><br><a href="https://github.com/jinhokim98">쿠키</a><br>6기</td>
+    <td align="center"><img src="https://github.com/Todari.png" width="120" alt="토다리"><br><a href="https://github.com/Todari">토다리</a><br>6기</td>
+    <td align="center"><img src="https://github.com/chosim-dvlpr.png" width="120" alt="프룬"><br><a href="https://github.com/chosim-dvlpr">프룬</a><br>6기</td>
+    <td align="center"><img src="https://github.com/ShinjungOh.png" width="120" alt="루나"><br><a href="https://github.com/ShinjungOh">루나</a><br>7기</td>
   </tr>
 </table>
 
@@ -114,11 +114,11 @@ H1, H2, H3 태그를 인식해서 목차가 자동으로 생성되며, 목차를
 
 <table>
   <tr>
-    <td align="center"><img src="https://github.com/jinchiim.png" width="120" alt="폴라"><br><a href="https://github.com/jinchiim">폴라</a></td>
-    <td align="center"><img src="https://github.com/masonkimseoul.png" width="120" alt="메이슨"><br><a href="https://github.com/masonkimseoul">메이슨</a></td>
-    <td align="center"><img src="https://github.com/Minjoo522.png" width="120" alt="리브"><br><a href="https://github.com/Minjoo522">리브</a></td>
-    <td align="center"><img src="https://github.com/Starlight258.png" width="120" alt="밍트"><br><a href="https://github.com/Starlight258">밍트</a></td>
-    <td align="center"><img src="https://github.com/2Jin1031.png" width="120" alt="칼리"><br><a href="https://github.com/2Jin1031">칼리</a></td>
-    <td align="center"><img src="https://github.com/CheChe903.png" width="120" alt="체체"><br><a href="https://github.com/CheChe903">체체</a></td>
+    <td align="center"><img src="https://github.com/Minjoo522.png" width="120" alt="리브"><br><a href="https://github.com/Minjoo522">리브</a><br>6기</td>
+    <td align="center"><img src="https://github.com/masonkimseoul.png" width="120" alt="메이슨"><br><a href="https://github.com/masonkimseoul">메이슨</a><br>6기</td>
+    <td align="center"><img src="https://github.com/jinchiim.png" width="120" alt="폴라"><br><a href="https://github.com/jinchiim">폴라</a><br>6기</td>
+    <td align="center"><img src="https://github.com/Starlight258.png" width="120" alt="밍트"><br><a href="https://github.com/Starlight258">밍트</a><br>7기</td>
+    <td align="center"><img src="https://github.com/2Jin1031.png" width="120" alt="칼리"><br><a href="https://github.com/2Jin1031">칼리</a><br>7기</td>
+    <td align="center"><img src="https://github.com/CheChe903.png" width="120" alt="체체"><br><a href="https://github.com/CheChe903">체체</a><br>7기</td>
   </tr>
 </table>
