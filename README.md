@@ -2,7 +2,7 @@
 
 # 크루위키 (Crew-Wiki)
 
-<img src="https://private-user-images.githubusercontent.com/97431021/551164006-8a2b35fc-1436-4fb0-8f62-6511114c905d.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzNTg3MjAsIm5iZiI6MTc3MTM1ODQyMCwicGF0aCI6Ii85NzQzMTAyMS81NTExNjQwMDYtOGEyYjM1ZmMtMTQzNi00ZmIwLThmNjItNjUxMTExNGM5MDVkLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAyMTclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMjE3VDIwMDAyMFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWJlODUyYmMwMTU2ZjNjNDJjY2E1M2Y2MGE3ZTQzYTg5MDM3YjQ2M2EyMzY3OTRjZTJlNzU0ZGI0ODdhZGFkNDEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.OKx4lMBejMqN8SeFIqkQP3CXHNmQDiMwdyWxzjaJkSE" width="500" alt="crew-wiki-logo">
+<img src="docs/screenshots/banner.png" width="500" alt="banner">
 
 ### 우아한테크코스 크루들을 위한 위키 서비스
 크루들의 정보(논란)를 기록하고 공유하는 공간입니다.
@@ -64,13 +64,13 @@ H1, H2, H3 태그를 인식해서 목차가 자동으로 생성되며, 목차를
 
 검색창에서 문서 제목을 입력하면 **자동완성 기능**을 통해 빠르게 문서를 찾을 수 있습니다.
 
-![문서 검색](docs/screenshots/search-document.png)
+<img src="docs/screenshots/search-document.png" width="400" alt="문서 검색">
 
 ### 최근 편집
 
 최근에 편집된 문서 20개를 확인할 수 있습니다. 데스크톱 화면에서 사이드바로 표시됩니다.
 
-![최근 편집](docs/screenshots/recent-edit.png)
+<img src="docs/screenshots/recent-edit.png" width="250" alt="최근 편집">
 
 ### 랜덤 문서 조회
 
@@ -78,17 +78,24 @@ H1, H2, H3 태그를 인식해서 목차가 자동으로 생성되며, 목차를
 
 ![랜덤 문서](docs/screenshots/random-document.png)
 
-### 그룹/조직 문서
+### 조직 문서
 
-조직별로 문서를 분류하고 관리할 수 있습니다. 각 그룹의 전용 페이지에서 관련 문서를 모아볼 수 있습니다.
+크루 문서의 작성하기 또는 편집하기 페이지에서 조직을 추가할 수 있습니다.  
+신규 조직을 추가하고 작성완료 버튼을 누르면 해당 조직의 문서가 자동으로 생성됩니다.
 
 <!-- 스크린샷 추가 필요 -->
+
+- **조직 추가** - 새로운 조직은 '추가하기'로 등록하고, 이미 존재하는 조직은 드롭다운에서 선택합니다.
+- **등록 취소** - Chip의 X 버튼으로 조직 등록을 취소할 수 있습니다.
+- **조직 문서** - 일반 문서와 마찬가지로 내용 수정, 편집기록 조회가 가능하고, 타임라인에 이벤트를 등록할 수 있습니다.
 
 ### 타임라인
 
-조직의 주요 이벤트를 타임라인 형태로 시각화하여 볼 수 있습니다.
+조직의 주요 이벤트를 타임라인 형태로 볼 수 있습니다.  
+이벤트 추가 버튼을 눌러 정보(날짜, 제목, 작성자, 내용)를 입력하고 추가하면 타임라인에 이벤트가 등록됩니다.
 
 <!-- 스크린샷 추가 필요 -->
+<img src="docs/screenshots/group-add-event.png" width="400" alt="이벤트 추가">
 
 ## Team
 
