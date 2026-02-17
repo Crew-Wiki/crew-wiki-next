@@ -9,6 +9,7 @@ import {postOrganizationDocumentClient} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {route} from '@constants/route';
 import {GroupDocumentResponse} from '@type/Group.type';
+import {EDITOR} from '@constants/editor';
 
 const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
   const savedDocument = await postDocumentClient(document);
@@ -17,7 +18,7 @@ const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
     document.organizations.map(org =>
       postOrganizationDocumentClient({
         title: org.title,
-        contents: '',
+        contents: EDITOR.organizationInitialValue,
         writer: document.writer,
         documentBytes: 0,
         crewDocumentUuid: savedDocument.documentUUID,

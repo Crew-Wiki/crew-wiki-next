@@ -10,6 +10,7 @@ import {useTrie} from '@store/trie';
 import {useDocument} from '@store/document';
 import {route} from '@constants/route';
 import {GroupDocumentResponse} from '@type/Group.type';
+import {EDITOR} from '@constants/editor';
 
 export const usePutDocument = () => {
   const router = useRouter();
@@ -33,7 +34,7 @@ export const usePutDocument = () => {
       newOrganizations.map(org =>
         postOrganizationDocumentClient({
           title: org.title,
-          contents: '',
+          contents: EDITOR.organizationInitialValue,
           writer: document.writer,
           documentBytes: 0,
           crewDocumentUuid: savedDocument.documentUUID,
