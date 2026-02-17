@@ -21,6 +21,8 @@
 ![Toast UI Editor](https://img.shields.io/badge/Toast_UI_Editor-515CE6?style=flat-square)
 ![Storybook](https://img.shields.io/badge/Storybook-FF4785?style=flat-square&logo=storybook&logoColor=white)
 
+<br/>
+
 ## 주요 기능
 
 ### 문서 조회
@@ -47,7 +49,7 @@ H1, H2, H3 태그를 인식해서 목차가 자동으로 생성되며, 목차를
 
 새로운 문서를 작성할 수 있습니다.  
 이미 존재하는 제목의 문서는 등록할 수 없으며, 제목 입력 후 포커스를 해제하면 중복 여부를 자동으로 검사합니다.
-문서 제목과 편집자, 내용을 입력하면 작성완료 버튼이 활성화됩니다. 
+문서 제목과 편집자, 내용을 입력하면 작성완료 버튼이 활성화됩니다.
 작성 중에도 5초마다 세션 스토리지에 자동 저장됩니다.
 
 ![문서 작성](docs/screenshots/document-write.png)
@@ -96,9 +98,11 @@ H1, H2, H3 태그를 인식해서 목차가 자동으로 생성되며, 목차를
 조직의 주요 이벤트를 타임라인 형태로 볼 수 있습니다.  
 이벤트 추가 버튼을 눌러 정보(날짜, 제목, 작성자, 내용)를 입력하고 추가하면 타임라인에 이벤트가 등록됩니다.
 
-<img src="docs/screenshots/group-timeline.png" width="400" alt="타임라인">
+<img src="docs/screenshots/group-timeline.png" width="800" alt="타임라인">
 
 <img src="docs/screenshots/group-add-event.png" width="400" alt="이벤트 추가">
+
+<br/>
 
 ## Team
 
