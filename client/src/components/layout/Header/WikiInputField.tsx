@@ -41,8 +41,8 @@ const WikiInputField = ({className, onSubmit}: WikiInputProps) => {
       trackDocumentSearch(value, targetUUID);
       router.push(getRouteByDocumentType(targetUUID, targetDocumentType));
     } else if (data.length !== 0) {
-      trackDocumentSearch(value, data[0]?.uuid ?? 'not_found');
-      router.push(getRouteByDocumentType(data[0]?.uuid, data[0]?.documentType));
+      trackDocumentSearch(value, data[0].uuid ?? 'not_found');
+      router.push(getRouteByDocumentType(data[0].uuid, data[0].documentType));
     } else {
       trackDocumentSearch(value, 'not_found');
       router.push(route.goWiki(value));
