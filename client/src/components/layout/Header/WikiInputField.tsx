@@ -62,7 +62,7 @@ const WikiInputField = ({className, handleSubmit}: WikiInputProps) => {
       <button type="submit" id="search-icon">
         <Image
           className="cursor-pointer max-[768px]:hidden"
-          src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/search-circle-secondary.svg`}
+          src={`${process.env.NEXT_PUBLIC_STATIC_DOMAIN}/images/search-circle-secondary.svg`}
           width={24}
           height={24}
           alt="search"

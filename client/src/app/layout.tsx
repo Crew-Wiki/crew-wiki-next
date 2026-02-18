@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: '크루위키',
     type: 'website',
     description: '우아한테크코스 크루들의 정보들을 담은 위키',
-    images: `${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/daemoon.png`,
+    images: `${process.env.NEXT_PUBLIC_STATIC_DOMAIN}/images/daemoon.png`,
   },
 };
 

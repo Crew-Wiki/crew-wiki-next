@@ -4,7 +4,7 @@ declare namespace NodeJS {
     NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL: string;
     NEXT_PUBLIC_AMPLITUDE_API_KEY: string;
     NEXT_PUBLIC_IMAGE_DOMAIN: string;
-    NEXT_PUBLIC_CDN_DOMAIN: string;
+    NEXT_PUBLIC_STATIC_DOMAIN: string;
     VIEW_DATA_FILE_PATH: string;
     VIEW_DATA_FLUSH_THRESHOLD: string;
     NEXT_PUBLIC_SENTRY_DSN: string;
