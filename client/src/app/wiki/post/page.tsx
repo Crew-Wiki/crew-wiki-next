@@ -18,10 +18,6 @@ const Page = () => {
   const addOrganization = useDocument(action => action.addOrganization);
   const removeOrganization = useDocument(action => action.removeOrganization);
 
-  const handleSelectOrganization = (organization: Organization) => {
-    addOrganization(organization);
-  };
-
   const handleAddOrganization = (title: string) => {
     const newOrganization: Organization = {
       title,
@@ -29,10 +25,6 @@ const Page = () => {
     };
 
     addOrganization(newOrganization);
-  };
-
-  const handleRemoveOrganization = (uuid: string) => {
-    removeOrganization(uuid);
   };
 
   useEffect(() => {
@@ -54,9 +46,9 @@ const Page = () => {
       <TitleInputField />
       <OrganizationInputField
         selectedOrganizations={organizations}
-        onSelect={handleSelectOrganization}
+        onSelect={addOrganization}
         onAdd={handleAddOrganization}
-        onRemove={handleRemoveOrganization}
+        onRemove={removeOrganization}
       />
       <TuiEditor
         initialValue={initialValue}
