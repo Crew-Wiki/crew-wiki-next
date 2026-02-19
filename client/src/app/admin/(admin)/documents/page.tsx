@@ -5,7 +5,7 @@ import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
 import {getAllDocumentsServer} from '@apis/server/document';
 import {deleteDocumentClient} from '@apis/client/document';
-import {WikiDocumentExpand} from '@type/Document.type';
+import {WikiDocumentExpand, DocumentType} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {route} from '@constants/route';
 
@@ -33,6 +33,14 @@ export default function AdminDocumentsPage() {
 
     return Array.from({length: endPage - startPage + 1}, (_, index) => startPage + index);
   }, [currentPage, totalPages]);
+
+  const getDocumentRoute = (uuid: string, documentType: DocumentType) => {
+    return documentType === DocumentType.Organization ? route.goWikiGroup(uuid) : route.goWiki(uuid);
+  };
+
+  const getDocumentEditRoute = (uuid: string, documentType: DocumentType) => {
+    return documentType === DocumentType.Organization ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
+  };
 
   const getDeleteConfirmMessage = (title: string) => {
     return `"${title}" 문서를 정말 삭제하시겠어요?\n이 작업은 되돌릴 수 없어요.`;
@@ -139,7 +147,7 @@ export default function AdminDocumentsPage() {
                 <tr key={document.uuid} className="hover:bg-grayscale-50">
                   <td
                     className="px-6 py-4 font-pretendard text-sm text-grayscale-text hover:cursor-pointer hover:text-primary-primary hover:underline"
-                    onClick={() => router.push(route.goWiki(document.uuid))}
+                    onClick={() => router.push(getDocumentRoute(document.uuid, document.documentType))}
                   >
                     {document.title}
                   </td>
@@ -150,7 +158,11 @@ export default function AdminDocumentsPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
-                      <Button size="xxs" style="tertiary" onClick={() => router.push(route.goWikiEdit(document.uuid))}>
+                      <Button
+                        size="xxs"
+                        style="tertiary"
+                        onClick={() => router.push(getDocumentEditRoute(document.uuid, document.documentType))}
+                      >
                         편집
                       </Button>
                       <Button size="xxs" style="text" onClick={() => handleDelete(document.uuid, document.title)}>
