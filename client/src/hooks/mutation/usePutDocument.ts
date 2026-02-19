@@ -20,14 +20,15 @@ export const usePutDocument = () => {
   const {trackDocumentUpdate} = useAmplitude();
 
   const putDocumentWithOrganizations = async (document: PostDocumentContent) => {
-    const savedDocument = await putDocumentClient(document);
+    const {organizations, ...documentBody} = document;
+    const savedDocument = await putDocumentClient(documentBody);
 
-    const newOrganizations = document.organizations.filter(
+    const newOrganizations = organizations.filter(
       org => !originalOrganizations.some(original => original.uuid === org.uuid),
     );
 
     const deletedOrganizations = originalOrganizations.filter(
-      original => !document.organizations.some(org => org.uuid === original.uuid),
+      original => !organizations.some(org => org.uuid === original.uuid),
     );
 
     const createdOrganizations = await Promise.all(

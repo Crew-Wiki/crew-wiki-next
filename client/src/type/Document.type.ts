@@ -77,11 +77,14 @@ export type WikiDocumentExpand = Omit<WikiDocument, 'documentUUID' | 'documentId
   documentType: DocumentType;
 };
 
-export interface PostDocumentContent {
+export interface PostDocumentBody {
   title: string;
   contents: string;
   writer: string;
   documentBytes: number;
   uuid: string;
+}
+
+export interface PostDocumentContent extends PostDocumentBody {
   organizations: Organization[];
 }

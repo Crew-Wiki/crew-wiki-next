@@ -12,10 +12,11 @@ import {GroupDocumentResponse} from '@type/Group.type';
 import {EDITOR} from '@constants/editor';
 
 const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
-  const savedDocument = await postDocumentClient(document);
+  const {organizations, ...documentBody} = document;
+  const savedDocument = await postDocumentClient(documentBody);
 
   const createdOrganizations = await Promise.all(
-    document.organizations.map(org =>
+    organizations.map(org =>
       postOrganizationDocumentClient({
         title: org.title,
         contents: EDITOR.organizationInitialValue,

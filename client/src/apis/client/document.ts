@@ -5,7 +5,7 @@ import {requestGetClient, requestPostClient, requestPutClient, requestDeleteClie
 import {
   DocumentType,
   LatestWikiDocument,
-  PostDocumentContent,
+  PostDocumentBody,
   WikiDocument,
   WikiDocumentLogSummary,
 } from '@type/Document.type';
@@ -67,7 +67,7 @@ export const getDocumentLogsByUUIDClient = async (uuid: string, params: Paginati
   return response;
 };
 
-export const postDocumentClient = async (document: PostDocumentContent) => {
+export const postDocumentClient = async (document: PostDocumentBody) => {
   const newDocument = await requestPostClient<WikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: CLIENT_ENDPOINT.postDocument,
@@ -77,7 +77,7 @@ export const postDocumentClient = async (document: PostDocumentContent) => {
   return newDocument;
 };
 
-export const putDocumentClient = async (document: PostDocumentContent) => {
+export const putDocumentClient = async (document: PostDocumentBody) => {
   const editDocument = await requestPutClient<WikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: CLIENT_ENDPOINT.putDocument,

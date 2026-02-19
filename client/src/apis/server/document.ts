@@ -3,7 +3,7 @@
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {
-  PostDocumentContent,
+  PostDocumentBody,
   WikiDocument,
   WikiDocumentExpand,
   WikiDocumentLogDetail,
@@ -73,7 +73,7 @@ export const getAllDocumentsServer = async () => {
   return response.data;
 };
 
-export const postDocumentServer = async (document: PostDocumentContent) => {
+export const postDocumentServer = async (document: PostDocumentBody) => {
   const response = await requestPostServer<WikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.postDocument,
@@ -83,7 +83,7 @@ export const postDocumentServer = async (document: PostDocumentContent) => {
   return response;
 };
 
-export const putDocumentServer = async (document: PostDocumentContent) => {
+export const putDocumentServer = async (document: PostDocumentBody) => {
   const response = await requestPutServer<WikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.updateDocument,
