@@ -5,7 +5,7 @@ import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
 import {getAllDocumentsServer} from '@apis/server/document';
 import {deleteDocumentClient} from '@apis/client/document';
-import {WikiDocumentExpand, DocumentType} from '@type/Document.type';
+import {WikiDocumentExpand, DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {route} from '@constants/route';
 
@@ -35,11 +35,11 @@ export default function AdminDocumentsPage() {
   }, [currentPage, totalPages]);
 
   const getDocumentRoute = (uuid: string, documentType: DocumentType) => {
-    return documentType === DocumentType.Organization ? route.goWikiGroup(uuid) : route.goWiki(uuid);
+    return documentType === DOCUMENT_TYPE.Organization ? route.goWikiGroup(uuid) : route.goWiki(uuid);
   };
 
   const getDocumentEditRoute = (uuid: string, documentType: DocumentType) => {
-    return documentType === DocumentType.Organization ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
+    return documentType === DOCUMENT_TYPE.Organization ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
   };
 
   const getDeleteConfirmMessage = (title: string) => {

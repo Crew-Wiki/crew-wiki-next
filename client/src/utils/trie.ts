@@ -1,5 +1,5 @@
 import {TitleAndUUID} from '@apis/client/document';
-import {DocumentType} from '@type/Document.type';
+import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
 
 class Node {
   child: Map<string, Node> = new Map();
@@ -17,7 +17,7 @@ export class Trie {
     data.forEach(({title, uuid, documentType}) => this.add(title, uuid, documentType));
   }
 
-  add(title: string, uuid: string, documentType: DocumentType = DocumentType.Crew): void {
+  add(title: string, uuid: string, documentType: DocumentType = DOCUMENT_TYPE.Crew): void {
     let currentNode = this.root;
 
     for (const char of title) {
@@ -75,7 +75,7 @@ export class Trie {
     return node.child.size === 0 && !node.isEnd;
   }
 
-  update(oldTitle: string, newTitle: string, uuid: string, documentType: DocumentType = DocumentType.Crew): void {
+  update(oldTitle: string, newTitle: string, uuid: string, documentType: DocumentType = DOCUMENT_TYPE.Crew): void {
     this.delete(oldTitle, uuid);
     this.add(newTitle, uuid, documentType);
   }

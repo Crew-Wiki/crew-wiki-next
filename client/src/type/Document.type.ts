@@ -1,10 +1,12 @@
 import {SORT_OPTIONS} from '@constants/popular';
 import {Organization} from './Group.type';
 
-export enum DocumentType {
-  Crew = 'CREW',
-  Organization = 'ORGANIZATION',
-}
+export const DOCUMENT_TYPE = {
+  Crew: 'CREW',
+  Organization: 'ORGANIZATION',
+} as const;
+
+export type DocumentType = (typeof DOCUMENT_TYPE)[keyof typeof DOCUMENT_TYPE];
 
 export interface WikiDocument {
   documentId: number;

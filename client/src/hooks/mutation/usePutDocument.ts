@@ -1,7 +1,7 @@
 'use client';
 
 import useMutation from '@hooks/useMutation';
-import {DocumentType, PostDocumentContent, WikiDocument} from '@type/Document.type';
+import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 import {putDocumentClient} from '@apis/client/document';
@@ -59,9 +59,9 @@ export const usePutDocument = () => {
     onSuccess: ({savedDocument, createdOrganizations}) => {
       trackDocumentUpdate(savedDocument.title, savedDocument.documentUUID);
       // TODO: 문서 제목 업데이트 기능 추가 시 updateTitle에 변경 전 문서 제목을 넣어야 합니다
-      updateTitle(savedDocument.title, savedDocument.title, savedDocument.documentUUID, DocumentType.Crew);
+      updateTitle(savedDocument.title, savedDocument.title, savedDocument.documentUUID, DOCUMENT_TYPE.Crew);
       createdOrganizations.forEach(org => {
-        addTitle(org.title, org.organizationDocumentUuid, DocumentType.Organization);
+        addTitle(org.title, org.organizationDocumentUuid, DOCUMENT_TYPE.Organization);
       });
       router.push(route.goWiki(savedDocument.documentUUID));
       router.refresh();

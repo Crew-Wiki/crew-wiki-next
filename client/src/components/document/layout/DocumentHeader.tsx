@@ -2,7 +2,7 @@ import Button from '@components/common/Button';
 import Link from 'next/link';
 import DocumentTitle from './DocumentTitle';
 import {route} from '@constants/route';
-import {DocumentType} from '@type/Document.type';
+import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
 
 interface DocumentHeaderProps {
   title: string;
@@ -10,9 +10,9 @@ interface DocumentHeaderProps {
   documentType?: DocumentType;
 }
 
-const DocumentHeader = ({title, uuid, documentType = DocumentType.Crew}: DocumentHeaderProps) => {
-  const editHref = documentType === DocumentType.Organization ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
-  const logsHref = documentType === DocumentType.Organization ? route.goWikiGroupLogs(uuid) : route.goWikiLogs(uuid);
+const DocumentHeader = ({title, uuid, documentType = DOCUMENT_TYPE.Crew}: DocumentHeaderProps) => {
+  const editHref = documentType === DOCUMENT_TYPE.Organization ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
+  const logsHref = documentType === DOCUMENT_TYPE.Organization ? route.goWikiGroupLogs(uuid) : route.goWikiLogs(uuid);
 
   return (
     <header className="flex w-full justify-between max-md:flex-col-reverse max-md:gap-4">

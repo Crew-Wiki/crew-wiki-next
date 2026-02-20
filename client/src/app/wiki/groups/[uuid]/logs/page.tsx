@@ -1,4 +1,4 @@
-import {DocumentType} from '@type/Document.type';
+import {DOCUMENT_TYPE} from '@type/Document.type';
 import type {UUIDParams} from '@type/PageParams.type';
 import {Metadata} from 'next';
 import {getDocumentLogsByUUIDServer} from '@apis/server/document';
@@ -35,7 +35,7 @@ const GroupLogsPage = async ({params}: UUIDParams) => {
         uuid={uuid}
         initialData={response.data}
         totalPage={response.totalPage}
-        documentType={DocumentType.Organization}
+        documentType={DOCUMENT_TYPE.Organization}
       />
     </div>
   );

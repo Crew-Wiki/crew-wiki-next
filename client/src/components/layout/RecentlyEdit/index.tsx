@@ -1,6 +1,6 @@
 import {getRecentlyDocumentsServer} from '@apis/server/document';
 import {route} from '@constants/route';
-import {DocumentType} from '@type/Document.type';
+import {DOCUMENT_TYPE} from '@type/Document.type';
 import timeConverter from '@utils/TimeConverter';
 import Link from 'next/link';
 
@@ -14,7 +14,7 @@ const RecentlyEdit = async () => {
       </h2>
       {documents.map(document => {
         const href =
-          document.documentType === DocumentType.Organization
+          document.documentType === DOCUMENT_TYPE.Organization
             ? route.goWikiGroup(document.uuid)
             : route.goWiki(document.uuid);
         return (
