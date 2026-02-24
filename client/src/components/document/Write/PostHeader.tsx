@@ -26,7 +26,7 @@ const RequestButton = ({mode}: ModeProps) => {
   const handleSubmit = async (contents: string) => {
     const document: PostDocumentContent = {
       uuid,
-      title: values.title,
+      title: values.title.trim(),
       contents,
       writer: values.writer,
       documentBytes: getBytes(contents),
