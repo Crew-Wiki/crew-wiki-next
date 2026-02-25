@@ -25,7 +25,9 @@ export const validateTitleOnBlur = (title: string, titleList?: string[]) => {
     reset: null,
   };
 
-  if (titleList?.includes(title)) {
+  const trimmedTitle = title.trim();
+
+  if (titleList?.some(title => title.trim() === trimmedTitle)) {
     errorInfo.errorMessage = '이미 있는 문서입니다.';
   } else {
     errorInfo.errorMessage = null;
