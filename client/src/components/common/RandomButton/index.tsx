@@ -3,7 +3,15 @@
 import {useRandomButton} from './useRandomButton';
 
 const RandomButton = () => {
-  const {isMobile, goRandomDocument} = useRandomButton();
+  const {isMobile, isLoading, goRandomDocument} = useRandomButton();
+
+  if (isLoading) {
+    return (
+      <div className="mr-4 flex h-9 w-9 items-center justify-center">
+        <div className="h-6 w-6 animate-spin rounded-full border-4 border-gray-300 border-t-[#25B4B9]" />
+      </div>
+    );
+  }
 
   return isMobile ? (
     <svg
