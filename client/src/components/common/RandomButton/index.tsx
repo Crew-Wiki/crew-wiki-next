@@ -9,7 +9,7 @@ const RandomButton = () => {
   if (isLoading) {
     return (
       <div className="mr-4 flex h-9 w-9 items-center justify-center">
-        <LoadingSpinner size="xs" />
+        <LoadingSpinner size="s" thickness="thick" />
       </div>
     );
   }
