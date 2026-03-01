@@ -1,9 +1,8 @@
-import {FC} from 'react';
 import {twMerge} from 'tailwind-merge';
 
 type SpinnerSize = 'xxs' | 'xs' | 's' | 'm';
 
-interface Props {
+interface LoadingSpinnerProps {
   size?: SpinnerSize;
   thickness?: 'thin' | 'normal' | 'thick';
   color?: string;
@@ -23,12 +22,12 @@ const THICKNESS_MAP = {
   thick: 'border-4',
 };
 
-export const LoadingSpinner: FC<Props> = ({
+export const LoadingSpinner = ({
   size = 's',
   thickness = 'normal',
   color = 'text-primary-primary',
   className,
-}) => {
+}: LoadingSpinnerProps) => {
   return (
     <div
       className={twMerge(
