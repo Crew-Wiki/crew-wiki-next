@@ -66,5 +66,5 @@ export async function uploadImage(documentUUID: string, imageFile: File) {
     throw new Error('이미지 업로드 중에 문제가 발생했습니다. 새로고침 후 다시 시도해주세요.');
   }
 
-  return `${process.env.NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN}/${uploadImageKey}`;
+  return `${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${uploadImageKey}`;
 }

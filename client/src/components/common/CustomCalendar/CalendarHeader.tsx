@@ -28,7 +28,7 @@ const CalendarHeader = ({
           aria-label="이전 달"
         >
           <Image
-            src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/chevron-left-icon.svg`}
+            src={`${process.env.NEXT_PUBLIC_STATIC_DOMAIN}/images/chevron-left-icon.svg`}
             width={24}
             height={24}
             alt="chevron left icon"
@@ -52,7 +52,7 @@ const CalendarHeader = ({
             aria-label="다음 달"
           >
             <Image
-              src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/chevron-right-icon.svg`}
+              src={`${process.env.NEXT_PUBLIC_STATIC_DOMAIN}/images/chevron-right-icon.svg`}
               width={24}
               height={24}
               alt="chevron right icon"

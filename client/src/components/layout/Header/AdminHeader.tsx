@@ -10,7 +10,7 @@ const AdminHeader = () => {
       <div className="flex items-center justify-between">
         <Link href={route.goAdminLogin()} className="flex items-center gap-2">
           <Image
-            src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/hangseong-white.png`}
+            src={`${process.env.NEXT_PUBLIC_STATIC_DOMAIN}/images/hangseong-white.png`}
             width={32}
             height={32}
             alt="logo"

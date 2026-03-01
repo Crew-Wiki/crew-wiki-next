@@ -26,7 +26,7 @@ const CalendarInput = ({value, placeholder, className, invalid, onClick}: Calend
       />
       <button onClick={onClick} className="absolute inset-y-0 right-0 flex items-center pr-3" aria-label="달력 열기">
         <Image
-          src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/calendar-icon.svg`}
+          src={`${process.env.NEXT_PUBLIC_STATIC_DOMAIN}/images/calendar-icon.svg`}
           width={24}
           height={24}
           alt="calendar icon"

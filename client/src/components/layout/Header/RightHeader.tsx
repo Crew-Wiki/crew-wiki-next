@@ -13,7 +13,7 @@ const RightHeader = ({onSubmit, toggleVisibility}: RightHeaderProps) => {
       <RandomButton />
       <WikiInputField className="hidden w-80 md:flex" handleSubmit={onSubmit} />
       <Image
-        src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/search-circle.svg`}
+        src={`${process.env.NEXT_PUBLIC_STATIC_DOMAIN}/images/search-circle.svg`}
         width={36}
         height={36}
         alt="search"

@@ -65,7 +65,7 @@ const WikiHeader = () => {
         <div className="header-container flex w-full max-w-[1440px] flex-row items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src={`${process.env.NEXT_PUBLIC_CDN_DOMAIN}/images/hangseong-white.png`}
+              src={`${process.env.NEXT_PUBLIC_STATIC_DOMAIN}/images/hangseong-white.png`}
               width={32}
               height={32}
               alt="logo"
