@@ -2,16 +2,68 @@ name: frontend-prod-deploy
 
 on:
   push:
-    branches: ["main"]
-    paths:
-      - "client/**"
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
-      - name: Deploy to EC2
+      - name: Checkout Source
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22.16.0'
+          cache: 'yarn'
+          cache-dependency-path: './client/yarn.lock'
+
+      - name: Install Dependencies & Build
+        working-directory: ./client
+        env:
+          NEXT_PUBLIC_CDN_DOMAIN: ${{ secrets.NEXT_PUBLIC_CDN_DOMAIN }}
+          VIEW_DATA_FILE_PATH: ${{ secrets.VIEW_DATA_FILE_PATH }}
+          VIEW_DATA_FLUSH_THRESHOLD: ${{ secrets.VIEW_DATA_FLUSH_THRESHOLD }}
+          NEXT_PUBLIC_BACKEND_SERVER_BASE_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL }}
+          NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL: ${{ secrets.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL }}
+          NEXT_PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY }}
+          NEXT_PUBLIC_IMAGE_S3_DOMAIN: ${{ secrets.NEXT_PUBLIC_IMAGE_S3_DOMAIN }}
+          NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN: ${{ secrets.NEXT_PUBLIC_IMAGE_CLOUDFRONT_DOMAIN }}
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          echo "🚧 Installing dependencies..."
+          yarn install --frozen-lockfile
+
+          echo "🏗️ Building Next.js..."
+          yarn build
+
+      - name: Compress Build Output Only
+        working-directory: ./client
+        run: |
+          echo "📦 Compressing .next..."
+          tar -czf next-build.tar.gz .next
+          echo "✅ Build file compressed: $(ls -lh next-build.tar.gz)"
+
+      - name: Copy Build File to Root
+        run: |
+          cp ./client/next-build.tar.gz ./next-build.tar.gz
+          echo "✅ Build file copied to root: $(ls -lh ./next-build.tar.gz)"
+
+      - name: Upload Build to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: 'next-build.tar.gz'
+          target: ${{ secrets.EC2_DEPLOY_DIR }}
+
+      - name: Deploy on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -19,11 +71,54 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd ${{ secrets.EC2_DEPLOY_DIR }}
-            source ~/.bashrc
-            source ~/.nvm/nvm.sh
+            set -e
+            set -o pipefail
+            trap 'echo "❌ 배포 실패: 라인 $LINENO에서 에러 발생"; exit 1' ERR
+
+            cd ${{ secrets.EC2_DEPLOY_DIR }} || {
+              echo "❌ 배포 디렉토리를 찾을 수 없습니다: ${{ secrets.EC2_DEPLOY_DIR }}"
+              exit 1
+            }
+
+            echo "🔄 Pulling latest code from Git..."
+            # git 충돌 방지를 위한 강제 덮어쓰기
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "📂 Checking build file..."
+            if [ ! -f next-build.tar.gz ]; then
+              echo "❌ Build file not found. Listing files:"
+              ls -la
+              exit 1
+            fi
+            echo "✅ Build file found: $(ls -lh next-build.tar.gz)"
+
+            echo "📂 Extracting .next build..."
+            rm -rf .next || sudo rm -rf .next
+            tar -xzf next-build.tar.gz
+            rm next-build.tar.gz
+
+            echo "📥 Setting up Node environment..."
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
             nvm use 22.16.0
-            git pull origin main
-            yarn install
-            yarn build
-            pm2 restart ecosystem.config.js --env production --update-env
+
+            if ! command -v yarn &> /dev/null; then
+              echo "⚠️  yarn을 찾을 수 없습니다. npm으로 yarn 설치 중..."
+              npm install -g yarn
+            fi
+
+            if ! command -v pm2 &> /dev/null; then
+              echo "⚠️  PM2를 찾을 수 없습니다. npm으로 PM2 설치 중..."
+              npm install -g pm2
+            fi
+
+            yarn install --frozen-lockfile
+
+            echo "🚀 Restarting PM2..."
+            pm2 update 2>/dev/null || true
+            pm2 reload ecosystem.config.js --env production --update-env || \
+            pm2 start ecosystem.config.js --env production
+
+            echo "✅ 배포가 성공적으로 완료되었습니다!"
