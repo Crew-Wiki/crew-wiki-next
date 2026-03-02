@@ -48,7 +48,7 @@ const Page = () => {
 
   if (isLoading) {
     return (
-      <section className="flex h-[700] w-full flex-col items-center justify-center gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-[768px]:gap-3 max-[768px]:p-4">
+      <section className="flex h-[700px] w-full flex-col items-center justify-center gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-[768px]:gap-3 max-[768px]:p-4">
         <LoadingSpinner size="m" thickness="thick" />
       </section>
     );
