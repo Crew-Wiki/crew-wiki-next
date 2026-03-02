@@ -6,6 +6,7 @@ import {
   ServerCreateRequestInitProps,
   ResponseType,
 } from '@type/http.type';
+import {HttpError} from '@utils/sentry/httpError';
 
 export const requestGetServer = async <T>({headers = {}, ...args}: ServerHttpMethodArgs): Promise<T> => {
   const response = await request<ResponseType<T>>({
@@ -95,16 +96,23 @@ const executeRequest = async ({url, requestInit}: FetchType) => {
     const response: Response = await fetch(url, requestInit);
 
     if (!response.ok) {
-      const errorData = await response.json();
-      const errorMessage = errorData?.message || JSON.stringify(errorData) || 'API 요청 실패';
-      throw new Error(errorMessage);
+      let errorMessage = 'API 요청 실패';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData?.message || JSON.stringify(errorData) || errorMessage;
+      } catch {
+        // Non-JSON 응답 body
+      }
+      throw new HttpError(errorMessage, response.status, url);
     }
     return response;
   } catch (error) {
+    if (error instanceof HttpError) {
+      throw error;
+    }
     if (error instanceof Error) {
       throw error;
-    } else {
-      throw new Error('알 수 없는 오류 발생');
     }
+    throw new Error('알 수 없는 오류 발생');
   }
 };
