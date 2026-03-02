@@ -72,7 +72,7 @@ export const classifyError = (event: ErrorEvent, hint: EventHint): ErrorClassifi
   const message = getErrorMessage(event, hint);
   const statusCode = getStatusCode(hint);
 
-  // === Error Level Low: Sentry로 에러를 보내지 않습니다 ===
+  // === Error Level Low ===
 
   if (isBrowserExtensionError(event, hint)) {
     return {level: ERROR_LEVEL.LOW, category: ERROR_CATEGORY.NETWORK};
@@ -90,8 +90,7 @@ export const classifyError = (event: ErrorEvent, hint: EventHint): ErrorClassifi
     return {level: ERROR_LEVEL.LOW, category: ERROR_CATEGORY.API};
   }
 
-  // === Error Level Medium:
-  // 주 1회 요약하여 알림을 보내고, 1시간 내 10회 이상 발생 시 Sentry에서 High로 상향됩니다 ===
+  // === Error Level Medium ===
 
   if (statusCode === 400) {
     return {level: ERROR_LEVEL.MEDIUM, category: ERROR_CATEGORY.API};
@@ -105,7 +104,7 @@ export const classifyError = (event: ErrorEvent, hint: EventHint): ErrorClassifi
     return {level: ERROR_LEVEL.MEDIUM, category: ERROR_CATEGORY.API};
   }
 
-  // === Error Level High: 즉시 알림을 보냅니다 ===
+  // === Error Level High ===
 
   if (isAuthRelated(hint)) {
     return {level: ERROR_LEVEL.HIGH, category: ERROR_CATEGORY.AUTH};
