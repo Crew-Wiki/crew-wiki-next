@@ -4,11 +4,11 @@ import {
   ERROR_CATEGORY,
   BROWSER_EXTENSION_PATTERNS,
   NETWORK_ERROR_PATTERNS,
-  VALIDATION_ERROR_PATTERNS,
   CORE_FEATURE_FAILURE_PATTERNS,
   AUTH_ENDPOINT_PATTERNS,
   ERROR_LEVEL,
 } from '@constants/sentry';
+import {VALIDATION_ERROR_PATTERNS} from '@constants/validation';
 import {HttpError} from './httpError';
 
 const getErrorMessage = (event: ErrorEvent, hint: EventHint): string => {
@@ -52,7 +52,7 @@ const isNetworkError = (message: string): boolean => {
 };
 
 const isValidationError = (message: string): boolean => {
-  return VALIDATION_ERROR_PATTERNS.some(pattern => message.includes(pattern));
+  return Object.values(VALIDATION_ERROR_PATTERNS).some(pattern => message.includes(pattern));
 };
 
 const isAuthRelated = (hint: EventHint): boolean => {

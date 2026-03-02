@@ -1,5 +1,6 @@
 'use client';
 
+import {VALIDATION_ERROR_PATTERNS} from '@constants/validation';
 import {ErrorInfo} from '@type/Document.type';
 
 export const validateTitleOnChange = (title: string) => {
@@ -9,7 +10,7 @@ export const validateTitleOnChange = (title: string) => {
   };
 
   if (title.length > 12) {
-    errorInfo.errorMessage = '제목은 12자가 최대에요';
+    errorInfo.errorMessage = VALIDATION_ERROR_PATTERNS.TITLE_LENGTH;
     errorInfo.reset = (title: string) => title.slice(0, 12);
   } else {
     errorInfo.errorMessage = null;

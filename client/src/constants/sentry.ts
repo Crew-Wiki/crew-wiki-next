@@ -30,13 +30,6 @@ export const NETWORK_ERROR_PATTERNS = [
   'The Internet connection appears to be offline',
 ] as const;
 
-export const VALIDATION_ERROR_PATTERNS = [
-  '제목은 12자가 최대에요',
-  '이미 있는 문서입니다',
-  '닉네임은 한글만 입력할 수 있어요',
-  '닉네임은 4자가 최대에요',
-] as const;
-
 export const CORE_FEATURE_FAILURE_PATTERNS = [
   'upload',
   'download',
