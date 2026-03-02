@@ -127,7 +127,7 @@ const executeRequest = async ({url, requestInit}: FetchType) => {
         const errorData = await response.json();
         errorMessage = errorData?.message || JSON.stringify(errorData) || errorMessage;
       } catch {
-        // Non-JSON 응답 body
+        // JSON 파싱 실패 시 기본 errorMessage 사용
       }
       throw new HttpError(errorMessage, response.status, url);
     }
