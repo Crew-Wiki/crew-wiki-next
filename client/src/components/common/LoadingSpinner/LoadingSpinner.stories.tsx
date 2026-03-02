@@ -13,7 +13,7 @@ const meta: Meta<typeof LoadingSpinner> = {
       control: 'select',
       options: ['thin', 'normal', 'thick'],
     },
-    color: {
+    colorClass: {
       control: 'text',
     },
   },
@@ -57,10 +57,10 @@ export const ThicknessVariants: Story = {
 export const ColorVariants: Story = {
   render: () => (
     <div style={{display: 'flex', gap: '2rem', alignItems: 'center'}}>
-      <LoadingSpinner color="text-primary-primary" />
-      <LoadingSpinner color="text-red-500" />
-      <LoadingSpinner color="text-blue-500" />
-      <LoadingSpinner color="text-black" />
+      <LoadingSpinner colorClass="text-primary-primary" />
+      <LoadingSpinner colorClass="text-red-500" />
+      <LoadingSpinner colorClass="text-blue-500" />
+      <LoadingSpinner colorClass="text-black" />
     </div>
   ),
 };

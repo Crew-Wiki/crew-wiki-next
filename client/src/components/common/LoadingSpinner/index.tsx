@@ -5,7 +5,7 @@ type SpinnerSize = 'xxs' | 'xs' | 's' | 'm';
 interface LoadingSpinnerProps {
   size?: SpinnerSize;
   thickness?: 'thin' | 'normal' | 'thick';
-  color?: string;
+  colorClass?: string;
   className?: string;
 }
 
@@ -25,7 +25,7 @@ const THICKNESS_MAP = {
 export const LoadingSpinner = ({
   size = 's',
   thickness = 'normal',
-  color = 'text-primary-primary',
+  colorClass = 'text-primary-primary',
   className,
 }: LoadingSpinnerProps) => {
   return (
@@ -34,7 +34,7 @@ export const LoadingSpinner = ({
         SIZE_MAP[size],
         THICKNESS_MAP[thickness],
         'animate-spin rounded-full border-gray-300 border-t-current',
-        color,
+        colorClass,
         className,
       )}
     />
