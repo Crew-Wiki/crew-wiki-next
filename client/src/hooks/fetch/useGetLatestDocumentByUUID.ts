@@ -7,9 +7,10 @@ import {useCallback} from 'react';
 
 export const useGetLatestDocumentByUUID = (uuid: string) => {
   const getData = useCallback(() => getDocumentByUUIDClient(uuid), [uuid]);
-  const {data} = useFetch<LatestWikiDocument>(getData);
+  const {data, isLoading} = useFetch<LatestWikiDocument>(getData);
 
   return {
     document: data,
+    isLoading,
   };
 };

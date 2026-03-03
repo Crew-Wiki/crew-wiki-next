@@ -56,3 +56,40 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
+
+export const Loading: Story = {
+  args: {
+    style: 'primary',
+    size: 's',
+    children: '로딩중',
+    isLoading: true,
+  },
+};
+
+export const SecondaryLoading: Story = {
+  args: {
+    style: 'secondary',
+    size: 's',
+    children: '로딩중',
+    isLoading: true,
+  },
+};
+
+export const LoadingAllSizes: Story = {
+  render: () => (
+    <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+      <Button style="primary" size="xxs" isLoading>
+        버튼
+      </Button>
+      <Button style="primary" size="xs" isLoading>
+        버튼
+      </Button>
+      <Button style="primary" size="s" isLoading>
+        버튼
+      </Button>
+      <Button style="primary" size="m" isLoading>
+        버튼
+      </Button>
+    </div>
+  ),
+};

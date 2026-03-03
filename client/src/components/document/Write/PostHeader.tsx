@@ -59,7 +59,7 @@ const RequestButton = ({mode}: ModeProps) => {
 
   return (
     <>
-      <Button style="primary" size="xs" disabled={!canSubmit || isPending} onClick={onSubmit}>
+      <Button style="primary" size="xs" disabled={!canSubmit} isLoading={isPending} onClick={onSubmit}>
         작성완료
       </Button>
       {conflictModal.component}

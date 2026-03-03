@@ -6,11 +6,9 @@ import 'dayjs/locale/ko';
 dayjs.locale('ko');
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.tz.setDefault('Asia/Seoul');
 
 const timeConverter = (time: string, formatStyle: string) => {
-  const timeConverted = dayjs(time);
-  return timeConverted.format(formatStyle);
+  return dayjs.utc(time).tz('Asia/Seoul').format(formatStyle);
 };
 
 export default timeConverter;
