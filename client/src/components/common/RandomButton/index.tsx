@@ -1,9 +1,18 @@
 'use client';
 
+import {LoadingSpinner} from '../LoadingSpinner';
 import {useRandomButton} from './useRandomButton';
 
 const RandomButton = () => {
-  const {isMobile, goRandomDocument} = useRandomButton();
+  const {isMobile, isLoading, goRandomDocument} = useRandomButton();
+
+  if (isLoading) {
+    return (
+      <div className="mr-4 flex h-9 w-9 items-center justify-center">
+        <LoadingSpinner size="s" thickness="thick" />
+      </div>
+    );
+  }
 
   return isMobile ? (
     <svg
