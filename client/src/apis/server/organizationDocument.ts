@@ -1,5 +1,6 @@
 'use server';
 
+import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {
   GroupDocumentResponse,
@@ -13,6 +14,7 @@ export const getOrganizationDocumentByUUIDServer = async (uuid: string) => {
   const response = await requestGetServer<OrganizationDocumentWithEventsResponse>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getOrganizationDocumentByUUID(uuid),
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getOrganizationDocumentByUUID(uuid)]},
   });
 
   return response;

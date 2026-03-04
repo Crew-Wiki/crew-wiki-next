@@ -1,8 +1,13 @@
-import {getDocumentByUUIDServer, getAllDocumentsServer} from '@apis/server/document';
+import {
+  getDocumentByUUIDServer,
+  getAllDocumentsServer,
+  getOrganizationDocumentsByDocumentUUIDServer,
+} from '@apis/server/document';
 import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
+import {DOCUMENT_TYPE} from '@type/Document.type';
 import type {UUIDParams} from '@type/PageParams.type';
 import {generateDocumentPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
@@ -18,7 +23,7 @@ export async function generateStaticParams() {
 
     if (!documents || !Array.isArray(documents)) return [];
 
-    return documents.map(({uuid}) => ({uuid}));
+    return documents.filter(({documentType}) => documentType === DOCUMENT_TYPE.Crew).map(({uuid}) => ({uuid}));
   } catch (error) {
     console.error('generateStaticParams 에러', error);
     return [];
@@ -34,7 +39,10 @@ export async function generateMetadata({params}: UUIDParams): Promise<Metadata> 
 // https://nextjs.org/docs/messages/sync-dynamic-apis
 const DocumentPage = async ({params}: UUIDParams) => {
   const {uuid} = await params;
-  const document = await getDocumentByUUIDServer(uuid);
+  const [document, organizations] = await Promise.all([
+    getDocumentByUUIDServer(uuid),
+    getOrganizationDocumentsByDocumentUUIDServer(uuid),
+  ]);
 
   if (!document) {
     notFound();
@@ -47,7 +55,7 @@ const DocumentPage = async ({params}: UUIDParams) => {
       <MobileDocumentHeader uuid={document.documentUUID} />
       <section className="flex h-fit min-h-[864px] w-full flex-col gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-md:gap-2 max-md:p-4 max-[768px]:gap-2">
         <DocumentHeader title={document.title} uuid={document.documentUUID} />
-        <DocumentContents contents={contents} />
+        <DocumentContents contents={contents} organizations={organizations} />
       </section>
       <DocumentFooter generateTime={document.generateTime} />
       <IncrementViewCountByUUID uuid={document.documentUUID} />

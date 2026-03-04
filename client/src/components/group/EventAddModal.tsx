@@ -54,7 +54,7 @@ const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
           <CustomCalendar
             value={date}
             onChange={setDate}
-            isClickableNextDays={true}
+            isClickableNextDays={false}
             placeholder="날짜를 선택해주세요"
           />
         </div>

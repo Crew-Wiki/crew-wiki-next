@@ -3,7 +3,7 @@
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {
-  PostDocumentContent,
+  PostDocumentBody,
   WikiDocument,
   WikiDocumentExpand,
   WikiDocumentLogDetail,
@@ -13,6 +13,7 @@ import {requestGetServer, requestPostServer, requestPutServer, requestDeleteServ
 import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
 import {ViewCountByUUID} from '@type/viewCount.type';
+import {Organization} from '@type/Group.type';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
   const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
@@ -72,7 +73,7 @@ export const getAllDocumentsServer = async () => {
   return response.data;
 };
 
-export const postDocumentServer = async (document: PostDocumentContent) => {
+export const postDocumentServer = async (document: PostDocumentBody) => {
   const response = await requestPostServer<WikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.postDocument,
@@ -82,7 +83,7 @@ export const postDocumentServer = async (document: PostDocumentContent) => {
   return response;
 };
 
-export const putDocumentServer = async (document: PostDocumentContent) => {
+export const putDocumentServer = async (document: PostDocumentBody) => {
   const response = await requestPutServer<WikiDocument>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.updateDocument,
@@ -113,4 +114,18 @@ export const deleteDocumentServer = async (uuid: string, cookieHeader?: string |
   });
 
   return response;
+};
+
+export const getOrganizationDocumentsByDocumentUUIDServer = async (uuid: string) => {
+  try {
+    const response = await requestGetServer<Organization[]>({
+      baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+      endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
+      next: {revalidate: CACHE.time.basicRevalidate},
+    });
+
+    return response;
+  } catch {
+    return [];
+  }
 };

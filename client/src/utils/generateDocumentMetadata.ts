@@ -34,10 +34,10 @@ export async function generateLogsPageMetadata(uuid: string): Promise<Metadata> 
     const documentTitle = document?.title;
 
     return {
-      title: `${documentTitle} 편집로그`,
-      description: `${documentTitle} 문서의 편집로그입니다.`,
+      title: `${documentTitle} 편집기록`,
+      description: `${documentTitle} 문서의 편집기록입니다.`,
       openGraph: {
-        title: `크루위키 ${documentTitle}문서의 편집로그`,
+        title: `크루위키 ${documentTitle}문서의 편집기록`,
         description: `${documentTitle}에 대한 정보(논란)를 확인하세요.`,
       },
     };
