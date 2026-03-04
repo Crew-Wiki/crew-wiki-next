@@ -1,6 +1,7 @@
-export type ErrorLevel = 'high' | 'medium' | 'low';
+import {ERROR_LEVEL, ERROR_CATEGORY} from '@constants/sentry';
 
-export type ErrorCategory = 'api' | 'auth' | 'network' | 'validation' | 'unknown';
+export type ErrorLevel = (typeof ERROR_LEVEL)[keyof typeof ERROR_LEVEL];
+export type ErrorCategory = (typeof ERROR_CATEGORY)[keyof typeof ERROR_CATEGORY];
 
 export type ErrorClassification = {
   level: ErrorLevel;
