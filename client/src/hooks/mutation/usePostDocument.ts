@@ -1,7 +1,7 @@
 'use client';
 
 import useMutation from '@hooks/useMutation';
-import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';;
+import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import useAmplitude from '@hooks/useAmplitude';
 import {postDocumentClient} from '@apis/client/document';
 import {postOrganizationDocumentClient, linkOrganizationDocumentClient} from '@apis/client/organization';
@@ -54,7 +54,7 @@ export const usePostDocument = () => {
       createdOrganizations.forEach(org => {
         addTitle(org.title, org.organizationDocumentUuid, DOCUMENT_TYPE.Organization);
       });
-      window.location.href = route.goWiki(document.documentUUID);
+      window.location.href = route.goWiki(savedDocument.documentUUID);
     },
   });
 

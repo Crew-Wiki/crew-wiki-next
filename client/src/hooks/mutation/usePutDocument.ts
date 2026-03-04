@@ -74,7 +74,7 @@ export const usePutDocument = () => {
       createdOrganizations.forEach(org => {
         addTitle(org.title, org.organizationDocumentUuid, DOCUMENT_TYPE.Organization);
       });
-      window.location.href = route.goWiki(document.documentUUID);
+      window.location.href = route.goWiki(savedDocument.documentUUID);
     },
   });
 
