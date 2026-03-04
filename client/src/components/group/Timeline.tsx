@@ -13,7 +13,9 @@ interface TimelineProps {
 // TODO: 이미지 없을 때 기본 fallback 이미지 표시하기
 
 const Timeline = ({events}: TimelineProps) => {
-  const timelineItems = events.map(event => ({
+  const sortedEvents = [...events].sort((a, b) => a.occurredAt.localeCompare(b.occurredAt));
+
+  const timelineItems = sortedEvents.map(event => ({
     id: event.organizationEventUuid,
     title: event.occurredAt,
     cardTitle: event.title,
