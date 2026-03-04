@@ -3,8 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
-import {classifyError} from '@utils/sentry/classifyError';
-import {ERROR_LEVEL} from '@constants/sentry';
+import {beforeSend} from '@utils/sentry';
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN || '',
@@ -18,21 +17,5 @@ Sentry.init({
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
 
-  beforeSend(event, hint) {
-    const {level, category} = classifyError(event, hint);
-
-    if (level === ERROR_LEVEL.LOW) {
-      return null;
-    }
-
-    event.tags = {
-      ...event.tags,
-      'error.level': level,
-      'error.category': category,
-    };
-
-    event.level = level === ERROR_LEVEL.HIGH ? 'error' : 'warning';
-
-    return event;
-  },
+  beforeSend,
 });
