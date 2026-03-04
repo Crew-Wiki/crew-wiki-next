@@ -18,7 +18,8 @@ type State = {
   uuid: string;
   isImageUploadPending: boolean;
   originalVersion: number;
-  organizations: Organization[];
+  newOrganizations: Organization[];
+  existingOrganizations: Organization[];
   originalOrganizations: Organization[];
 };
 
@@ -33,7 +34,8 @@ type Action = {
   onBlur: (value: string, field: Field, list?: string[]) => void;
   reset: () => void;
   updateImageUploadPending: (isPending: boolean) => void;
-  addOrganization: (organization: Organization) => void;
+  addNewOrganization: (organization: Organization) => void;
+  addExistingOrganization: (organization: Organization) => void;
   removeOrganization: (uuid: string) => void;
 };
 
@@ -62,7 +64,8 @@ const initialValue: State = {
   uuid: '',
   isImageUploadPending: false,
   originalVersion: 0,
-  organizations: [],
+  newOrganizations: [],
+  existingOrganizations: [],
   originalOrganizations: [],
 };
 
@@ -82,7 +85,8 @@ export const useDocument = create<State & Action>(set => ({
       },
       uuid: uuid ? uuid : crypto.randomUUID(),
       originalVersion: version ? version : 0,
-      organizations: organizations ?? [],
+      newOrganizations: [],
+      existingOrganizations: organizations ?? [],
       originalOrganizations: organizations ?? [],
     });
   },
@@ -138,15 +142,22 @@ export const useDocument = create<State & Action>(set => ({
     set(() => initialValue);
   },
 
-  addOrganization: (organization: Organization) => {
+  addNewOrganization: (organization: Organization) => {
     set(state => ({
-      organizations: [...state.organizations, organization],
+      newOrganizations: [...state.newOrganizations, organization],
+    }));
+  },
+
+  addExistingOrganization: (organization: Organization) => {
+    set(state => ({
+      existingOrganizations: [...state.existingOrganizations, organization],
     }));
   },
 
   removeOrganization: (uuid: string) => {
     set(state => ({
-      organizations: state.organizations.filter(org => org.uuid !== uuid),
+      newOrganizations: state.newOrganizations.filter(org => org.uuid !== uuid),
+      existingOrganizations: state.existingOrganizations.filter(org => org.uuid !== uuid),
     }));
   },
 }));

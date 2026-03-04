@@ -5,6 +5,7 @@ import {requestDeleteClient, requestGetClient, requestPostClient, requestPutClie
 import {
   GroupDocumentResponse,
   OrganizationDocumentCreateRequest,
+  OrganizationDocumentLinkRequest,
   OrganizationDocumentUpdateRequest,
   OrganizationDocumentWithEventsResponse,
 } from '@type/Group.type';
@@ -22,6 +23,16 @@ export const postOrganizationDocumentClient = async (request: OrganizationDocume
   const response = await requestPostClient<GroupDocumentResponse>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.postOrganizationDocument,
+    body: request,
+  });
+
+  return response;
+};
+
+export const linkOrganizationDocumentClient = async (request: OrganizationDocumentLinkRequest) => {
+  const response = await requestPostClient<GroupDocumentResponse>({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.linkOrganizationDocument,
     body: request,
   });
 

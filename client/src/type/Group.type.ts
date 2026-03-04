@@ -42,6 +42,12 @@ export interface OrganizationDocumentWithEventsResponse {
   organizationEventResponses: OrganizationEventResponse[];
 }
 
+// 기존 조직 문서 연결 요청 타입
+export interface OrganizationDocumentLinkRequest {
+  crewDocumentUuid: string;
+  organizationDocumentUuid: string;
+}
+
 // 조직 문서 생성 요청 타입
 export interface OrganizationDocumentCreateRequest {
   title: string;

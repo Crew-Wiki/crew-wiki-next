@@ -88,5 +88,6 @@ export interface PostDocumentBody {
 }
 
 export interface PostDocumentContent extends PostDocumentBody {
-  organizations: Organization[];
+  newOrganizations: Organization[];
+  existingOrganizations: Organization[];
 }

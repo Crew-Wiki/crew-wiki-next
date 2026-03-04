@@ -16,7 +16,8 @@ const RequestButton = ({mode}: ModeProps) => {
   const values = useDocument(state => state.values);
   const errors = useDocument(state => state.errorMessages);
   const isImageUploadPending = useDocument(state => state.isImageUploadPending);
-  const organizations = useDocument(state => state.organizations);
+  const newOrganizations = useDocument(state => state.newOrganizations);
+  const existingOrganizations = useDocument(state => state.existingOrganizations);
 
   const requiredFields: Array<Field> = ['title', 'writer', 'contents'];
   const canSubmit = requiredFields.every(field => values[field].trim() !== '' && errors[field] === null);
@@ -31,7 +32,8 @@ const RequestButton = ({mode}: ModeProps) => {
       contents,
       writer: values.writer,
       documentBytes: getBytes(contents),
-      organizations,
+      newOrganizations,
+      existingOrganizations,
     };
 
     if (mode === 'post') {

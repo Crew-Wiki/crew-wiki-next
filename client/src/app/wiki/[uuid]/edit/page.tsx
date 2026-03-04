@@ -19,9 +19,15 @@ const EditPage = ({document}: EditPageProps) => {
   const setInit = useDocument(action => action.setInit);
   const reset = useDocument(action => action.reset);
   const onChange = useDocument(action => action.onChange);
-  const organizations = useDocument(state => state.organizations);
-  const addOrganization = useDocument(action => action.addOrganization);
+  const newOrganizations = useDocument(state => state.newOrganizations);
+  const existingOrganizations = useDocument(state => state.existingOrganizations);
+  const addNewOrganization = useDocument(action => action.addNewOrganization);
+  const addExistingOrganization = useDocument(action => action.addExistingOrganization);
   const removeOrganization = useDocument(action => action.removeOrganization);
+
+  const handleSelectOrganization = (organization: Organization) => {
+    addExistingOrganization(organization);
+  };
 
   const handleAddOrganization = (title: string) => {
     const newOrganization: Organization = {
@@ -29,7 +35,7 @@ const EditPage = ({document}: EditPageProps) => {
       uuid: crypto.randomUUID(),
     };
 
-    addOrganization(newOrganization);
+    addNewOrganization(newOrganization);
   };
 
   useEffect(() => {
@@ -52,8 +58,8 @@ const EditPage = ({document}: EditPageProps) => {
       <PostHeader mode="edit" />
       <TitleInputField />
       <OrganizationInputField
-        selectedOrganizations={organizations}
-        onSelect={addOrganization}
+        selectedOrganizations={[...newOrganizations, ...existingOrganizations]}
+        onSelect={handleSelectOrganization}
         onAdd={handleAddOrganization}
         onRemove={removeOrganization}
       />

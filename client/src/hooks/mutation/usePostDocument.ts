@@ -5,18 +5,18 @@ import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.t
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 import {postDocumentClient} from '@apis/client/document';
-import {postOrganizationDocumentClient} from '@apis/client/organization';
+import {postOrganizationDocumentClient, linkOrganizationDocumentClient} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {route} from '@constants/route';
 import {GroupDocumentResponse} from '@type/Group.type';
 import {EDITOR} from '@constants/editor';
 
 const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
-  const {organizations, ...documentBody} = document;
+  const {newOrganizations, existingOrganizations, ...documentBody} = document;
   const savedDocument = await postDocumentClient(documentBody);
 
   const createdOrganizations = await Promise.all(
-    organizations.map(org =>
+    newOrganizations.map(org =>
       postOrganizationDocumentClient({
         title: org.title,
         contents: EDITOR.organizationInitialValue,
@@ -28,7 +28,16 @@ const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
     ),
   );
 
-  return {savedDocument, createdOrganizations};
+  const linkedOrganizations = await Promise.all(
+    existingOrganizations.map(org =>
+      linkOrganizationDocumentClient({
+        crewDocumentUuid: savedDocument.documentUUID,
+        organizationDocumentUuid: org.uuid,
+      }),
+    ),
+  );
+
+  return {savedDocument, createdOrganizations: [...createdOrganizations, ...linkedOrganizations]};
 };
 
 export const usePostDocument = () => {

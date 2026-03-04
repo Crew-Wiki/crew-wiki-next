@@ -5,7 +5,11 @@ import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.t
 import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 import {putDocumentClient} from '@apis/client/document';
-import {deleteOrganizationFromDocumentClient, postOrganizationDocumentClient} from '@apis/client/organization';
+import {
+  deleteOrganizationFromDocumentClient,
+  linkOrganizationDocumentClient,
+  postOrganizationDocumentClient,
+} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {useDocument} from '@store/document';
 import {route} from '@constants/route';
@@ -20,15 +24,15 @@ export const usePutDocument = () => {
   const {trackDocumentUpdate} = useAmplitude();
 
   const putDocumentWithOrganizations = async (document: PostDocumentContent) => {
-    const {organizations, ...documentBody} = document;
+    const {newOrganizations, existingOrganizations, ...documentBody} = document;
     const savedDocument = await putDocumentClient(documentBody);
 
-    const newOrganizations = organizations.filter(
+    const newlyLinkedOrganizations = existingOrganizations.filter(
       org => !originalOrganizations.some(original => original.uuid === org.uuid),
     );
 
     const deletedOrganizations = originalOrganizations.filter(
-      original => !organizations.some(org => org.uuid === original.uuid),
+      original => !existingOrganizations.some(org => org.uuid === original.uuid),
     );
 
     const createdOrganizations = await Promise.all(
@@ -44,11 +48,20 @@ export const usePutDocument = () => {
       ),
     );
 
+    const linkedOrganizations = await Promise.all(
+      newlyLinkedOrganizations.map(org =>
+        linkOrganizationDocumentClient({
+          crewDocumentUuid: savedDocument.documentUUID,
+          organizationDocumentUuid: org.uuid,
+        }),
+      ),
+    );
+
     await Promise.all(
       deletedOrganizations.map(org => deleteOrganizationFromDocumentClient(savedDocument.documentUUID, org.uuid)),
     );
 
-    return {savedDocument, createdOrganizations};
+    return {savedDocument, createdOrganizations: [...createdOrganizations, ...linkedOrganizations]};
   };
 
   const {mutate, isPending} = useMutation<
