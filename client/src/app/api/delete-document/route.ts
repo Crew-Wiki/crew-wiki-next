@@ -10,7 +10,6 @@ import {ApiResponseType} from '@type/http.type';
 const deleteDocument = async (uuid: string, cookieHeader?: string) => {
   const response = await deleteDocumentServer(uuid, cookieHeader);
 
-  revalidateTag(CACHE.tag.getDocumentsUUID);
   revalidateTag(CACHE.tag.getRecentlyDocuments);
   revalidateTag(CACHE.tag.getDocumentByUUID(uuid));
 

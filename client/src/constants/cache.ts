@@ -28,7 +28,6 @@ export const CACHE = {
     getDocumentByUUID: (uuid: string) => TAG_PREFIX + `title:${uuid}`,
     getDocumentLogsByUUID: (uuid: string) => TAG_PREFIX + `logs:${uuid}`,
     getSpecificDocumentLog: (logId: number) => TAG_PREFIX + `specificLog:${logId}`,
-
-    getDocumentsUUID: TAG_PREFIX + 'get-documents-uuid',
+    getOrganizationDocumentByUUID: (uuid: string) => TAG_PREFIX + `organization:${uuid}`,
   },
 } as const;

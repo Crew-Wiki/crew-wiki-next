@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import {ErrorInfo, ErrorMessage} from '@type/Document.type';
+import {Organization} from '@type/Group.type';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
 import {validateWriterOnChange} from '@utils/validation/writer';
 
@@ -17,6 +18,9 @@ type State = {
   uuid: string;
   isImageUploadPending: boolean;
   originalVersion: number;
+  newOrganizations: Organization[];
+  existingOrganizations: Organization[];
+  originalOrganizations: Organization[];
 };
 
 type Validators = {
@@ -25,11 +29,14 @@ type Validators = {
 };
 
 type Action = {
-  setInit: (initial: FieldType, uuid: string | null, version?: number) => void;
+  setInit: (initial: FieldType, uuid: string | null, version?: number, organizations?: Organization[]) => void;
   onChange: (value: string, field: Field) => void;
   onBlur: (value: string, field: Field, list?: string[]) => void;
   reset: () => void;
   updateImageUploadPending: (isPending: boolean) => void;
+  addNewOrganization: (organization: Organization) => void;
+  addExistingOrganization: (organization: Organization) => void;
+  removeOrganization: (uuid: string) => void;
 };
 
 const validators: Map<Field, Validators> = new Map();
@@ -57,11 +64,14 @@ const initialValue: State = {
   uuid: '',
   isImageUploadPending: false,
   originalVersion: 0,
+  newOrganizations: [],
+  existingOrganizations: [],
+  originalOrganizations: [],
 };
 
 export const useDocument = create<State & Action>(set => ({
   ...initialValue,
-  setInit: (initial, uuid, version) => {
+  setInit: (initial, uuid, version, organizations) => {
     set({
       values: {
         title: initial.title,
@@ -75,6 +85,9 @@ export const useDocument = create<State & Action>(set => ({
       },
       uuid: uuid ? uuid : crypto.randomUUID(),
       originalVersion: version ? version : 0,
+      newOrganizations: [],
+      existingOrganizations: organizations ?? [],
+      originalOrganizations: organizations ?? [],
     });
   },
 
@@ -127,5 +140,24 @@ export const useDocument = create<State & Action>(set => ({
 
   reset: () => {
     set(() => initialValue);
+  },
+
+  addNewOrganization: (organization: Organization) => {
+    set(state => ({
+      newOrganizations: [...state.newOrganizations, organization],
+    }));
+  },
+
+  addExistingOrganization: (organization: Organization) => {
+    set(state => ({
+      existingOrganizations: [...state.existingOrganizations, organization],
+    }));
+  },
+
+  removeOrganization: (uuid: string) => {
+    set(state => ({
+      newOrganizations: state.newOrganizations.filter(org => org.uuid !== uuid),
+      existingOrganizations: state.existingOrganizations.filter(org => org.uuid !== uuid),
+    }));
   },
 }));

@@ -8,6 +8,7 @@ import {EventInput, EventFormData} from '@type/Event.type';
 import {OrganizationEventResponse} from '@type/Group.type';
 import {useRouter} from 'next/navigation';
 import {formatDate} from '@utils/date';
+import {CLIENT_ENDPOINT} from '@constants/endpoint';
 import {requestPostClientWithoutResponse} from '@http/client';
 
 // react-chrono 라이브러리 때문에 hydration 오류가 발생(라이브러리가 내부적으로 브라우저 전용 API를 사용해서 서버 렌더링 결과와 클라이언트 렌더링 결과가 다름)
@@ -43,7 +44,7 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
     try {
       await requestPostClientWithoutResponse({
         baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
-        endpoint: '/api/post-organization-event',
+        endpoint: CLIENT_ENDPOINT.postOrganizationEvent,
         body: eventData,
       });
 

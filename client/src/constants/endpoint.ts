@@ -16,8 +16,12 @@ export const ENDPOINT = {
 
   // Organization Document
   getOrganizationDocumentByUUID: (uuid: string) => `/organization/uuid/${uuid}`,
+  getOrganizationDocumentsByDocumentUUID: (uuid: string) => `/document/${uuid}/organization-documents`,
   postOrganizationDocument: '/organization',
+  linkOrganizationDocument: '/organization/link',
   putOrganizationDocument: '/organization',
+  deleteOrganizationFromDocument: (documentUuid: string, organizationDocumentUuid: string) =>
+    `/document/${documentUuid}/organization-documents/${organizationDocumentUuid}`,
 
   // Organization Event
   postOrganizationEvent: '/organization-events',
@@ -28,4 +32,24 @@ export const ENDPOINT = {
   postAdminLogin: '/auth/login',
   postAdminLogout: '/auth/logout',
   getLoginCheck: '/auth/login/check',
+} as const;
+
+export const CLIENT_ENDPOINT = {
+  // Document
+  postDocument: '/api/post-document',
+  putDocument: '/api/put-document',
+  getDocumentTitleList: '/api/get-document-title-list',
+  deleteDocument: '/api/delete-document',
+
+  // Organization
+  putOrganizationDocument: '/api/put-organization-document',
+  postOrganizationEvent: '/api/post-organization-event',
+
+  // View Count
+  postViewCount: '/api/post-view-count',
+
+  // Admin
+  postAdminLogin: '/api/post-admin-login',
+  postAdminLogout: '/api/post-admin-logout',
+  deleteFrontendServerCache: '/api/delete-frontend-server-cache',
 } as const;

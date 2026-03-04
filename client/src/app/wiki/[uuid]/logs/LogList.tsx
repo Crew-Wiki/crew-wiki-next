@@ -2,21 +2,24 @@
 
 import {InfiniteScrollObserver} from '@components/common/InfinityScrollObserver';
 import {LogContent} from './LogContent';
-import {WikiDocumentLogSummary} from '@type/Document.type';
+import {DOCUMENT_TYPE, DocumentType, WikiDocumentLogSummary} from '@type/Document.type';
 import {useGetDocumentLogs} from '@hooks/fetch/useGetDocumentLogs';
 
 type LogListParams = {
   uuid: string;
   initialData: WikiDocumentLogSummary[];
   totalPage: number;
+  documentType?: DocumentType;
 };
 
-export const LogList = ({uuid, initialData, totalPage}: LogListParams) => {
+export const LogList = ({uuid, initialData, totalPage, documentType = DOCUMENT_TYPE.Crew}: LogListParams) => {
   const {logs, fetchNextPage} = useGetDocumentLogs(uuid, initialData, totalPage);
 
   return (
     <div className="flex flex-col gap-4">
-      {logs?.map(log => <LogContent key={log.id} uuid={uuid} summary={log} />)}
+      {logs?.map(log => (
+        <LogContent key={log.id} uuid={uuid} summary={log} documentType={documentType} />
+      ))}
       <InfiniteScrollObserver key={uuid} callback={fetchNextPage} />
     </div>
   );

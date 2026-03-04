@@ -9,8 +9,16 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Removable: Story = {
   args: {
     text: '태그',
+    variant: 'removable',
+  },
+};
+
+export const Link: Story = {
+  args: {
+    text: '태그',
+    variant: 'link',
   },
 };

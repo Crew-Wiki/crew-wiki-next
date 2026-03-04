@@ -16,6 +16,8 @@ const RequestButton = ({mode}: ModeProps) => {
   const values = useDocument(state => state.values);
   const errors = useDocument(state => state.errorMessages);
   const isImageUploadPending = useDocument(state => state.isImageUploadPending);
+  const newOrganizations = useDocument(state => state.newOrganizations);
+  const existingOrganizations = useDocument(state => state.existingOrganizations);
 
   const requiredFields: Array<Field> = ['title', 'writer', 'contents'];
   const canSubmit = requiredFields.every(field => values[field].trim() !== '' && errors[field] === null);
@@ -26,10 +28,12 @@ const RequestButton = ({mode}: ModeProps) => {
   const handleSubmit = async (contents: string) => {
     const document: PostDocumentContent = {
       uuid,
-      title: values.title,
+      title: values.title.trim(),
       contents,
       writer: values.writer,
       documentBytes: getBytes(contents),
+      newOrganizations,
+      existingOrganizations,
     };
 
     if (mode === 'post') {
@@ -59,7 +63,7 @@ const RequestButton = ({mode}: ModeProps) => {
 
   return (
     <>
-      <Button style="primary" size="xs" disabled={!canSubmit || isPending} onClick={onSubmit}>
+      <Button style="primary" size="xs" disabled={!canSubmit} isLoading={isPending} onClick={onSubmit}>
         작성완료
       </Button>
       {conflictModal.component}
