@@ -29,7 +29,7 @@ export const validateTitleOnBlur = (title: string, titleList?: string[]) => {
   const trimmedTitle = title.trim();
 
   if (titleList?.some(title => title.trim() === trimmedTitle)) {
-    errorInfo.errorMessage = '이미 있는 문서입니다.';
+    errorInfo.errorMessage = VALIDATION_ERROR_PATTERNS.DUPLICATE_DOCUMENT;
   } else {
     errorInfo.errorMessage = null;
   }
