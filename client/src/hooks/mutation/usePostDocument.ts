@@ -1,8 +1,7 @@
 'use client';
 
 import useMutation from '@hooks/useMutation';
-import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
-import {useRouter} from 'next/navigation';
+import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';;
 import useAmplitude from '@hooks/useAmplitude';
 import {postDocumentClient} from '@apis/client/document';
 import {postOrganizationDocumentClient, linkOrganizationDocumentClient} from '@apis/client/organization';
@@ -41,7 +40,6 @@ const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
 };
 
 export const usePostDocument = () => {
-  const router = useRouter();
   const addTitle = useTrie(state => state.addTitle);
   const {trackDocumentCreate} = useAmplitude();
 
@@ -56,8 +54,7 @@ export const usePostDocument = () => {
       createdOrganizations.forEach(org => {
         addTitle(org.title, org.organizationDocumentUuid, DOCUMENT_TYPE.Organization);
       });
-      router.push(route.goWiki(savedDocument.documentUUID));
-      router.refresh();
+      window.location.href = route.goWiki(document.documentUUID);
     },
   });
 

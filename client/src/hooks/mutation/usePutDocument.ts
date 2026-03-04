@@ -2,7 +2,6 @@
 
 import useMutation from '@hooks/useMutation';
 import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
-import {useRouter} from 'next/navigation';
 import useAmplitude from '@hooks/useAmplitude';
 import {putDocumentClient} from '@apis/client/document';
 import {
@@ -17,7 +16,6 @@ import {GroupDocumentResponse} from '@type/Group.type';
 import {EDITOR} from '@constants/editor';
 
 export const usePutDocument = () => {
-  const router = useRouter();
   const updateTitle = useTrie(state => state.updateTitle);
   const addTitle = useTrie(state => state.addTitle);
   const originalOrganizations = useDocument(state => state.originalOrganizations);
@@ -76,8 +74,7 @@ export const usePutDocument = () => {
       createdOrganizations.forEach(org => {
         addTitle(org.title, org.organizationDocumentUuid, DOCUMENT_TYPE.Organization);
       });
-      router.push(route.goWiki(savedDocument.documentUUID));
-      router.refresh();
+      window.location.href = route.goWiki(document.documentUUID);
     },
   });
 

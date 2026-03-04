@@ -10,6 +10,7 @@ import {useDocument} from '@store/document';
 import {LatestWikiDocument} from '@type/Document.type';
 import {useGetLatestDocumentByUUID} from '@hooks/fetch/useGetLatestDocumentByUUID';
 import {Organization} from '@type/Group.type';
+import {LoadingSpinner} from '@components/common/LoadingSpinner';
 
 type EditPageProps = {
   document: LatestWikiDocument;
@@ -70,9 +71,19 @@ const EditPage = ({document}: EditPageProps) => {
 
 const Page = () => {
   const {uuid} = useParams();
-  const {document} = useGetLatestDocumentByUUID(uuid as string); // 최신의 데이터를 불러와야하기 때문에 캐시 데이터 사용하지 않음.
+  const {document, isLoading} = useGetLatestDocumentByUUID(uuid as string); // 최신의 데이터를 불러와야하기 때문에 캐시 데이터 사용하지 않음.
 
-  return document && <EditPage document={document} />;
+  if (isLoading) {
+    return (
+      <section className="flex h-[700px] w-full flex-col items-center justify-center gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-[768px]:gap-3 max-[768px]:p-4">
+        <LoadingSpinner size="m" thickness="thick" />
+      </section>
+    );
+  }
+
+  if (!document) return null;
+
+  return <EditPage document={document} />;
 };
 
 export default Page;

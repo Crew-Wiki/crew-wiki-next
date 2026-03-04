@@ -19,7 +19,7 @@ const NotFound = () => {
         <DocumentTitle title={uuid as string} />
         <fieldset className="flex gap-2">
           <Button style="primary" size="xs" onClick={goPostPage}>
-            작성하기
+            <span className="whitespace-nowrap">작성하기</span>
           </Button>
         </fieldset>
       </header>

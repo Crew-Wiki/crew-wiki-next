@@ -8,6 +8,7 @@ import {
   FetchType,
   ResponseType,
 } from '@type/http.type';
+import {HttpError} from '@utils/sentry/httpError';
 
 export const requestGetClient = async <T>({headers = {}, ...args}: ClientHttpMethodArgs): Promise<T> => {
   const response = await request<ResponseType<T>>({
@@ -121,16 +122,23 @@ const executeRequest = async ({url, requestInit}: FetchType) => {
     const response: Response = await fetch(url, requestInit);
 
     if (!response.ok) {
-      const errorData = await response.json();
-      const errorMessage = errorData?.message || JSON.stringify(errorData) || 'API 요청 실패';
-      throw new Error(errorMessage);
+      let errorMessage = 'API 요청 실패';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData?.message || JSON.stringify(errorData) || errorMessage;
+      } catch {
+        // JSON 파싱 실패 시 기본 errorMessage 사용
+      }
+      throw new HttpError(errorMessage, response.status, url);
     }
     return response;
   } catch (error) {
+    if (error instanceof HttpError) {
+      throw error;
+    }
     if (error instanceof Error) {
       throw error;
-    } else {
-      throw new Error('알 수 없는 오류 발생');
     }
+    throw new Error('알 수 없는 오류 발생');
   }
 };

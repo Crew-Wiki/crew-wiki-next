@@ -23,9 +23,10 @@ export const useGetLatestDocumentByUUID = (uuid: string) => {
     };
   }, [uuid]);
 
-  const {data} = useFetch<DocumentWithOrganizations>(getData);
+  const {data, isLoading} = useFetch<DocumentWithOrganizations>(getData);
 
   return {
     document: data,
+    isLoading,
   };
 };

@@ -28,7 +28,7 @@ const RequestButton = ({mode}: ModeProps) => {
   const handleSubmit = async (contents: string) => {
     const document: PostDocumentContent = {
       uuid,
-      title: values.title,
+      title: values.title.trim(),
       contents,
       writer: values.writer,
       documentBytes: getBytes(contents),
@@ -63,7 +63,7 @@ const RequestButton = ({mode}: ModeProps) => {
 
   return (
     <>
-      <Button style="primary" size="xs" disabled={!canSubmit || isPending} onClick={onSubmit}>
+      <Button style="primary" size="xs" disabled={!canSubmit} isLoading={isPending} onClick={onSubmit}>
         작성완료
       </Button>
       {conflictModal.component}

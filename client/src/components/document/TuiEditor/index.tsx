@@ -1,6 +1,7 @@
 'use client';
 
 import '@toast-ui/editor/toastui-editor.css';
+import './TuiEditor.css';
 
 import dynamic from 'next/dynamic';
 
