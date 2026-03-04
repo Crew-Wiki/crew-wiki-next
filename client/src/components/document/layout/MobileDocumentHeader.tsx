@@ -1,23 +1,28 @@
 import Button from '@components/common/Button';
 import {route} from '@constants/route';
+import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
 import Link from 'next/link';
 
 interface MobileDocumentHeaderProps {
   uuid: string;
+  documentType?: DocumentType;
 }
 
-const MobileDocumentHeader = ({uuid}: MobileDocumentHeaderProps) => {
+const MobileDocumentHeader = ({uuid, documentType = DOCUMENT_TYPE.Crew}: MobileDocumentHeaderProps) => {
+  const editHref = documentType === DOCUMENT_TYPE.Organization ? route.goWikiGroupEdit(uuid) : route.goWikiEdit(uuid);
+  const logsHref = documentType === DOCUMENT_TYPE.Organization ? route.goWikiGroupLogs(uuid) : route.goWikiLogs(uuid);
+
   return (
     <div className="md:hidden">
       <fieldset className="flex gap-2 max-md:w-full max-md:justify-center">
-        <Link href={route.goWikiEdit(uuid)}>
+        <Link href={editHref}>
           <Button style="tertiary" size="xs">
             편집하기
           </Button>
         </Link>
-        <Link href={route.goWikiLogs(uuid)}>
+        <Link href={logsHref}>
           <Button style="tertiary" size="xs">
-            편집로그
+            편집기록
           </Button>
         </Link>
         <Link href={route.goWikiWrite()}>

@@ -1,13 +1,13 @@
 'use server';
 
-import {PostDocumentContent, WikiDocument} from '@type/Document.type';
+import {PostDocumentBody, WikiDocument} from '@type/Document.type';
 import {NextRequest, NextResponse} from 'next/server';
 import {revalidateTag} from 'next/cache';
 import {CACHE} from '@constants/cache';
 import {putDocumentServer} from '@apis/server/document';
 import {ApiResponseType} from '@type/http.type';
 
-const putDocument = async (document: PostDocumentContent) => {
+const putDocument = async (document: PostDocumentBody) => {
   const response = await putDocumentServer(document);
 
   revalidateTag(CACHE.tag.getRecentlyDocuments);
@@ -18,7 +18,7 @@ const putDocument = async (document: PostDocumentContent) => {
 };
 
 export const PUT = async (request: NextRequest) => {
-  const document: PostDocumentContent = await request.json();
+  const document: PostDocumentBody = await request.json();
 
   try {
     const updatedDocument = await putDocument(document);

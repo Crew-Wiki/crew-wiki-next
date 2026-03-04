@@ -1,7 +1,9 @@
 'use server';
 
+import {CACHE} from '@constants/cache';
 import {EventFormData, OrganizationEventCreateResponse} from '@type/Event.type';
 import {NextRequest, NextResponse} from 'next/server';
+import {revalidateTag} from 'next/cache';
 import {postOrganizationEventServer} from '@apis/server/organizationEvent';
 import {ApiResponseType} from '@type/http.type';
 
@@ -10,6 +12,8 @@ export const POST = async (request: NextRequest) => {
 
   try {
     const createdEvent = await postOrganizationEventServer(eventData);
+
+    revalidateTag(CACHE.tag.getOrganizationDocumentByUUID(eventData.organizationDocumentUuid));
 
     const response: ApiResponseType<OrganizationEventCreateResponse> = {
       data: createdEvent,

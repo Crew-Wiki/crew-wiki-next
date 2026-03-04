@@ -82,7 +82,7 @@ const WikiHeader = () => {
             isVisibleSmallSearchBar ? '' : 'hidden',
           )}
         >
-          <WikiInputField className="w-full" handleSubmit={onSubmit} />
+          <WikiInputField className="w-full" onSubmit={onSubmit} />
         </div>
       </div>
     </motion.div>

@@ -1,19 +1,22 @@
 import {route} from '@constants/route';
-import {WikiDocumentLogSummary} from '@type/Document.type';
+import {DOCUMENT_TYPE, DocumentType, WikiDocumentLogSummary} from '@type/Document.type';
 import timeConverter from '@utils/TimeConverter';
 import Link from 'next/link';
 
 type LogContentProps = {
   uuid: string;
   summary: WikiDocumentLogSummary;
+  documentType?: DocumentType;
 };
 
-export const LogContent = ({uuid, summary}: LogContentProps) => {
+export const LogContent = ({uuid, summary, documentType = DOCUMENT_TYPE.Crew}: LogContentProps) => {
   const {id, version, generateTime, documentBytes, writer} = summary;
+  const logHref =
+    documentType === DOCUMENT_TYPE.Organization ? route.goWikiGroupLog(uuid, id) : route.goWikiLog(uuid, id);
 
   return (
     <Link
-      href={route.goWikilog(uuid, id)}
+      href={logHref}
       passHref
       className="text-md flex w-full items-center justify-center gap-2 rounded-2xl border border-primary-100 px-2 py-4 font-pretendard text-grayscale-800 md:gap-8"
     >

@@ -82,11 +82,16 @@ export const useRelativeSearchTerms = ({editorRef}: UseRelativeSearchTermArgs) =
     setReferQuery(text);
   }, [editorRef, refStartPos]);
 
+  const closeRelativeSearchTerms = () => {
+    setShowRelativeSearchTerms(false);
+  };
+
   return {
     ...floatingAreaPosition,
     titles,
     onClick,
     showRelativeSearchTerms,
+    closeRelativeSearchTerms,
     recordRefStartPos,
     recordRefEndPose,
   };

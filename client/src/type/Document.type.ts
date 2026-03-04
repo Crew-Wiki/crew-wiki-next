@@ -1,4 +1,12 @@
 import {SORT_OPTIONS} from '@constants/popular';
+import {Organization} from './Group.type';
+
+export const DOCUMENT_TYPE = {
+  Crew: 'CREW',
+  Organization: 'ORGANIZATION',
+} as const;
+
+export type DocumentType = (typeof DOCUMENT_TYPE)[keyof typeof DOCUMENT_TYPE];
 
 export interface WikiDocument {
   documentId: number;
@@ -7,6 +15,7 @@ export interface WikiDocument {
   contents: string;
   writer: string;
   generateTime: string;
+  organizations: Organization[];
 }
 
 export interface LatestWikiDocument extends WikiDocument {
@@ -67,12 +76,18 @@ export type WikiDocumentExpand = Omit<WikiDocument, 'documentUUID' | 'documentId
   id: number;
   documentBytes: number;
   viewCount: number;
+  documentType: DocumentType;
 };
 
-export interface PostDocumentContent {
+export interface PostDocumentBody {
   title: string;
   contents: string;
   writer: string;
   documentBytes: number;
   uuid: string;
+}
+
+export interface PostDocumentContent extends PostDocumentBody {
+  newOrganizations: Organization[];
+  existingOrganizations: Organization[];
 }

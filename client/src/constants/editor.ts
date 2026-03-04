@@ -18,4 +18,11 @@ export const EDITOR = {
     <td></td>
   </tr>
 </table>`,
+  organizationInitialValue: `# 그룹 정보
+## 결성일
+
+## 그룹 설명
+
+# 구성원
+`,
 } as const;
