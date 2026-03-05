@@ -1,6 +1,7 @@
 'use server';
 
 import {CACHE} from '@constants/cache';
+import {allDocumentsParams} from '@constants/params';
 import {PostDocumentBody, WikiDocument} from '@type/Document.type';
 import {revalidateTag} from 'next/cache';
 import {NextRequest, NextResponse} from 'next/server';
@@ -11,6 +12,7 @@ const postDocument = async (document: PostDocumentBody) => {
   const response = await postDocumentServer(document);
 
   revalidateTag(CACHE.tag.getRecentlyDocuments);
+  revalidateTag(CACHE.tag.getDocuments(allDocumentsParams));
   revalidateTag(CACHE.tag.getDocumentByUUID(document.uuid));
   revalidateTag(CACHE.tag.getDocumentLogsByUUID(document.uuid));
 
