@@ -121,7 +121,7 @@ export const getOrganizationDocumentsByDocumentUUIDServer = async (uuid: string)
     const response = await requestGetServer<Organization[]>({
       baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
       endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
-      next: {revalidate: CACHE.time.basicRevalidate},
+      next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getOrganizationsByDocumentUUID(uuid)]},
     });
 
     return response;
