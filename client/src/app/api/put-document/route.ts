@@ -13,6 +13,7 @@ const putDocument = async (document: PostDocumentBody) => {
   revalidateTag(CACHE.tag.getRecentlyDocuments);
   revalidateTag(CACHE.tag.getDocumentByUUID(document.uuid));
   revalidateTag(CACHE.tag.getDocumentLogsByUUID(document.uuid));
+  revalidateTag(CACHE.tag.getOrganizationsByDocumentUUID(document.uuid));
 
   return response;
 };
