@@ -39,6 +39,10 @@ function isValidVersion(version) {
 /* ------------------ branch ------------------ */
 const BRANCH = execSync('git branch --show-current').toString().trim();
 
+if (!/^[a-zA-Z0-9._\-/]+$/.test(BRANCH)) {
+  fail(`브랜치 이름에 허용되지 않는 문자가 포함되어 있습니다. (현재: ${BRANCH})`);
+}
+
 /* ------------------ pre checks ------------------ */
 function ensureGhInstalled() {
   try {
