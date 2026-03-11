@@ -44,6 +44,7 @@ export const CLIENT_ENDPOINT = {
   // Organization
   putOrganizationDocument: '/api/put-organization-document',
   postOrganizationEvent: '/api/post-organization-event',
+  revalidateOrganizationDocument: '/api/revalidate-organization-document',
 
   // View Count
   postViewCount: '/api/post-view-count',

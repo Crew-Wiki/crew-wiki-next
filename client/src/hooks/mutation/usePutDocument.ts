@@ -8,6 +8,7 @@ import {
   deleteOrganizationFromDocumentClient,
   linkOrganizationDocumentClient,
   postOrganizationDocumentClient,
+  revalidateOrganizationDocumentClient,
 } from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {useDocument} from '@store/document';
@@ -58,6 +59,15 @@ export const usePutDocument = () => {
     await Promise.all(
       deletedOrganizations.map(org => deleteOrganizationFromDocumentClient(savedDocument.documentUUID, org.uuid)),
     );
+
+    const organizationUuidsToRevalidate = [
+      ...createdOrganizations.map(org => org.organizationDocumentUuid),
+      ...linkedOrganizations.map(org => org.organizationDocumentUuid),
+      ...deletedOrganizations.map(org => org.uuid),
+    ];
+    if (organizationUuidsToRevalidate.length > 0) {
+      await revalidateOrganizationDocumentClient(organizationUuidsToRevalidate);
+    }
 
     return {savedDocument, createdOrganizations: [...createdOrganizations, ...linkedOrganizations]};
   };

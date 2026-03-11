@@ -55,3 +55,11 @@ export const deleteOrganizationFromDocumentClient = async (documentUuid: string,
     endpoint: ENDPOINT.deleteOrganizationFromDocument(documentUuid, organizationDocumentUuid),
   });
 };
+
+export const revalidateOrganizationDocumentClient = async (organizationDocumentUuids: string[]) => {
+  await requestPostClient({
+    baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
+    endpoint: CLIENT_ENDPOINT.revalidateOrganizationDocument,
+    body: {organizationDocumentUuids},
+  });
+};
