@@ -68,8 +68,8 @@ export const usePutDocument = () => {
     if (organizationUuidsToRevalidate.length > 0) {
       try {
         await revalidateOrganizationDocumentClient(organizationUuidsToRevalidate);
-      } catch {
-        // 캐시 무효화 실패해도 사용자 플로우를 차단하지 않음
+      } catch (error) {
+        console.error('Failed to revalidate organization document cache on put:', error);
       }
     }
 
