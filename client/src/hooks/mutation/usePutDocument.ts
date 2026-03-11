@@ -66,7 +66,11 @@ export const usePutDocument = () => {
       ...deletedOrganizations.map(org => org.uuid),
     ];
     if (organizationUuidsToRevalidate.length > 0) {
-      await revalidateOrganizationDocumentClient(organizationUuidsToRevalidate);
+      try {
+        await revalidateOrganizationDocumentClient(organizationUuidsToRevalidate);
+      } catch {
+        // 캐시 무효화 실패해도 사용자 플로우를 차단하지 않음
+      }
     }
 
     return {savedDocument, createdOrganizations: [...createdOrganizations, ...linkedOrganizations]};

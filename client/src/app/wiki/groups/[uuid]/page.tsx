@@ -36,7 +36,7 @@ const GroupPage = async ({params}: {params: Promise<{uuid: string}>}) => {
         <TOC headTags={extractHeadings(htmlContents)} />
         <div className="toastui-editor-contents" dangerouslySetInnerHTML={{__html: htmlContents}} />
 
-        <CrewMemberSection crewDocuments={groupDocument.linkedCrewDocuments} />
+        <CrewMemberSection crewDocuments={groupDocument.linkedCrewDocuments ?? []} />
         <TimelineSection events={groupDocument.organizationEventResponses} organizationDocumentUuid={uuid} />
       </section>
       <DocumentFooter generateTime={groupDocument.generateTime} />
