@@ -36,6 +36,9 @@ function isValidVersion(version) {
   return /^\d+\.\d+\.\d+$/.test(version);
 }
 
+/* ------------------ branch ------------------ */
+const BRANCH = execSync('git branch --show-current').toString().trim();
+
 /* ------------------ pre checks ------------------ */
 function ensureGhInstalled() {
   try {
@@ -54,9 +57,8 @@ function ensureGhAuthenticated() {
 }
 
 function ensureDevelopBranch() {
-  const branch = run('git branch --show-current', true);
-  if (branch !== 'develop') {
-    fail(`현재 브랜치가 develop이 아닙니다. (현재: ${branch})`);
+  if (!BRANCH.startsWith('develop')) {
+    fail(`현재 브랜치가 develop으로 시작하지 않습니다. (현재: ${BRANCH})`);
   }
 }
 
@@ -65,7 +67,7 @@ function ensureNoOpenReleasePr() {
     `gh pr list \
       --repo ${FULL_REPO} \
       --base main \
-      --head develop \
+      --head ${BRANCH} \
       --state open \
       --json number \
       --jq "length"`,
@@ -136,7 +138,7 @@ rl.question('다음 배포 버전을 입력해주세요 ex) X.Y.Z : ', version =
     run(`git commit -m "chore: release v${version}"`);
 
     /* 4. push */
-    run('git push origin develop');
+    run(`git push origin ${BRANCH}`);
 
     /* 5. 릴리즈 노트 */
     const notes = generateReleaseNotes(version);
@@ -147,7 +149,7 @@ rl.question('다음 배포 버전을 입력해주세요 ex) X.Y.Z : ', version =
       `gh pr create \
         --repo ${FULL_REPO} \
         --base main \
-        --head develop \
+        --head ${BRANCH} \
         --title "v${version} 배포" \
         --body-file "${RELEASE_NOTES_TMP}"`,
     );
