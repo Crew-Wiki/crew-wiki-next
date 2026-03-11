@@ -8,6 +8,7 @@ import {processHtmlContent} from '@utils/processHtmlContent';
 import TOC from '@components/document/TOC/TOC';
 import '@components/document/layout/toastui-editor-viewer.css';
 import {getOrganizationDocumentByUUIDServer} from '@apis/server/organizationDocument';
+import CrewMemberSection from '@components/document/layout/CrewMemberSection';
 
 const GroupPage = async ({params}: {params: Promise<{uuid: string}>}) => {
   const {uuid} = await params;
@@ -35,6 +36,7 @@ const GroupPage = async ({params}: {params: Promise<{uuid: string}>}) => {
         <TOC headTags={extractHeadings(htmlContents)} />
         <div className="toastui-editor-contents" dangerouslySetInnerHTML={{__html: htmlContents}} />
 
+        <CrewMemberSection crewDocuments={groupDocument.linkedCrewDocuments} />
         <TimelineSection events={groupDocument.organizationEventResponses} organizationDocumentUuid={uuid} />
       </section>
       <DocumentFooter generateTime={groupDocument.generateTime} />
