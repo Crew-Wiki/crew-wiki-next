@@ -1,5 +1,6 @@
 'use client';
 
+import * as Sentry from '@sentry/nextjs';
 import useMutation from '@hooks/useMutation';
 import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import useAmplitude from '@hooks/useAmplitude';
@@ -69,7 +70,10 @@ export const usePutDocument = () => {
       try {
         await revalidateOrganizationDocumentClient(organizationUuidsToRevalidate);
       } catch (error) {
-        console.error('Failed to revalidate organization document cache on put:', error);
+        Sentry.captureException(error, {
+          tags: {action: 'revalidate-organization-cache'},
+          extra: {organizationUuidsToRevalidate},
+        });
       }
     }
 

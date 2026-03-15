@@ -1,5 +1,6 @@
 'use client';
 
+import * as Sentry from '@sentry/nextjs';
 import useMutation from '@hooks/useMutation';
 import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import useAmplitude from '@hooks/useAmplitude';
@@ -47,7 +48,10 @@ const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
     try {
       await revalidateOrganizationDocumentClient(organizationUuidsToRevalidate);
     } catch (error) {
-      console.error('Failed to revalidate organization document cache on post:', error);
+      Sentry.captureException(error, {
+        tags: {action: 'revalidate-organization-cache'},
+        extra: {organizationUuidsToRevalidate},
+      });
     }
   }
 
