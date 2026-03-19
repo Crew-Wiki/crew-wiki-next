@@ -62,7 +62,7 @@ const Timeline = ({events, onEdit}: TimelineProps) => {
         mediaHeight={80}
       >
         {sortedEvents.map(event => (
-          <div key={event.organizationEventUuid} className="flex h-full flex-col font-pretendard">
+          <div key={event.organizationEventUuid} className="flex h-full w-full flex-col font-pretendard">
             <h3 className="m-0 mb-2 text-base font-semibold text-grayscale-text">{event.title}</h3>
             <p className="m-0 mb-2 text-sm font-bold text-grayscale-500">{event.writer}</p>
             <p className="m-0 break-words text-sm leading-normal text-grayscale-600">{event.contents}</p>
