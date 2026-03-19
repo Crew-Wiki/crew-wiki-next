@@ -4,8 +4,7 @@ import {useState} from 'react';
 import dynamic from 'next/dynamic';
 import Button from '@components/common/Button';
 import {useModal} from '@components/common/Modal/useModal';
-import EventAddModal from '@components/group/EventAddModal';
-import EventEditModal from '@components/group/EventEditModal';
+import EventModal from '@components/group/EventModal';
 import {EventInput, EventFormData, OrganizationEventUpdateRequest} from '@type/Event.type';
 import {OrganizationEventResponse} from '@type/Group.type';
 import {useRouter} from 'next/navigation';
@@ -104,7 +103,7 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
     open: openAddModal,
     close: closeAddModal,
     component: addModalComponent,
-  } = useModal(<EventAddModal onCancel={() => closeAddModal()} onSubmit={handleAddEvent} />);
+  } = useModal(<EventModal mode="add" onCancel={() => closeAddModal()} onSubmit={handleAddEvent} />);
 
   const {
     open: openEditModal,
@@ -112,7 +111,7 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
     component: editModalComponent,
   } = useModal(
     editingEvent ? (
-      <EventEditModal event={editingEvent} onCancel={() => closeEditModal()} onSubmit={handleEditEvent} />
+      <EventModal mode="edit" event={editingEvent} onCancel={() => closeEditModal()} onSubmit={handleEditEvent} />
     ) : (
       <></>
     ),
