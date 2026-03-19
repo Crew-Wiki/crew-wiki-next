@@ -170,6 +170,12 @@
   overflow: hidden !important;
 }
 
+/* 더보기 그라디언트 제거 (useReadMore={false}이므로 불필요) */
+.timeline-container [class*='TimelineContentDetailsWrapper'] {
+  --rc-gradient-color: transparent !important;
+  background: none !important;
+}
+
 .timeline-container [class*='MediaDetailsWrapper'],
 .timeline-container [class*='CardMediaHeader'],
 .timeline-container [class*='CardHeader'],
