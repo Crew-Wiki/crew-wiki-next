@@ -83,7 +83,6 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
       });
 
       closeEditModal();
-      setEditingEvent(null);
       router.refresh();
     } catch (error) {
       Sentry.captureException(error, {
@@ -115,6 +114,9 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
     ) : (
       <></>
     ),
+    {
+      onClose: () => setEditingEvent(null),
+    },
   );
 
   return (
