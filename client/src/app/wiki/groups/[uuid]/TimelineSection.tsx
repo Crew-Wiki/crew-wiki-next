@@ -78,7 +78,7 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
       await requestPutClientWithoutResponse({
         baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
         endpoint: CLIENT_ENDPOINT.putOrganizationEvent,
-        queryParams: {uuid: editingEvent.organizationEventUuid},
+        queryParams: {uuid: editingEvent.organizationEventUuid, organizationDocumentUuid},
         body: eventData,
       });
 
