@@ -1,15 +1,18 @@
 'use client';
 
+import {useState} from 'react';
 import dynamic from 'next/dynamic';
 import Button from '@components/common/Button';
 import {useModal} from '@components/common/Modal/useModal';
 import EventAddModal from '@components/group/EventAddModal';
-import {EventInput, EventFormData} from '@type/Event.type';
+import EventEditModal from '@components/group/EventEditModal';
+import {EventInput, EventFormData, OrganizationEventUpdateRequest} from '@type/Event.type';
 import {OrganizationEventResponse} from '@type/Group.type';
 import {useRouter} from 'next/navigation';
 import {formatDate} from '@utils/date';
 import {CLIENT_ENDPOINT} from '@constants/endpoint';
-import {requestPostClientWithoutResponse} from '@http/client';
+import {requestPostClientWithoutResponse, requestPutClientWithoutResponse} from '@http/client';
+import * as Sentry from '@sentry/nextjs';
 
 // react-chrono 라이브러리 때문에 hydration 오류가 발생(라이브러리가 내부적으로 브라우저 전용 API를 사용해서 서버 렌더링 결과와 클라이언트 렌더링 결과가 다름)
 // Timeline 컴포넌트를 동적 import해서 SSR을 비활성화
@@ -29,6 +32,7 @@ interface TimelineSectionProps {
 
 const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProps) => {
   const router = useRouter();
+  const [editingEvent, setEditingEvent] = useState<OrganizationEventResponse | null>(null);
 
   const handleAddEvent = async (data: EventInput) => {
     const occurredAt = formatDate(data.date, '-');
@@ -48,19 +52,71 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
         body: eventData,
       });
 
-      closeModal();
+      closeAddModal();
       router.refresh();
     } catch (error) {
-      console.error('이벤트 추가 실패:', error);
+      Sentry.captureException(error, {
+        tags: {action: 'add-organization-event'},
+        extra: {eventData},
+      });
       alert('이벤트 추가에 실패했습니다.');
     }
   };
 
+  const handleEditEvent = async (data: EventInput) => {
+    if (!editingEvent) return;
+
+    const occurredAt = formatDate(data.date, '-');
+
+    const eventData: OrganizationEventUpdateRequest = {
+      title: data.title,
+      contents: data.contents,
+      writer: data.writer,
+      occurredAt,
+    };
+
+    try {
+      await requestPutClientWithoutResponse({
+        baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
+        endpoint: CLIENT_ENDPOINT.putOrganizationEvent,
+        queryParams: {uuid: editingEvent.organizationEventUuid},
+        body: eventData,
+      });
+
+      closeEditModal();
+      setEditingEvent(null);
+      router.refresh();
+    } catch (error) {
+      Sentry.captureException(error, {
+        tags: {action: 'edit-organization-event'},
+        extra: {eventData, organizationEventUuid: editingEvent.organizationEventUuid},
+      });
+      alert('이벤트 수정에 실패했습니다.');
+    }
+  };
+
+  const handleOpenEditModal = (event: OrganizationEventResponse) => {
+    setEditingEvent(event);
+    openEditModal();
+  };
+
   const {
-    open: openModal,
-    close: closeModal,
-    component: modalComponent,
-  } = useModal(<EventAddModal onCancel={() => closeModal()} onSubmit={handleAddEvent} />);
+    open: openAddModal,
+    close: closeAddModal,
+    component: addModalComponent,
+  } = useModal(<EventAddModal onCancel={() => closeAddModal()} onSubmit={handleAddEvent} />);
+
+  const {
+    open: openEditModal,
+    close: closeEditModal,
+    component: editModalComponent,
+  } = useModal(
+    editingEvent ? (
+      <EventEditModal event={editingEvent} onCancel={() => closeEditModal()} onSubmit={handleEditEvent} />
+    ) : (
+      <></>
+    ),
+  );
 
   return (
     <div className="mt-8">
@@ -68,12 +124,13 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
         <h1 id="3" className="font-bm text-2xl text-grayscale-text">
           타임라인
         </h1>
-        <Button style="primary" size="xs" onClick={openModal}>
+        <Button style="primary" size="xs" onClick={openAddModal}>
           이벤트 추가
         </Button>
       </div>
-      <Timeline events={events} />
-      {modalComponent}
+      <Timeline events={events} onEdit={handleOpenEditModal} />
+      {addModalComponent}
+      {editModalComponent}
     </div>
   );
 };

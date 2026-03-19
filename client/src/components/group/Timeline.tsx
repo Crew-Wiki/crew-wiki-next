@@ -8,19 +8,21 @@ import './Timeline.css';
 
 interface TimelineProps {
   events: OrganizationEventResponse[];
+  onEdit?: (event: OrganizationEventResponse) => void;
 }
 
 // TODO: 이미지 없을 때 기본 fallback 이미지 표시하기
+const Timeline = ({events, onEdit}: TimelineProps) => {
+  const handleEditClick = (e: React.MouseEvent, event: OrganizationEventResponse) => {
+    e.stopPropagation();
+    onEdit?.(event);
+  };
 
-const Timeline = ({events}: TimelineProps) => {
   const sortedEvents = [...events].sort((a, b) => a.occurredAt.localeCompare(b.occurredAt));
 
   const timelineItems = sortedEvents.map(event => ({
     id: event.organizationEventUuid,
     title: event.occurredAt,
-    cardTitle: event.title,
-    cardSubtitle: event.writer,
-    cardDetailedText: event.contents,
   }));
 
   if (events.length === 0) {
@@ -36,7 +38,7 @@ const Timeline = ({events}: TimelineProps) => {
       <Chrono
         items={timelineItems}
         mode="HORIZONTAL"
-        cardHeight={120}
+        cardHeight={200}
         scrollable={{scrollbar: true}}
         theme={{
           primary: colors.primary.primary,
@@ -44,21 +46,9 @@ const Timeline = ({events}: TimelineProps) => {
           cardBgColor: colors.white,
           titleColor: colors.grayscale.text,
           titleColorActive: colors.primary.primary,
-          cardTitleColor: colors.grayscale.text,
-          cardSubtitleColor: colors.grayscale[500],
-          cardDetailsColor: colors.grayscale[600],
         }}
         fontSizes={{
           title: '0.875rem',
-          cardTitle: '1rem',
-          cardSubtitle: '0.75rem',
-          cardText: '0.875rem',
-        }}
-        classNames={{
-          card: 'shadow-md rounded-lg',
-          cardTitle: 'font-pretendard font-semibold',
-          cardSubTitle: 'font-pretendard text-grayscale-500',
-          cardText: 'font-pretendard',
         }}
         hideControls
         disableClickOnCircle
@@ -70,7 +60,20 @@ const Timeline = ({events}: TimelineProps) => {
         disableToolbar={true}
         showAllCardsHorizontal={true}
         mediaHeight={80}
-      />
+      >
+        {sortedEvents.map(event => (
+          <div key={event.organizationEventUuid} className="flex h-full flex-col font-pretendard">
+            <h3 className="m-0 mb-2 text-base font-semibold text-grayscale-text">{event.title}</h3>
+            <p className="m-0 mb-2 text-sm font-bold text-grayscale-500">{event.writer}</p>
+            <p className="m-0 break-words text-sm leading-normal text-grayscale-600">{event.contents}</p>
+            {onEdit && (
+              <button type="button" className="timeline-card-edit-button" onClick={e => handleEditClick(e, event)}>
+                수정
+              </button>
+            )}
+          </div>
+        ))}
+      </Chrono>
     </div>
   );
 };
