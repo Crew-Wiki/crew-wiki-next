@@ -3,7 +3,7 @@ name: Sync Issue Info to PR
 on:
   pull_request:
     types: [opened]
-    branches: [develop]
+    branches: ['develop/**']
 
 jobs:
   sync-issue-meta:
