@@ -3,6 +3,7 @@ name: Close Issue on PR Merge
 on:
   pull_request:
     types: [closed]
+    branches: ['develop/**']
 
 jobs:
   close-issue:

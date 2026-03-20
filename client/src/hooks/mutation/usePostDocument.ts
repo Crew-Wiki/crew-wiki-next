@@ -1,10 +1,15 @@
 'use client';
 
+import * as Sentry from '@sentry/nextjs';
 import useMutation from '@hooks/useMutation';
 import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import useAmplitude from '@hooks/useAmplitude';
 import {postDocumentClient} from '@apis/client/document';
-import {postOrganizationDocumentClient, linkOrganizationDocumentClient} from '@apis/client/organization';
+import {
+  postOrganizationDocumentClient,
+  linkOrganizationDocumentClient,
+  revalidateOrganizationDocumentClient,
+} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {route} from '@constants/route';
 import {GroupDocumentResponse} from '@type/Group.type';
@@ -35,6 +40,20 @@ const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
       }),
     ),
   );
+
+  const organizationUuidsToRevalidate = [...createdOrganizations, ...linkedOrganizations].map(
+    org => org.organizationDocumentUuid,
+  );
+  if (organizationUuidsToRevalidate.length > 0) {
+    try {
+      await revalidateOrganizationDocumentClient(organizationUuidsToRevalidate);
+    } catch (error) {
+      Sentry.captureException(error, {
+        tags: {action: 'revalidate-organization-cache'},
+        extra: {organizationUuidsToRevalidate},
+      });
+    }
+  }
 
   return {savedDocument, createdOrganizations: [...createdOrganizations, ...linkedOrganizations]};
 };
