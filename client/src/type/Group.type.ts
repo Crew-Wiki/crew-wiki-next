@@ -31,6 +31,11 @@ export interface OrganizationEventResponse {
   occurredAt: string;
 }
 
+export interface LinkedCrewDocumentResponse {
+  documentUuid: string;
+  title: string;
+}
+
 // 조직 문서 및 이벤트 조회 응답 타입
 export interface OrganizationDocumentWithEventsResponse {
   organizationDocumentId: number;
@@ -40,6 +45,7 @@ export interface OrganizationDocumentWithEventsResponse {
   writer: string;
   generateTime: string;
   organizationEventResponses: OrganizationEventResponse[];
+  linkedCrewDocuments: LinkedCrewDocumentResponse[];
 }
 
 // 기존 조직 문서 연결 요청 타입

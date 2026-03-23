@@ -1,5 +1,6 @@
 'use client';
 
+import * as Sentry from '@sentry/nextjs';
 import useMutation from '@hooks/useMutation';
 import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import useAmplitude from '@hooks/useAmplitude';
@@ -8,6 +9,7 @@ import {
   deleteOrganizationFromDocumentClient,
   linkOrganizationDocumentClient,
   postOrganizationDocumentClient,
+  revalidateOrganizationDocumentClient,
 } from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {useDocument} from '@store/document';
@@ -58,6 +60,22 @@ export const usePutDocument = () => {
     await Promise.all(
       deletedOrganizations.map(org => deleteOrganizationFromDocumentClient(savedDocument.documentUUID, org.uuid)),
     );
+
+    const organizationUuidsToRevalidate = [
+      ...createdOrganizations.map(org => org.organizationDocumentUuid),
+      ...linkedOrganizations.map(org => org.organizationDocumentUuid),
+      ...deletedOrganizations.map(org => org.uuid),
+    ];
+    if (organizationUuidsToRevalidate.length > 0) {
+      try {
+        await revalidateOrganizationDocumentClient(organizationUuidsToRevalidate);
+      } catch (error) {
+        Sentry.captureException(error, {
+          tags: {action: 'revalidate-organization-cache'},
+          extra: {organizationUuidsToRevalidate},
+        });
+      }
+    }
 
     return {savedDocument, createdOrganizations: [...createdOrganizations, ...linkedOrganizations]};
   };

@@ -3,7 +3,7 @@ name: frontend-dev-deploy
 on:
   push:
     branches:
-      - develop
+      - 'develop/**'
 
 jobs:
   deploy:
@@ -83,8 +83,9 @@ jobs:
 
             echo "🔄 Pulling latest code from Git..."
             # git 충돌 방지를 위한 강제 덮어쓰기
-            git fetch origin develop
-            git reset --hard origin/develop
+            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+            git fetch origin "$BRANCH_NAME"
+            git reset --hard "origin/$BRANCH_NAME"
 
             echo "📂 Checking build file..."
             if [ ! -f next-build.tar.gz ]; then
