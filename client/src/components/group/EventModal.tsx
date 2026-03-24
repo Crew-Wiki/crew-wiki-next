@@ -7,16 +7,16 @@ import CustomCalendar from '@components/common/CustomCalendar';
 import {EventInput} from '@type/Event.type';
 import {OrganizationEventResponse} from '@type/Group.type';
 
-type EventModal = 'add' | 'edit';
+type EventModalMode = 'add' | 'edit';
 
 interface EventModalProps {
-  mode: EventModal;
+  mode: EventModalMode;
   event?: OrganizationEventResponse;
   onCancel: () => void;
   onSubmit: (data: EventInput) => void;
 }
 
-const MODE_TEXT: Record<EventModal, {title: string; submit: string}> = {
+const MODE_TEXT: Record<EventModalMode, {title: string; submit: string}> = {
   add: {title: '이벤트 추가하기', submit: '추가하기'},
   edit: {title: '이벤트 수정하기', submit: '수정하기'},
 };
