@@ -21,9 +21,8 @@ export const PUT = async (request: NextRequest) => {
     return NextResponse.json(response, {status: 400});
   }
 
-  const eventData: OrganizationEventUpdateRequest = await request.json();
-
   try {
+    const eventData: OrganizationEventUpdateRequest = await request.json();
     const updatedEvent = await putOrganizationEventServer(organizationEventUuid, eventData);
 
     if (organizationDocumentUuid) {
