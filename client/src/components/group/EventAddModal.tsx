@@ -5,28 +5,17 @@ import {Modal} from '@components/common/Modal/Modal';
 import Button from '@components/common/Button';
 import CustomCalendar from '@components/common/CustomCalendar';
 import {EventInput} from '@type/Event.type';
-import {OrganizationEventResponse} from '@type/Group.type';
 
-type EventModalMode = 'add' | 'edit';
-
-interface EventModalProps {
-  mode: EventModalMode;
-  event?: OrganizationEventResponse;
+interface EventAddModalProps {
   onCancel: () => void;
   onSubmit: (data: EventInput) => void;
 }
 
-const MODE_TEXT: Record<EventModalMode, {title: string; submit: string}> = {
-  add: {title: '이벤트 추가하기', submit: '추가하기'},
-  edit: {title: '이벤트 수정하기', submit: '수정하기'},
-};
-
-// TODO: 이미지 첨부 기능 추가 (이미지 업로드 UI 필요)
-const EventModal = ({mode, event, onCancel, onSubmit}: EventModalProps) => {
-  const [date, setDate] = useState<Date | null>(event ? new Date(event.occurredAt) : null);
-  const [writer, setWriter] = useState(event?.writer ?? '');
-  const [title, setTitle] = useState(event?.title ?? '');
-  const [contents, setContents] = useState(event?.contents ?? '');
+const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
+  const [date, setDate] = useState<Date | null>(null);
+  const [writer, setWriter] = useState('');
+  const [title, setTitle] = useState('');
+  const [contents, setContents] = useState('');
 
   const handleWriterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWriter(e.target.value);
@@ -55,7 +44,7 @@ const EventModal = ({mode, event, onCancel, onSubmit}: EventModalProps) => {
 
   return (
     <Modal className="w-[450px]">
-      <h2 className="mb-6 text-center text-xl font-bold text-grayscale-text">{MODE_TEXT[mode].title}</h2>
+      <h2 className="mb-6 text-center text-xl font-bold text-grayscale-text">이벤트 추가하기</h2>
 
       <div className="mb-6 flex flex-col gap-2">
         <div>
@@ -116,7 +105,7 @@ const EventModal = ({mode, event, onCancel, onSubmit}: EventModalProps) => {
         </div>
         <div className="flex-1 [&>button]:h-[35px] [&>button]:w-full [&>button]:rounded-[12px]">
           <Button style="secondary" size="m" onClick={handleSubmit} disabled={!isValid}>
-            {MODE_TEXT[mode].submit}
+            추가하기
           </Button>
         </div>
       </div>
@@ -124,4 +113,4 @@ const EventModal = ({mode, event, onCancel, onSubmit}: EventModalProps) => {
   );
 };
 
-export default EventModal;
+export default EventAddModal;
