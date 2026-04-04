@@ -4,3 +4,8 @@ export const VALIDATION_ERROR_PATTERNS = {
   NICKNAME_MAX_LENGTH: '닉네임은 4자가 최대에요',
   TITLE_LENGTH: '제목은 12자가 최대에요',
 } as const;
+
+export const EVENT_VALIDATION_LIMITS = {
+  MAX_EVENT_TITLE_LENGTH: 20,
+  MAX_EVENT_CONTENTS_LENGTH: 50,
+} as const;

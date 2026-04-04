@@ -6,6 +6,7 @@ import Button from '@components/common/Button';
 import CustomCalendar from '@components/common/CustomCalendar';
 import {EventInput} from '@type/Event.type';
 import {OrganizationEventResponse} from '@type/Group.type';
+import {EVENT_VALIDATION_LIMITS} from '@constants/validation';
 
 interface EventEditModalProps {
   event: OrganizationEventResponse;
@@ -25,14 +26,14 @@ const EventEditModal = ({event, onCancel, onSubmit}: EventEditModalProps) => {
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value.length <= 20) {
+    if (value.length <= EVENT_VALIDATION_LIMITS.MAX_EVENT_TITLE_LENGTH) {
       setTitle(value);
     }
   };
 
   const handleContentsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    if (value.length <= 50) {
+    if (value.length <= EVENT_VALIDATION_LIMITS.MAX_EVENT_CONTENTS_LENGTH) {
       setContents(value);
     }
   };
@@ -73,7 +74,9 @@ const EventEditModal = ({event, onCancel, onSubmit}: EventEditModalProps) => {
         <div>
           <div className="mb-2 flex justify-between text-base font-bold">
             <span className="text-grayscale-600">제목</span>
-            <span className="text-sm font-normal text-grayscale-300">{title.length}/20</span>
+            <span className="text-sm font-normal text-grayscale-300">
+              {title.length}/{EVENT_VALIDATION_LIMITS.MAX_EVENT_TITLE_LENGTH}
+            </span>
           </div>
           <input
             type="text"
@@ -87,7 +90,9 @@ const EventEditModal = ({event, onCancel, onSubmit}: EventEditModalProps) => {
         <div>
           <div className="mb-2 flex justify-between text-base font-bold">
             <span className="text-grayscale-600">내용</span>
-            <span className="text-sm font-normal text-grayscale-300">{contents.length}/50</span>
+            <span className="text-sm font-normal text-grayscale-300">
+              {contents.length}/{EVENT_VALIDATION_LIMITS.MAX_EVENT_CONTENTS_LENGTH}
+            </span>
           </div>
           <textarea
             value={contents}
