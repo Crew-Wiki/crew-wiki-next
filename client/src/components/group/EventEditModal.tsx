@@ -5,18 +5,20 @@ import {Modal} from '@components/common/Modal/Modal';
 import Button from '@components/common/Button';
 import CustomCalendar from '@components/common/CustomCalendar';
 import {EventInput} from '@type/Event.type';
+import {OrganizationEventResponse} from '@type/Group.type';
 import {EVENT_VALIDATION_LIMITS} from '@constants/validation';
 
-interface EventAddModalProps {
+interface EventEditModalProps {
+  event: OrganizationEventResponse;
   onCancel: () => void;
   onSubmit: (data: EventInput) => void;
 }
 
-const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
-  const [date, setDate] = useState<Date | null>(null);
-  const [writer, setWriter] = useState('');
-  const [title, setTitle] = useState('');
-  const [contents, setContents] = useState('');
+const EventEditModal = ({event, onCancel, onSubmit}: EventEditModalProps) => {
+  const [date, setDate] = useState<Date | null>(new Date(event.occurredAt));
+  const [writer, setWriter] = useState(event.writer);
+  const [title, setTitle] = useState(event.title);
+  const [contents, setContents] = useState(event.contents);
 
   const handleWriterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWriter(e.target.value);
@@ -45,7 +47,7 @@ const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
 
   return (
     <Modal className="w-[450px]">
-      <h2 className="mb-6 text-center text-xl font-bold text-grayscale-text">이벤트 추가하기</h2>
+      <h2 className="mb-6 text-center text-xl font-bold text-grayscale-text">이벤트 수정하기</h2>
 
       <div className="mb-6 flex flex-col gap-2">
         <div>
@@ -110,7 +112,7 @@ const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
         </div>
         <div className="flex-1 [&>button]:h-[35px] [&>button]:w-full [&>button]:rounded-[12px]">
           <Button style="secondary" size="m" onClick={handleSubmit} disabled={!isValid}>
-            추가하기
+            수정하기
           </Button>
         </div>
       </div>
@@ -118,4 +120,4 @@ const EventAddModal = ({onCancel, onSubmit}: EventAddModalProps) => {
   );
 };
 
-export default EventAddModal;
+export default EventEditModal;

@@ -70,6 +70,7 @@ jobs:
           username: ${{ secrets.SSH_DEV_USERNAME }}
           key: ${{ secrets.SSH_DEV_KEY }}
           port: ${{ secrets.SSH_DEV_PORT }}
+          envs: GITHUB_REF
           script: |
             set -e
             set -o pipefail
