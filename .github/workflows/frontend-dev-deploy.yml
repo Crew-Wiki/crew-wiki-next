@@ -83,7 +83,7 @@ jobs:
             echo "🔄 Pulling latest code from Git..."
             # git 충돌 방지를 위한 강제 덮어쓰기
             BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-            git fetch origin "$BRANCH_NAME"
+            git fetch --prune origin
             git reset --hard "origin/$BRANCH_NAME"
 
             echo "📂 Checking build file..."
