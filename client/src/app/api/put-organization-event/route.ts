@@ -1,13 +1,16 @@
 'use server';
 
+import {CACHE} from '@constants/cache';
 import {OrganizationEventUpdateRequest, OrganizationEvent} from '@type/Event.type';
 import {NextRequest, NextResponse} from 'next/server';
+import {revalidateTag} from 'next/cache';
 import {putOrganizationEventServer} from '@apis/server/organizationEvent';
 import {ApiResponseType} from '@type/http.type';
 
 export const PUT = async (request: NextRequest) => {
   const {searchParams} = new URL(request.url);
   const organizationEventUuid = searchParams.get('uuid');
+  const organizationDocumentUuid = searchParams.get('organizationDocumentUuid');
 
   if (!organizationEventUuid) {
     const response: ApiResponseType<null> = {
@@ -18,10 +21,13 @@ export const PUT = async (request: NextRequest) => {
     return NextResponse.json(response, {status: 400});
   }
 
-  const eventData: OrganizationEventUpdateRequest = await request.json();
-
   try {
+    const eventData: OrganizationEventUpdateRequest = await request.json();
     const updatedEvent = await putOrganizationEventServer(organizationEventUuid, eventData);
+
+    if (organizationDocumentUuid) {
+      revalidateTag(CACHE.tag.getOrganizationDocumentByUUID(organizationDocumentUuid));
+    }
 
     const response: ApiResponseType<OrganizationEvent> = {
       data: updatedEvent,

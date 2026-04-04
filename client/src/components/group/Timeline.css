@@ -84,7 +84,7 @@
   visibility: visible !important;
   opacity: 1 !important;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e5e5;
+  border: 1px solid #E3E3E7; /* grayscale.border */
   border-radius: 0.5rem;
   padding: 1rem;
   background: white;
@@ -96,19 +96,19 @@
 }
 
 .timeline-container [class*='TimelineItemContentWrapper'].active {
-  border: 1.5px solid #25b4b9 !important;
+  border: 1.5px solid #25B4B9 !important; /* primary.primary */
   border-radius: 0.5rem !important;
   outline: none !important;
 }
 
 .timeline-container [class*='TimelineItemContentWrapper'].active h3,
 .timeline-container [class*='TimelineItemContentWrapper'].active [class*='CardTitle'] {
-  color: #25b4b9;
+  color: #25B4B9; /* primary.primary */
 }
 
 /* 날짜 스타일 */
 .timeline-container .timeline-item-title {
-  color: #888888;
+  color: #9FA0A2; /* grayscale.lightText */
   font-family: 'Pretendard', sans-serif;
   font-size: 0.75rem;
   margin-bottom: 0.5rem;
@@ -118,25 +118,24 @@
 .timeline-container h3 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #27282A; /* grayscale.text */
   margin-bottom: 0.5rem;
 }
 
 .timeline-container h4 {
   font-family: 'Pretendard', sans-serif;
   font-size: 0.75rem;
-  color: #888888;
+  color: #77787A; /* grayscale[500] */
   margin: 0 0 0.5rem 0;
   padding: 0;
 }
 
-.timeline-container p,
 .timeline-container [class*='CardDetails'],
 .timeline-container [class*='CardText'],
 .timeline-container [class*='DetailText'],
 .timeline-container [class*='DetailsText'] {
   font-family: 'Pretendard', sans-serif;
-  color: #555555;
+  color: #77787A; /* grayscale[600] */
   line-height: 1.5;
   font-size: 0.875rem;
   white-space: normal !important;
@@ -170,6 +169,12 @@
   overflow: hidden !important;
 }
 
+/* 더보기 그라디언트 제거 (useReadMore={false}이므로 불필요) */
+.timeline-container [class*='TimelineContentDetailsWrapper'] {
+  --rc-gradient-color: transparent !important;
+  background: none !important;
+}
+
 .timeline-container [class*='MediaDetailsWrapper'],
 .timeline-container [class*='CardMediaHeader'],
 .timeline-container [class*='CardHeader'],
@@ -190,4 +195,23 @@
 .timeline-container [class*='MediaDetailsWrapper'] span {
   margin: 0 !important;
   padding: 0 !important;
+}
+
+.timeline-card-edit-button {
+  margin-top: auto;
+  align-self: flex-end;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.75rem;
+  color: #9FA0A2; /* grayscale.lightText */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.timeline-card-edit-button:hover {
+  color: #25B4B9; /* primary.primary */
 }
