@@ -11,7 +11,7 @@ import {
 } from '@type/Document.type';
 import {requestGetServer, requestPostServer, requestPutServer, requestDeleteServer} from '@http/server';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
-import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
+import {documentLogsParams, recentlyParams} from '@constants/params';
 import {ViewCountByUUID} from '@type/viewCount.type';
 import {Organization} from '@type/Group.type';
 import {TitleAndUUID} from '@apis/client/document';
@@ -76,11 +76,6 @@ export const getSpecificDocumentLogServer = async (logId: number) => {
 
 export const getRecentlyDocumentsServer = async () => {
   const response = await getDocumentsServerWithPagination(recentlyParams);
-  return response.data;
-};
-
-export const getAllDocumentsServer = async () => {
-  const response = await getDocumentsServerWithPagination(allDocumentsParams);
   return response.data;
 };
 
