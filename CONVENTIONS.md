@@ -416,7 +416,7 @@ route.goWikiEdit(uuid)            // → '/wiki/{uuid}/edit'
 
 ```tsx
 // app/wiki/[uuid]/page.tsx
-import {getDocumentByUUIDServer, getAllDocumentsServer} from '@apis/server/document';
+import {getDocumentByUUIDServer, getDocumentTitlesServer} from '@apis/server/document';
 import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
@@ -432,7 +432,7 @@ export const dynamicParams = true;
 
 export async function generateStaticParams() {
   try {
-    const documents = await getAllDocumentsServer();
+    const documents = await getDocumentTitlesServer();
     if (!documents || !Array.isArray(documents)) return [];
     return documents.map(({uuid}) => ({uuid}));
   } catch (error) {
