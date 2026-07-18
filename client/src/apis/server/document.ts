@@ -14,7 +14,7 @@ import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {documentLogsParams, recentlyParams} from '@constants/params';
 import {ViewCountByUUID} from '@type/viewCount.type';
 import {Organization} from '@type/Group.type';
-import {TitleAndUUID} from '@apis/client/document';
+import {DocumentTitle} from '@apis/client/document';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
   const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
@@ -28,7 +28,7 @@ export const getDocumentsServerWithPagination = async (params: PaginationParams)
 };
 
 export const getDocumentTitlesServer = async () => {
-  const response = await requestGetServer<TitleAndUUID[]>({
+  const response = await requestGetServer<DocumentTitle[]>({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
     endpoint: ENDPOINT.getDocumentTitles,
     next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentTitles]},

@@ -4,7 +4,7 @@ import Button from '@components/common/Button';
 import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
 import {getDocumentTitlesServer} from '@apis/server/document';
-import {deleteDocumentClient, TitleAndUUID} from '@apis/client/document';
+import {deleteDocumentClient, DocumentTitle} from '@apis/client/document';
 import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {route} from '@constants/route';
@@ -12,13 +12,13 @@ import {route} from '@constants/route';
 export default function AdminDocumentsPage() {
   const {value, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [documents, setDocuments] = useState<TitleAndUUID[]>([]);
+  const [documents, setDocuments] = useState<DocumentTitle[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const PAGE_SIZE = 10;
 
-  const filterDocumentsByTitle = (docs: TitleAndUUID[], searchValue: string) => {
+  const filterDocumentsByTitle = (docs: DocumentTitle[], searchValue: string) => {
     return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
   };
 
@@ -134,16 +134,14 @@ export default function AdminDocumentsPage() {
           </thead>
           <tbody className="divide-y divide-grayscale-100">
             {paginatedDocuments.map(document => {
-              const latestEditDate = document.generateTime
-                ? new Date(document.generateTime)
-                    .toLocaleDateString('ko-KR', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })
-                    .replace(/\. /g, '.')
-                    .replace(/\.$/, '')
-                : '-';
+              const latestEditDate = new Date(document.generateTime)
+                .toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+                .replace(/\. /g, '.')
+                .replace(/\.$/, '');
 
               return (
                 <tr key={document.uuid} className="hover:bg-grayscale-50">

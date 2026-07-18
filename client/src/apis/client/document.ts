@@ -43,7 +43,10 @@ export type TitleAndUUID = {
   title: string;
   uuid: string;
   documentType: DocumentType;
-  generateTime?: string;
+};
+
+export type DocumentTitle = TitleAndUUID & {
+  generateTime: string;
 };
 
 export const getSearchDocumentClient = async (query: string) => {
