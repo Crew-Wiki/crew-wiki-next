@@ -410,7 +410,7 @@ import {useTrie} from '@store/trie';
 import {useEffect} from 'react';
 
 const InitTrie = () => {
-  const {data} = useGetDocumentTitleList();      // 전체 문서 {title, uuid}[] 조회
+  const {data} = useGetDocumentTitleList();      // 전체 문서 제목 목록(TitleAndUUID[]) 조회
   const setInit = useTrie(state => state.setInit);
 
   useEffect(() => {

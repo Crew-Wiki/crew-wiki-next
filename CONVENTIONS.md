@@ -870,6 +870,30 @@ export const postDocumentServer = async (document: PostDocumentContent) => {
 };
 ```
 
+### 목록 조회는 경량 엔드포인트 사용
+
+전체 문서 목록이 필요할 때 본문(`contents`)까지 포함된 전체 문서를 받으면, 문서 수가 많을수록 응답 payload가 커져 Next.js가 파싱에 실패할 수 있습니다. 목록에 필요한 최소 필드만 반환하는 전용 엔드포인트(`/document/titles`)를 사용합니다.
+
+```ts
+// GET: 경량 제목 목록 (본문 제외, ISR 캐시 적용)
+export const getDocumentTitlesServer = async () => {
+  return await requestGetServer<DocumentTitle[]>({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.getDocumentTitles,
+    next: { revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentTitles] },
+  });
+};
+```
+
+**제목 목록 타입 구분**:
+
+| 타입 | 필드 | 용도 |
+|------|------|------|
+| `TitleAndUUID` | `title`, `uuid`, `documentType` | 검색·자동완성(트라이). 검색(`/document/search`)이 반환하는 최소 필드 |
+| `DocumentTitle` | `TitleAndUUID` + `generateTime` | 전체 제목 목록(`/document/titles`). 관리자 문서 목록 등 편집일이 필요한 경우 |
+
+> `DocumentTitle[]`은 `TitleAndUUID[]`에 할당 가능하므로, 트라이(검색)용 BFF에서는 응답 타입을 `TitleAndUUID[]`로 좁혀 씁니다.
+
 ### Route Handler (BFF)
 
 ```ts
@@ -1860,7 +1884,7 @@ import {useTrie} from '@store/trie';
 import {useEffect} from 'react';
 
 const InitTrie = () => {
-  const {data} = useGetDocumentTitleList();      // 전체 문서 {title, uuid}[] 조회
+  const {data} = useGetDocumentTitleList();      // 전체 문서 제목 목록(TitleAndUUID[]) 조회
   const setInit = useTrie(state => state.setInit);
 
   useEffect(() => {
