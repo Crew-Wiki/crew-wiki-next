@@ -8,6 +8,16 @@ export const DOCUMENT_TYPE = {
 
 export type DocumentType = (typeof DOCUMENT_TYPE)[keyof typeof DOCUMENT_TYPE];
 
+export type TitleAndUUID = {
+  title: string;
+  uuid: string;
+  documentType: DocumentType;
+};
+
+export type DocumentTitle = TitleAndUUID & {
+  generateTime: string;
+};
+
 export interface WikiDocument {
   documentId: number;
   documentUUID: string;

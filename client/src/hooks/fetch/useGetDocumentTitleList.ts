@@ -1,5 +1,6 @@
-import {getDocumentTitleListClient, TitleAndUUID} from '@apis/client/document';
+import {getDocumentTitleListClient} from '@apis/client/document';
 import {useFetch} from '@hooks/useFetch';
+import {TitleAndUUID} from '@type/Document.type';
 
 export const useGetDocumentTitleList = () => {
   const {data} = useFetch<TitleAndUUID[]>(getDocumentTitleListClient);

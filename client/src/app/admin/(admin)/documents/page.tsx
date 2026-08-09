@@ -4,8 +4,8 @@ import Button from '@components/common/Button';
 import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
 import {getDocumentTitlesServer} from '@apis/server/document';
-import {deleteDocumentClient, DocumentTitle} from '@apis/client/document';
-import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
+import {deleteDocumentClient} from '@apis/client/document';
+import {DOCUMENT_TYPE, DocumentTitle, DocumentType} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {route} from '@constants/route';
 

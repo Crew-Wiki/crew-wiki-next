@@ -1,5 +1,4 @@
-import {TitleAndUUID} from '@apis/client/document';
-import {DocumentType} from '@type/Document.type';
+import {DocumentType, TitleAndUUID} from '@type/Document.type';
 import {Trie} from '@utils/trie';
 import {create} from 'zustand';
 

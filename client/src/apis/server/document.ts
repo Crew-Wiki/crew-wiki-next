@@ -3,6 +3,7 @@
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {
+  DocumentTitle,
   PostDocumentBody,
   WikiDocument,
   WikiDocumentExpand,
@@ -14,7 +15,6 @@ import {PaginationParams, PaginationResponse} from '@type/General.type';
 import {documentLogsParams, recentlyParams} from '@constants/params';
 import {ViewCountByUUID} from '@type/viewCount.type';
 import {Organization} from '@type/Group.type';
-import {DocumentTitle} from '@apis/client/document';
 
 export const getDocumentsServerWithPagination = async (params: PaginationParams) => {
   const response = await requestGetServer<PaginationResponse<WikiDocumentExpand[]>>({
