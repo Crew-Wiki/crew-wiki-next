@@ -196,14 +196,18 @@ export const getDocumentTitlesServer = async () => {
 };
 ```
 
-**제목 목록 타입 구분**:
+**제목 목록 타입 구분** (둘 다 `@type/Document.type.ts`에 선언):
 
 | 타입 | 필드 | 용도 |
 |------|------|------|
 | `TitleAndUUID` | `title`, `uuid`, `documentType` | 검색·자동완성(트라이). 검색(`/document/search`)이 반환하는 최소 필드 |
 | `DocumentTitle` | `TitleAndUUID` + `generateTime` | 전체 제목 목록(`/document/titles`). 관리자 문서 목록 등 편집일이 필요한 경우 |
 
-> `DocumentTitle[]`은 `TitleAndUUID[]`에 할당 가능하므로, 트라이(검색)용 BFF에서는 응답 타입을 `TitleAndUUID[]`로 좁혀 씁니다.
+> 서버 API와 BFF는 실제 응답 그대로 `DocumentTitle[]`을 쓰고, `DocumentTitle[]`은 `TitleAndUUID[]`에 할당 가능하므로 트라이(검색)처럼 `generateTime`이 필요 없는 소비처에서는 `TitleAndUUID[]`로 좁혀 씁니다.
+>
+> 서버·클라이언트 양쪽에서 쓰는 타입이므로 `apis/` 아래가 아니라 공통 타입 파일(`@type/Document.type.ts`)에 선언합니다.
+
+**캐시 무효화**: 문서 생성(post)·수정(put)·삭제(delete) Route Handler에서 모두 `revalidateTag(CACHE.tag.getDocumentTitles)`를 호출합니다. 수정도 `generateTime`을 바꾸므로, 빠뜨리면 관리자 문서 목록의 최근 편집일이 갱신되지 않습니다.
 
 ### Route Handler (BFF)
 

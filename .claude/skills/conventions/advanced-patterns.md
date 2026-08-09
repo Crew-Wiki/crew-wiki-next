@@ -281,7 +281,7 @@ export const usePutDocument = () => {
 
 ```ts
 // utils/trie.ts
-import {TitleAndUUID} from '@apis/client/document';
+import {TitleAndUUID} from '@type/Document.type';
 
 class Node {
   child: Map<string, Node> = new Map();
