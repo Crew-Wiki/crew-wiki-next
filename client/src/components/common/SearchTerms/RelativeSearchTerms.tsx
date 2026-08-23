@@ -1,6 +1,6 @@
 'use client';
 
-import {TitleAndUUID} from '@apis/client/document';
+import {TitleAndUUID} from '@type/Document.type';
 
 interface RelativeSearchTermsProps {
   style?: React.CSSProperties;

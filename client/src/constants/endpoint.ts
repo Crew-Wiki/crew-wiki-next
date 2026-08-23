@@ -3,6 +3,7 @@ export const ENDPOINT = {
   postDocument: '/document',
   updateDocument: '/document',
   getDocuments: '/document',
+  getDocumentTitles: '/document/titles',
   getDocumentByTitle: (title: string) => `/document/title/${title}`,
   getDocumentByUUID: (uuid: string) => `/document/uuid/${uuid}`,
   getRandomDocument: '/document/random',

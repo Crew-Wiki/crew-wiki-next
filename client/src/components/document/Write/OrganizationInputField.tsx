@@ -7,8 +7,7 @@ import Button from '@components/common/Button';
 import {Chip} from '@components/common/Chip';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useTrie} from '@store/trie';
-import {TitleAndUUID} from '@apis/client/document';
-import {DOCUMENT_TYPE} from '@type/Document.type';
+import {DOCUMENT_TYPE, TitleAndUUID} from '@type/Document.type';
 import {Organization} from '@type/Group.type';
 
 interface OrganizationInputFieldProps {

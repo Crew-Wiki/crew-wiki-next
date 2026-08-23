@@ -1,6 +1,6 @@
 import {
   getDocumentByUUIDServer,
-  getAllDocumentsServer,
+  getDocumentTitlesServer,
   getOrganizationDocumentsByDocumentUUIDServer,
 } from '@apis/server/document';
 import DocumentContents from '@components/document/layout/DocumentContents';
@@ -19,7 +19,7 @@ export const dynamicParams = true;
 
 export async function generateStaticParams() {
   try {
-    const documents = await getAllDocumentsServer();
+    const documents = await getDocumentTitlesServer();
 
     if (!documents || !Array.isArray(documents)) return [];
 

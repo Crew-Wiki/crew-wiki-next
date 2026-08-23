@@ -3,9 +3,9 @@
 import {CLIENT_ENDPOINT, ENDPOINT} from '@constants/endpoint';
 import {requestGetClient, requestPostClient, requestPutClient, requestDeleteClient} from '@http/client';
 import {
-  DocumentType,
   LatestWikiDocument,
   PostDocumentBody,
+  TitleAndUUID,
   WikiDocument,
   WikiDocumentLogSummary,
 } from '@type/Document.type';
@@ -37,12 +37,6 @@ export const getRandomDocumentClient = async () => {
   });
 
   return document;
-};
-
-export type TitleAndUUID = {
-  title: string;
-  uuid: string;
-  documentType: DocumentType;
 };
 
 export const getSearchDocumentClient = async (query: string) => {

@@ -1,5 +1,4 @@
-import {TitleAndUUID} from '@apis/client/document';
-import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
+import {DOCUMENT_TYPE, DocumentType, TitleAndUUID} from '@type/Document.type';
 
 class Node {
   child: Map<string, Node> = new Map();

@@ -3,6 +3,7 @@
 import {CACHE} from '@constants/cache';
 import {ENDPOINT} from '@constants/endpoint';
 import {
+  DocumentTitle,
   PostDocumentBody,
   WikiDocument,
   WikiDocumentExpand,
@@ -11,7 +12,7 @@ import {
 } from '@type/Document.type';
 import {requestGetServer, requestPostServer, requestPutServer, requestDeleteServer} from '@http/server';
 import {PaginationParams, PaginationResponse} from '@type/General.type';
-import {allDocumentsParams, documentLogsParams, recentlyParams} from '@constants/params';
+import {documentLogsParams, recentlyParams} from '@constants/params';
 import {ViewCountByUUID} from '@type/viewCount.type';
 import {Organization} from '@type/Group.type';
 
@@ -21,6 +22,16 @@ export const getDocumentsServerWithPagination = async (params: PaginationParams)
     endpoint: ENDPOINT.getDocuments,
     queryParams: params,
     next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocuments(params)]},
+  });
+
+  return response;
+};
+
+export const getDocumentTitlesServer = async () => {
+  const response = await requestGetServer<DocumentTitle[]>({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
+    endpoint: ENDPOINT.getDocumentTitles,
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentTitles]},
   });
 
   return response;
@@ -65,11 +76,6 @@ export const getSpecificDocumentLogServer = async (logId: number) => {
 
 export const getRecentlyDocumentsServer = async () => {
   const response = await getDocumentsServerWithPagination(recentlyParams);
-  return response.data;
-};
-
-export const getAllDocumentsServer = async () => {
-  const response = await getDocumentsServerWithPagination(allDocumentsParams);
   return response.data;
 };
 

@@ -24,6 +24,7 @@ export const CACHE = {
   tag: {
     getDocuments: (params: PaginationParams) => TAG_PREFIX + generatePaginationCacheTags(params, 'documents'),
     getRecentlyDocuments: TAG_PREFIX + generatePaginationCacheTags(recentlyParams, 'documents'),
+    getDocumentTitles: TAG_PREFIX + 'document-titles',
     getDocumentByTitle: (title: string) => TAG_PREFIX + `title:${decodeURI(title)}`,
     getDocumentByUUID: (uuid: string) => TAG_PREFIX + `title:${uuid}`,
     getDocumentLogsByUUID: (uuid: string) => TAG_PREFIX + `logs:${uuid}`,

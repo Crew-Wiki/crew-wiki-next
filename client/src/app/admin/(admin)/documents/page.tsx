@@ -3,22 +3,22 @@
 import Button from '@components/common/Button';
 import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
-import {getAllDocumentsServer} from '@apis/server/document';
+import {getDocumentTitlesServer} from '@apis/server/document';
 import {deleteDocumentClient} from '@apis/client/document';
-import {WikiDocumentExpand, DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
+import {DOCUMENT_TYPE, DocumentTitle, DocumentType} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {route} from '@constants/route';
 
 export default function AdminDocumentsPage() {
   const {value, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
+  const [documents, setDocuments] = useState<DocumentTitle[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const PAGE_SIZE = 10;
 
-  const filterDocumentsByTitle = (docs: WikiDocumentExpand[], searchValue: string) => {
+  const filterDocumentsByTitle = (docs: DocumentTitle[], searchValue: string) => {
     return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
   };
 
@@ -80,7 +80,7 @@ export default function AdminDocumentsPage() {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const allDocs = await getAllDocumentsServer();
+        const allDocs = await getDocumentTitlesServer();
         setDocuments(allDocs);
       } catch (error) {
         console.error('문서를 불러오는데 실패했습니다:', error);
