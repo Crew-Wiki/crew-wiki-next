@@ -12,14 +12,14 @@ jobs:
 
     steps:
       - name: Checkout Source
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: '22.16.0'
-          cache: 'yarn'
-          cache-dependency-path: './client/yarn.lock'
+          node-version: "24.13.0"
+          cache: "yarn"
+          cache-dependency-path: "./client/yarn.lock"
 
       - name: Install Dependencies & Build
         working-directory: ./client
@@ -60,7 +60,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: 'next-build.tar.gz'
+          source: "next-build.tar.gz"
           target: ${{ secrets.EC2_DEPLOY_DIR }}
 
       - name: Deploy on EC2
@@ -102,7 +102,7 @@ jobs:
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-            nvm use 22.16.0
+            nvm use 24.13.0
 
             if ! command -v yarn &> /dev/null; then
               echo "⚠️  yarn을 찾을 수 없습니다. npm으로 yarn 설치 중..."
