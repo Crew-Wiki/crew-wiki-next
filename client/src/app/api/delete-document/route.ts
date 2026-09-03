@@ -16,6 +16,7 @@ const deleteDocument = async (uuid: string, cookieHeader?: string) => {
   const response = await api.admin.documents(uuid).delete({headers});
 
   revalidateTag(CACHE.tag.getRecentlyDocuments);
+  revalidateTag(CACHE.tag.getDocumentTitles);
   revalidateTag(CACHE.tag.getDocumentByUUID(uuid));
 
   return response;

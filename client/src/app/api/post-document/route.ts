@@ -2,7 +2,6 @@
 
 import type {CrewDocumentCreateRequest, DocumentResponse} from '@apis/generated/types';
 import {CACHE} from '@constants/cache';
-import {allDocumentsParams} from '@constants/params';
 import {revalidateTag} from 'next/cache';
 import {NextRequest, NextResponse} from 'next/server';
 import {ApiResponseType} from '@type/http.type';
@@ -12,7 +11,7 @@ const postDocument = async (document: CrewDocumentCreateRequest) => {
   const response = await api.document.post(document);
 
   revalidateTag(CACHE.tag.getRecentlyDocuments);
-  revalidateTag(CACHE.tag.getDocuments(allDocumentsParams));
+  revalidateTag(CACHE.tag.getDocumentTitles);
   revalidateTag(CACHE.tag.getDocumentByUUID(document.uuid));
   revalidateTag(CACHE.tag.getDocumentLogsByUUID(document.uuid));
   revalidateTag(CACHE.tag.getOrganizationsByDocumentUUID(document.uuid));
