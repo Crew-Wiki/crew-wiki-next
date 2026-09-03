@@ -1,24 +1,25 @@
 'use client';
 
+import type {DocumentListResponse} from '@apis/generated/types';
+import {DOCUMENT_TYPE, DocumentType} from '@constants/document';
 import Button from '@components/common/Button';
 import {useState, useEffect, useMemo} from 'react';
 import {useInput} from '@components/common/Input/useInput';
-import {getAllDocumentsServer} from '@apis/server/document';
-import {deleteDocumentClient} from '@apis/client/document';
-import {WikiDocumentExpand, DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
 import {useRouter} from 'next/navigation';
 import {route} from '@constants/route';
+import {api} from '@apis/generated/client';
+import {allDocumentsParams} from '@constants/params';
 
 export default function AdminDocumentsPage() {
   const {value, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [documents, setDocuments] = useState<WikiDocumentExpand[]>([]);
+  const [documents, setDocuments] = useState<DocumentListResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const PAGE_SIZE = 10;
 
-  const filterDocumentsByTitle = (docs: WikiDocumentExpand[], searchValue: string) => {
+  const filterDocumentsByTitle = (docs: DocumentListResponse[], searchValue: string) => {
     return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
   };
 
@@ -66,7 +67,7 @@ export default function AdminDocumentsPage() {
 
     if (confirm(confirmMessage)) {
       try {
-        await deleteDocumentClient(uuid);
+        await api.admin.documents(uuid).delete();
         const updatedDocs = documents.filter(document => document.uuid !== uuid);
         setDocuments(updatedDocs);
         alert('문서가 삭제되었습니다.');
@@ -80,8 +81,8 @@ export default function AdminDocumentsPage() {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const allDocs = await getAllDocumentsServer();
-        setDocuments(allDocs);
+        const allDocs = await api.document.get(allDocumentsParams);
+        setDocuments(allDocs.data);
       } catch (error) {
         console.error('문서를 불러오는데 실패했습니다:', error);
       } finally {

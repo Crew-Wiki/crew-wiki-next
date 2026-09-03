@@ -1,5 +1,5 @@
-import {TitleAndUUID} from '@apis/client/document';
-import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
+import {DOCUMENT_TYPE, DocumentType} from '@constants/document';
+import {DocumentSearchResponse} from '@apis/generated/types';
 
 class Node {
   child: Map<string, Node> = new Map();
@@ -12,7 +12,7 @@ class Node {
 export class Trie {
   private root: Node;
 
-  constructor(data: TitleAndUUID[] = []) {
+  constructor(data: DocumentSearchResponse[] = []) {
     this.root = new Node();
     data.forEach(({title, uuid, documentType}) => this.add(title, uuid, documentType));
   }
@@ -32,7 +32,7 @@ export class Trie {
     currentNode.isEnd = true;
   }
 
-  search(prefix: string): TitleAndUUID[] {
+  search(prefix: string): DocumentSearchResponse[] {
     let currentNode = this.root;
 
     for (const char of prefix) {
@@ -41,12 +41,12 @@ export class Trie {
       currentNode = nextNode;
     }
 
-    const results: TitleAndUUID[] = [];
+    const results: DocumentSearchResponse[] = [];
     this.searchFunc(currentNode, prefix, results);
     return results;
   }
 
-  private searchFunc(node: Node, prefix: string, results: TitleAndUUID[]) {
+  private searchFunc(node: Node, prefix: string, results: DocumentSearchResponse[]) {
     if (node.isEnd && node.uuid && node.title && node.documentType) {
       results.push({title: node.title, uuid: node.uuid, documentType: node.documentType});
     }

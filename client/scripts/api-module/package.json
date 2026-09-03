@@ -1,0 +1,5 @@
+{
+  "name": "api-module",
+  "private": true,
+  "type": "module"
+}

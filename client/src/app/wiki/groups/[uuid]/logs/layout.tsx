@@ -1,13 +1,13 @@
-import {getOrganizationDocumentByUUIDServer} from '@apis/server/organizationDocument';
 import {GroupLogsHeader} from './GroupLogsHeader';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import {UUIDParams} from '@type/PageParams.type';
+import {api} from '@apis/generated/server';
 
 type Props = React.PropsWithChildren & UUIDParams;
 
 const Layout = async ({children, params}: Props) => {
   const {uuid} = await params;
-  const document = await getOrganizationDocumentByUUIDServer(uuid);
+  const document = await api.organization.uuid(uuid).get();
 
   return (
     document && (

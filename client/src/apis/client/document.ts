@@ -1,74 +1,14 @@
-'use client';
-
-import {CLIENT_ENDPOINT, ENDPOINT} from '@constants/endpoint';
-import {requestGetClient, requestPostClient, requestPutClient, requestDeleteClient} from '@http/client';
+import {CLIENT_ENDPOINT} from '@constants/endpoint';
+import {requestDeleteClient, requestGetClient, requestPostClient, requestPutClient} from '@http/client';
 import {
-  DocumentType,
-  LatestWikiDocument,
-  PostDocumentBody,
-  WikiDocument,
-  WikiDocumentLogSummary,
-} from '@type/Document.type';
-import {PaginationParams, PaginationResponse} from '@type/General.type';
-import {Organization} from '@type/Group.type';
+  CrewDocumentCreateRequest,
+  DocumentResponse,
+  DocumentSearchResponse,
+  DocumentUpdateRequest,
+} from '@apis/generated/types';
 
-export const getDocumentByTitleClient = async (title: string) => {
-  const response = await requestGetClient<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getDocumentByTitle(title),
-  });
-
-  return response;
-};
-
-export const getDocumentByUUIDClient = async (uuid: string) => {
-  const response = await requestGetClient<LatestWikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getDocumentByUUID(uuid),
-  });
-
-  return response;
-};
-
-export const getRandomDocumentClient = async () => {
-  const document = await requestGetClient<WikiDocument>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getRandomDocument,
-  });
-
-  return document;
-};
-
-export type TitleAndUUID = {
-  title: string;
-  uuid: string;
-  documentType: DocumentType;
-};
-
-export const getSearchDocumentClient = async (query: string) => {
-  const response = await requestGetClient<TitleAndUUID[]>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getDocumentSearch,
-    queryParams: {
-      keyWord: query,
-    },
-  });
-
-  return response;
-};
-
-export const getDocumentLogsByUUIDClient = async (uuid: string, params: PaginationParams) => {
-  const response = await requestGetClient<PaginationResponse<WikiDocumentLogSummary[]>>({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-    endpoint: ENDPOINT.getDocumentLogsByUUID(uuid),
-    queryParams: params,
-  });
-
-  return response;
-};
-
-export const postDocumentClient = async (document: PostDocumentBody) => {
-  const newDocument = await requestPostClient<WikiDocument>({
+export const postDocumentClient = async (document: CrewDocumentCreateRequest) => {
+  const newDocument = await requestPostClient<DocumentResponse>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: CLIENT_ENDPOINT.postDocument,
     body: document,
@@ -77,8 +17,8 @@ export const postDocumentClient = async (document: PostDocumentBody) => {
   return newDocument;
 };
 
-export const putDocumentClient = async (document: PostDocumentBody) => {
-  const editDocument = await requestPutClient<WikiDocument>({
+export const putDocumentClient = async (document: DocumentUpdateRequest) => {
+  const editDocument = await requestPutClient<DocumentResponse>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: CLIENT_ENDPOINT.putDocument,
     body: document,
@@ -88,7 +28,7 @@ export const putDocumentClient = async (document: PostDocumentBody) => {
 };
 
 export const getDocumentTitleListClient = async () => {
-  const response = await requestGetClient<TitleAndUUID[]>({
+  const response = await requestGetClient<DocumentSearchResponse[]>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: CLIENT_ENDPOINT.getDocumentTitleList,
   });
@@ -102,17 +42,4 @@ export const deleteDocumentClient = async (uuid: string) => {
     endpoint: CLIENT_ENDPOINT.deleteDocument,
     queryParams: {uuid},
   });
-};
-
-export const getOrganizationDocumentsByDocumentUUIDClient = async (uuid: string) => {
-  try {
-    const response = await requestGetClient<Organization[]>({
-      baseUrl: process.env.NEXT_PUBLIC_BACKEND_SERVER_BASE_URL,
-      endpoint: ENDPOINT.getOrganizationDocumentsByDocumentUUID(uuid),
-    });
-
-    return response;
-  } catch {
-    return [];
-  }
 };

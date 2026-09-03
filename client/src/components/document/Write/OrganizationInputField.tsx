@@ -1,5 +1,7 @@
 'use client';
 
+import type {DocumentSearchResponse, OrganizationDocumentSearchResponse} from '@apis/generated/types';
+import {DOCUMENT_TYPE} from '@constants/document';
 import {useState} from 'react';
 import {useInput} from '@components/common/Input/useInput';
 import Input from '@components/common/Input';
@@ -7,13 +9,10 @@ import Button from '@components/common/Button';
 import {Chip} from '@components/common/Chip';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
 import {useTrie} from '@store/trie';
-import {TitleAndUUID} from '@apis/client/document';
-import {DOCUMENT_TYPE} from '@type/Document.type';
-import {Organization} from '@type/Group.type';
 
 interface OrganizationInputFieldProps {
-  selectedOrganizations: Organization[];
-  onSelect: (organization: Organization) => void;
+  selectedOrganizations: OrganizationDocumentSearchResponse[];
+  onSelect: (organization: OrganizationDocumentSearchResponse) => void;
   onAdd: (title: string) => void;
   onRemove: (uuid: string) => void;
 }
@@ -25,7 +24,7 @@ const OrganizationInputField = ({selectedOrganizations, onSelect, onRemove, onAd
   const searchTitle = useTrie(state => state.searchTitle);
 
   const searchResults = searchTitle(value).filter(
-    (doc): doc is TitleAndUUID & {documentType: typeof DOCUMENT_TYPE.Organization} =>
+    (doc): doc is DocumentSearchResponse & {documentType: typeof DOCUMENT_TYPE.Organization} =>
       doc.documentType === DOCUMENT_TYPE.Organization &&
       !selectedOrganizations.some(selected => selected.uuid === doc.uuid),
   );

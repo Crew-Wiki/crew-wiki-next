@@ -1,0 +1,1627 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CrewWiki Application Swagger",
+    "description": "크루위키의 API 문서입니다.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev.api.crew-wiki.site"
+    }
+  ],
+  "paths": {
+    "/organization": {
+      "put": {
+        "tags": ["organization-document-controller"],
+        "summary": "조직 위키 글 수정",
+        "description": "조직 위키 글을 수정합니다.",
+        "operationId": "modifyOrganizationDocumentContents",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationDocumentUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyOrganizationDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["organization-document-controller"],
+        "summary": "조직 위키 글 생성 및 연결",
+        "description": "조직 위키 글을 생성하며 크루 문서와 연결합니다.",
+        "operationId": "createOrganizationDocumentContents",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationDocumentCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyOrganizationDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organization-events/{organizationEventUuid}": {
+      "put": {
+        "tags": ["organization-event-controller"],
+        "summary": "조직 이벤트 수정",
+        "description": "조직 이벤트를 수정합니다.",
+        "operationId": "put",
+        "parameters": [
+          {
+            "name": "organizationEventUuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationEventUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyOrganizationEventUpdateResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["organization-event-controller"],
+        "summary": "조직 이벤트 삭제",
+        "description": "조직 이벤트를 삭제합니다.",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "organizationEventUuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "위키 글 전체 조회",
+        "description": "페이지네이션을 통해 모든 위키 글을 조회합니다.",
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "pageRequestDto",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PagingRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyPagedResponseListDocumentListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["document-controller"],
+        "summary": "위키 글 수정",
+        "description": "위키 글을 수정합니다.",
+        "operationId": "put_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["document-controller"],
+        "summary": "위키 글 작성",
+        "description": "위키 글을 작성합니다.",
+        "operationId": "post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrewDocumentCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organization/link": {
+      "post": {
+        "tags": ["organization-document-controller"],
+        "summary": "기존 조직 문서를 크루 문서에 연결",
+        "description": "이미 존재하는 조직 문서를 크루 문서와 연결합니다.",
+        "operationId": "linkOrganizationDocument",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationDocumentLinkRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyOrganizationDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organization-events": {
+      "post": {
+        "tags": ["organization-event-controller"],
+        "summary": "조직 이벤트 생성",
+        "description": "조직 이벤트를 생성합니다.",
+        "operationId": "post_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationEventCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyOrganizationEventCreateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/views/flush": {
+      "post": {
+        "tags": ["document-controller"],
+        "summary": "누적 조회수 수신 API",
+        "description": "프론트에서 누적된 조회수를 전달받아 DB에 반영합니다.",
+        "operationId": "flushViews",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewFlushRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "logout",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/organization/uuid/{uuidText}": {
+      "get": {
+        "tags": ["organization-document-controller"],
+        "summary": "UUID로 조직 문서 및 이벤트 조회",
+        "description": "UUID를 통해 조직 문서 및 이벤트를 조회합니다.",
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "uuidText",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyOrganizationDocumentAndEventResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/graph": {
+      "get": {
+        "tags": ["crew-graph-controller"],
+        "summary": "크루 관계 그래프 조회",
+        "description": "기수에 속한 크루 문서 관계를 조회하고, 조직 선택 시 조직 노드와 연결 간선을 추가합니다.",
+        "operationId": "findByGeneration",
+        "parameters": [
+          {
+            "name": "generation",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organizationDocumentUuid",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyCrewGraphResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/{uuidText}/organization-documents": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "특정 문서에 대한 조직 문서 조회 API",
+        "description": "특정 문서에 대한 조직 문서들을 조회합니다.",
+        "operationId": "readOrganizationDocument",
+        "parameters": [
+          {
+            "name": "uuidText",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyListOrganizationDocumentSearchResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/uuid/{uuidText}": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "UUID로 위키 글 조회",
+        "description": "UUID를 통해 위키 글을 조회합니다.",
+        "operationId": "getByUuid",
+        "parameters": [
+          {
+            "name": "uuidText",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/uuid/{uuidText}/log": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "문서 로그 목록 조회",
+        "description": "문서 UUID로 해당 문서의 로그 목록을 페이지네이션을 통해 조회합니다.",
+        "operationId": "getLogs",
+        "parameters": [
+          {
+            "name": "uuidText",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageRequestDto",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PagingRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyPagedResponseListHistoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/titles": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "위키 글 제목 전체 조회",
+        "description": "모든 위키 글의 제목과 UUID를 조회합니다.",
+        "operationId": "findAllTitles",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyListDocumentTitleListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/title/{title}": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "제목으로 위키 글 조회",
+        "description": "제목을 통해 위키 글을 조회합니다.",
+        "operationId": "get_1",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/title/{title}/uuid": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "제목으로 UUID 조회",
+        "description": "제목을 통해 위키 글의 UUID를 조회합니다.",
+        "operationId": "getUuidByTitle",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/search": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "키워드로 위키 글 검색",
+        "description": "키워드로 위키 글을 검색합니다.",
+        "operationId": "search",
+        "parameters": [
+          {
+            "name": "keyWord",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyListDocumentSearchResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/random": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "랜덤 위키 글 조회",
+        "description": "랜덤으로 위키 글을 조회합니다.",
+        "operationId": "getRandom",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/log/{logId}": {
+      "get": {
+        "tags": ["document-controller"],
+        "summary": "로그 상세 조회",
+        "description": "로그 ID로 로그 상세 정보를 조회합니다.",
+        "operationId": "getDocumentLogs",
+        "parameters": [
+          {
+            "name": "logId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyHistoryDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/crews": {
+      "get": {
+        "tags": ["crew-document-query-controller"],
+        "summary": "기수별 크루 목록 조회",
+        "description": "기수에 속한 크루의 이름, 문서 UUID, 분야를 조회합니다.",
+        "operationId": "findAllByGeneration",
+        "parameters": [
+          {
+            "name": "generation",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyListGenerationCrewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login/check": {
+      "get": {
+        "tags": ["auth-controller"],
+        "operationId": "checkAuth",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/{uuidText}/organization-documents/{organizationDocumentUuidText}": {
+      "delete": {
+        "tags": ["document-controller"],
+        "summary": "특정 문서에 대한 조직 문서 삭제 API",
+        "description": "특정 문서에 대한 조직 문서를 제거합니다.",
+        "operationId": "deleteOrganizationDocument",
+        "parameters": [
+          {
+            "name": "uuidText",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organizationDocumentUuidText",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/documents/{documentUuid}": {
+      "delete": {
+        "tags": ["admin-controller"],
+        "summary": "문서 삭제",
+        "description": "문서 Uuid로 문서를 삭제합니다.",
+        "operationId": "deleteDocumentByDocumentId",
+        "parameters": [
+          {
+            "name": "documentUuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessBodyVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OrganizationDocumentUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "documentBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "OrganizationDocumentResponse": {
+        "type": "object",
+        "properties": {
+          "organizationDocumentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "organizationDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "generateTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SuccessBodyOrganizationDocumentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/OrganizationDocumentResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "OrganizationEventUpdateRequest": {
+        "required": ["occurredAt", "title", "writer"],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "OrganizationEventUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "organizationEventUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "SuccessBodyOrganizationEventUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/OrganizationEventUpdateResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "DocumentUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "documentBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "DocumentResponse": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "documentUUID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "generateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "viewCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "latestVersion": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "organizationDocumentResponses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationDocumentResponse"
+            }
+          }
+        }
+      },
+      "SuccessBodyDocumentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DocumentResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "OrganizationDocumentCreateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "documentBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "crewDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "OrganizationDocumentLinkRequest": {
+        "type": "object",
+        "properties": {
+          "crewDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "OrganizationEventCreateRequest": {
+        "required": ["occurredAt", "organizationDocumentUuid", "title", "writer"],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "organizationDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "OrganizationEventCreateResponse": {
+        "type": "object",
+        "properties": {
+          "organizationEventUuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "SuccessBodyOrganizationEventCreateResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/OrganizationEventCreateResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "CrewDocumentCreateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "documentBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ViewFlushRequest": {
+        "type": "object",
+        "properties": {
+          "views": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "SuccessBodyString": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "loginId": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LinkedCrewDocumentResponse": {
+        "type": "object",
+        "properties": {
+          "documentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "OrganizationDocumentAndEventResponse": {
+        "type": "object",
+        "properties": {
+          "organizationDocumentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "organizationDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "generateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "organizationEventResponses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationEventResponse"
+            }
+          },
+          "linkedCrewDocuments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkedCrewDocumentResponse"
+            }
+          }
+        }
+      },
+      "OrganizationEventResponse": {
+        "type": "object",
+        "properties": {
+          "organizationEventUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "SuccessBodyOrganizationDocumentAndEventResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/OrganizationDocumentAndEventResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "CrewGraphResponse": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GraphNodeResponse"
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GraphEdgeResponse"
+            }
+          }
+        }
+      },
+      "GraphEdgeResponse": {
+        "type": "object",
+        "properties": {
+          "sourceDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetDocumentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["REFERENCE", "ORGANIZATION_LINK"]
+          }
+        }
+      },
+      "GraphNodeResponse": {
+        "type": "object",
+        "properties": {
+          "documentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["CREW", "ORGANIZATION"]
+          }
+        }
+      },
+      "SuccessBodyCrewGraphResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CrewGraphResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "PagingRequest": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "type": "string"
+          },
+          "sortDirection": {
+            "type": "string"
+          }
+        }
+      },
+      "DocumentListResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "documentBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "generateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "viewCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "documentType": {
+            "type": "string",
+            "enum": ["CREW", "ORGANIZATION"]
+          }
+        }
+      },
+      "PagedResponseListDocumentListResponse": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentListResponse"
+            }
+          }
+        }
+      },
+      "SuccessBodyPagedResponseListDocumentListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PagedResponseListDocumentListResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "OrganizationDocumentSearchResponse": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessBodyListOrganizationDocumentSearchResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationDocumentSearchResponse"
+            }
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "HistoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "documentBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "generateTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PagedResponseListHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoryResponse"
+            }
+          }
+        }
+      },
+      "SuccessBodyPagedResponseListHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PagedResponseListHistoryResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "DocumentTitleListResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentType": {
+            "type": "string",
+            "enum": ["CREW", "ORGANIZATION"]
+          },
+          "generateTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SuccessBodyListDocumentTitleListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentTitleListResponse"
+            }
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "SuccessBodyObject": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "DocumentSearchResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentType": {
+            "type": "string",
+            "enum": ["CREW", "ORGANIZATION"]
+          }
+        }
+      },
+      "SuccessBodyListDocumentSearchResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSearchResponse"
+            }
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "HistoryDetailResponse": {
+        "type": "object",
+        "properties": {
+          "logId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string"
+          },
+          "generateTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SuccessBodyHistoryDetailResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HistoryDetailResponse"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "GenerationCrewResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "documentUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "field": {
+            "type": "string",
+            "enum": ["BACKEND", "FRONTEND", "ANDROID"]
+          }
+        }
+      },
+      "SuccessBodyListGenerationCrewResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GenerationCrewResponse"
+            }
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      },
+      "AdminResponse": {
+        "type": "object"
+      },
+      "SuccessBodyVoid": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "code": {
+            "type": "string",
+            "enum": ["SUCCESS"]
+          }
+        }
+      }
+    }
+  }
+}

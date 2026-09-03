@@ -1,8 +1,8 @@
-import {PaginationParams} from '@type/General.type';
+import type {PagingRequest} from '@apis/generated/types';
 import {recentlyParams} from './params';
 
 export const generatePaginationCacheTags = (
-  {pageNumber, pageSize, sort, sortDirection}: PaginationParams,
+  {pageNumber, pageSize, sort, sortDirection}: PagingRequest,
   originTag: string,
 ): string => {
   return [
@@ -22,7 +22,7 @@ export const CACHE = {
     longRevalidate: 604800, // 7 days
   },
   tag: {
-    getDocuments: (params: PaginationParams) => TAG_PREFIX + generatePaginationCacheTags(params, 'documents'),
+    getDocuments: (params: PagingRequest) => TAG_PREFIX + generatePaginationCacheTags(params, 'documents'),
     getRecentlyDocuments: TAG_PREFIX + generatePaginationCacheTags(recentlyParams, 'documents'),
     getDocumentByTitle: (title: string) => TAG_PREFIX + `title:${decodeURI(title)}`,
     getDocumentByUUID: (uuid: string) => TAG_PREFIX + `title:${uuid}`,
