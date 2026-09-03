@@ -1,6 +1,6 @@
+import {DOCUMENT_TYPE} from '@constants/document';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTerms';
-import {DOCUMENT_TYPE} from '@type/Document.type';
 
 const meta: Meta<typeof RelativeSearchTerms> = {
   title: 'Common/RelativeSearchTerms',

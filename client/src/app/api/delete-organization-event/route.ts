@@ -1,8 +1,8 @@
 'use server';
 
 import {NextRequest, NextResponse} from 'next/server';
-import {deleteOrganizationEventServer} from '@apis/server/organizationEvent';
 import {ApiResponseType} from '@type/http.type';
+import {api} from '@apis/generated/server';
 
 export const DELETE = async (request: NextRequest) => {
   const {searchParams} = new URL(request.url);
@@ -18,8 +18,7 @@ export const DELETE = async (request: NextRequest) => {
   }
 
   try {
-    await deleteOrganizationEventServer(organizationEventUuid);
-
+    await api.organizationEvents(organizationEventUuid).delete();
     const response: ApiResponseType<object> = {
       data: {},
       code: 'SUCCESS',

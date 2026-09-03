@@ -1,15 +1,16 @@
 'use server';
 
-import {getDocumentTitlesServer} from '@apis/server/document';
-import {DocumentTitle} from '@type/Document.type';
+import {api} from '@apis/generated/server';
+import {DocumentSearchResponse} from '@apis/generated/types';
+import {allDocumentsParams} from '@constants/params';
 import {ApiResponseType} from '@type/http.type';
 import {NextResponse} from 'next/server';
 
 export const GET = async () => {
-  const documents = await getDocumentTitlesServer();
+  const documents = await api.document.get(allDocumentsParams);
 
-  const response: ApiResponseType<DocumentTitle[]> = {
-    data: documents,
+  const response: ApiResponseType<DocumentSearchResponse[]> = {
+    data: documents.data.map(({title, uuid, documentType}) => ({title, uuid, documentType})),
     code: 'SUCCESS',
   };
 

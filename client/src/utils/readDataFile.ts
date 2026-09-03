@@ -1,4 +1,4 @@
-import {ViewData} from '@type/viewCount.type';
+import {ViewData} from '@utils/viewCount';
 import {readFile} from 'fs/promises';
 
 export async function readDataFile(filePath: string): Promise<ViewData> {

@@ -1,4 +1,3 @@
-import {getSpecificDocumentLogServer} from '@apis/server/document';
 import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
@@ -7,6 +6,7 @@ import type {UUIDLogParams, UUIDParams} from '@type/PageParams.type';
 import {generateLogPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
+import {api} from '@apis/generated/server';
 
 export async function generateMetadata({params}: UUIDParams): Promise<Metadata> {
   const {uuid} = await params;
@@ -15,7 +15,7 @@ export async function generateMetadata({params}: UUIDParams): Promise<Metadata> 
 
 const Page = async ({params}: UUIDLogParams) => {
   const {uuid, logId} = await params;
-  const document = await getSpecificDocumentLogServer(Number(logId));
+  const document = await api.document.log(Number(logId)).get();
   const contents = await markdownToHtml(document.contents);
 
   return (

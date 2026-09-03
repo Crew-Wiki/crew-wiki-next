@@ -4,11 +4,16 @@ import {CACHE} from '@constants/cache';
 import {NextRequest, NextResponse} from 'next/server';
 import {revalidateTag} from 'next/cache';
 import {cookies} from 'next/headers';
-import {deleteDocumentServer} from '@apis/server/document';
 import {ApiResponseType} from '@type/http.type';
+import {api} from '@apis/generated/server';
 
 const deleteDocument = async (uuid: string, cookieHeader?: string) => {
-  const response = await deleteDocumentServer(uuid, cookieHeader);
+  const headers: Record<string, string> = {};
+  if (cookieHeader) {
+    headers['Cookie'] = cookieHeader;
+  }
+
+  const response = await api.admin.documents(uuid).delete({headers});
 
   revalidateTag(CACHE.tag.getRecentlyDocuments);
   revalidateTag(CACHE.tag.getDocumentTitles);

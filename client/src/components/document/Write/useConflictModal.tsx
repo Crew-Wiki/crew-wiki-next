@@ -4,9 +4,9 @@ import {useEffect, useState} from 'react';
 import {useModal} from '@components/common/Modal/useModal';
 import {ConflictModal} from './ConflictModal';
 import {useDocument} from '@store/document';
-import {getDocumentByUUIDClient} from '@apis/client/document';
 import {createConflictText} from '@utils/createConflictText';
 import {useFetch} from '@hooks/useFetch';
+import {api} from '@apis/generated/client';
 
 interface ConflictModalProps {
   handleSubmit: (contents: string) => Promise<void>;
@@ -19,7 +19,7 @@ export const useConflictModal = ({handleSubmit}: ConflictModalProps) => {
   });
 
   const [isResolved, setIsResolved] = useState(false);
-  const {refetch: fetchData, isLoading} = useFetch(() => getDocumentByUUIDClient(uuid), {enabled: false});
+  const {refetch: fetchData, isLoading} = useFetch(() => api.document.uuid(uuid).get(), {enabled: false});
 
   useEffect(() => {
     const hasConflictMarkers = /<<<<<|──────────────/.test(conflict.content);

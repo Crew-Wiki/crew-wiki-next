@@ -1,10 +1,10 @@
 'use client';
 
+import {EventInput} from '@components/group/type';
 import {useState} from 'react';
 import {Modal} from '@components/common/Modal/Modal';
 import Button from '@components/common/Button';
 import CustomCalendar from '@components/common/CustomCalendar';
-import {EventInput} from '@type/Event.type';
 import {EVENT_VALIDATION_LIMITS} from '@constants/validation';
 
 interface EventAddModalProps {

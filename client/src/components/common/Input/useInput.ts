@@ -1,4 +1,4 @@
-import {ErrorInfo, ErrorMessage} from '@type/Document.type';
+import {ErrorInfo, ErrorMessage} from '@store/document';
 import {useState} from 'react';
 
 type UseInputArgs = {
