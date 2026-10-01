@@ -48,7 +48,11 @@ export interface CrewGraphResponse {
 
 export interface GraphCrew {
   id: string; // `crew:${documentUuid}`
-  name: string;
+  title: string; // 문서 제목 원문. 예: '카야(8기)'
+  // 화면에 그릴 라벨. 제목에서 기수를 뗀 값이다 (toGraphLabel).
+  // 같은 라벨이 둘 이상 나올 수 있다 — '루나(8기)' 와 '루나' 는 라벨이 같아도 다른 문서다.
+  // 노드를 구분하는 것은 라벨이 아니라 documentUuid 다.
+  label: string;
   documentUuid: string;
   documentType: DocumentType;
   field: FieldId; // 응답의 null 은 여기서 'unassigned' 로 접힌다

@@ -128,7 +128,8 @@ const placeCrewsAroundAnchor = (
         y: anchor.y + Math.sin(angle) * radius,
         radius: GRAPH_NODE.crewRadius,
         isField: false,
-        labelLength: crew.name.length + (isMultiGeneration ? GRAPH_LAYOUT.multiGenerationLabelPad : 0),
+        // 라벨은 기수를 뗀 값이다. 여러 기수를 함께 보면 '5기' 를 병기하므로 그만큼 폭을 더 잡는다.
+        labelLength: crew.label.length + (isMultiGeneration ? GRAPH_LAYOUT.multiGenerationLabelPad : 0),
       };
     });
   });
