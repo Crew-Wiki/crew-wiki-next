@@ -9,7 +9,9 @@ import {
 } from '@components/graph/graphFixture';
 import {
   CREW_FIELD_TO_FIELD_ID,
+  CURRENT_GENERATION,
   FIELD_ID,
+  GRAPH_CREW_LABEL_CLASS,
   GRAPH_FIELDS,
   GRAPH_FIELD_STYLE,
   GRAPH_NODE,
@@ -62,16 +64,34 @@ const LayoutPreview = ({crews, isNarrow = false}: {crews: GraphCrew[]; isNarrow?
       {crews.map(crew => {
         const position = layout[crew.id];
         const style = GRAPH_FIELD_STYLE[crew.field];
+        const isCurrentGeneration = crew.generation === CURRENT_GENERATION;
 
         return (
-          <g key={crew.id}>
-            <circle cx={position.x} cy={position.y} r={GRAPH_NODE.crewRadius} strokeWidth={2} className={style.dot} />
+          // 겹 순서는 기획안 데모와 같다: 후광 → 투명한 히트 영역 → 점 → 라벨.
+          <g key={crew.id} className="group">
+            <circle
+              cx={position.x}
+              cy={position.y}
+              r={GRAPH_NODE.crewHaloRadius}
+              strokeWidth={GRAPH_NODE.crewHaloWidth}
+              className={`fill-none opacity-0 transition-opacity duration-150 group-hover:opacity-[0.16] ${style.halo}`}
+            />
+            <circle cx={position.x} cy={position.y} r={GRAPH_NODE.crewHitRadius} className="fill-transparent" />
+            <circle
+              cx={position.x}
+              cy={position.y}
+              r={GRAPH_NODE.crewRadius}
+              strokeWidth={isCurrentGeneration ? 0 : GRAPH_NODE.pastGenerationStrokeWidth}
+              className={isCurrentGeneration ? style.dot : style.pastDot}
+            />
             <text
               x={position.x}
               y={position.y + GRAPH_NODE.crewLabelOffsetY}
               textAnchor="middle"
-              fontSize={12}
-              className={style.label}
+              fontSize={GRAPH_NODE.crewLabelFontSize}
+              fontWeight={600}
+              letterSpacing="-0.01em"
+              className={GRAPH_CREW_LABEL_CLASS}
             >
               {crew.label}
             </text>
@@ -93,8 +113,25 @@ const LayoutPreview = ({crews, isNarrow = false}: {crews: GraphCrew[]; isNarrow?
               rx={GRAPH_NODE.fieldPillRadius}
               className={style.pill}
             />
-            <text x={position.x} y={position.y + 5} textAnchor="middle" fontSize={14} fontWeight={700} fill="#ffffff">
-              {field.name} {field.crewCount}
+            {/* 이름과 인원수를 한 text 안에서 나눈다. 인원수는 작고 흐리게 붙어 따라간다. */}
+            <text
+              x={position.x}
+              y={position.y}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize={GRAPH_NODE.fieldPillFontSize}
+              fontWeight={700}
+              className="fill-white"
+            >
+              {field.name}
+              <tspan
+                dx={GRAPH_NODE.fieldPillCountGap}
+                fontSize={GRAPH_NODE.fieldPillCountFontSize}
+                fontWeight={500}
+                fillOpacity={0.75}
+              >
+                {field.crewCount}
+              </tspan>
             </text>
           </g>
         );
@@ -153,4 +190,16 @@ export const LayoutFieldsFilled: Story = {
 // 좁은 화면에서는 네 그룹이 세로로 쌓인다. 미지정이 맨 아래 단이다.
 export const LayoutNarrow: Story = {
   render: () => <LayoutPreview crews={toCrews(crewListFixture)} isNarrow />,
+};
+
+// 지난 기수가 섞였을 때. 지금 기수는 꽉 찬 점, 지난 기수는 연한 점에 테두리만 남는다.
+// 픽스처가 전부 8기라 세 명 중 한 명을 7기로 돌려 두 스타일을 나란히 본다.
+export const LayoutMixedGenerations: Story = {
+  render: () => (
+    <LayoutPreview
+      crews={toCrews(crewListFixture).map((crew, index) =>
+        index % 3 === 0 ? {...crew, generation: '7기' as const} : crew,
+      )}
+    />
+  ),
 };
