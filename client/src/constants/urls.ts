@@ -9,6 +9,7 @@ export const URLS = {
   main: '/',
   wiki: '/wiki',
   wikiGroups: '/wiki/groups',
+  wikiGraph: '/wiki/graph',
   docs: ':title',
   edit: '/edit',
   post: '/post',
