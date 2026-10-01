@@ -1,0 +1,140 @@
+// 관계 그래프 상수. 배치 파라미터는 기획안의 동작 데모에서 그대로 옮긴 값이다.
+// 이 파일은 그래프(A)와 데이터·조작(B)이 함께 쓰는 계약이므로, 머지 뒤에는 둘이 같이 고친다.
+
+export const FIELD_ID = {
+  Backend: 'backend',
+  Frontend: 'frontend',
+  Android: 'android',
+  Unassigned: 'unassigned',
+} as const;
+
+// API 응답의 field 값. 분야를 입력하지 않은 크루는 null 로 내려온다.
+export const CREW_FIELD = {
+  Backend: 'BACKEND',
+  Frontend: 'FRONTEND',
+  Android: 'ANDROID',
+} as const;
+
+// API 응답 field → 그래프 그룹. null 은 이 표에 없으므로 Unassigned 로 접힌다.
+export const CREW_FIELD_TO_FIELD_ID = {
+  BACKEND: FIELD_ID.Backend,
+  FRONTEND: FIELD_ID.Frontend,
+  ANDROID: FIELD_ID.Android,
+} as const;
+
+// 미지정은 항상 배열 마지막. 좁은 화면 세로 스택이 이 순서를 그대로 따르므로,
+// 순서를 바꾸면 미지정이 세 분야 위로 올라간다.
+export const GRAPH_FIELDS = [
+  {id: FIELD_ID.Backend, name: 'Backend'},
+  {id: FIELD_ID.Frontend, name: 'Frontend'},
+  {id: FIELD_ID.Android, name: 'Android'},
+  {id: FIELD_ID.Unassigned, name: '미지정'},
+] as const;
+
+// generation 은 숫자가 아니라 '8기' 형식 문자열이다.
+// generation=8 로 보내면 오류 없이 빈 배열이 오므로 리터럴 유니온으로 막는다.
+// 쿼리스트링 인코딩은 objectToQueryString 이 하므로 여기에 미리 인코딩한 값을 넣지 않는다.
+export const GENERATIONS = ['6기', '7기', '8기', '9기'] as const;
+export const CURRENT_GENERATION = '8기';
+
+export const GRAPH_STAGE = {
+  width: 1160,
+  height: 734,
+  centerX: 580, // width / 2
+  centerY: 367, // height / 2
+} as const;
+
+export const GRAPH_NODE = {
+  fieldPillWidth: 118, // 인원수·분야명 길이와 무관하게 고정
+  fieldPillHeight: 42,
+  fieldPillRadius: 21,
+  fieldPillEdgeClamp: 27, // 간선 끝점을 알약에 붙일 때 쓰는 반지름 상한
+  crewRadius: 18,
+  crewInnerRadius: 5, // 현재 기수 표시용 내부 채움
+  crewLabelOffsetY: 37, // 라벨은 노드 아래에 상시 표시
+  edgeGap: 3, // 간선이 노드에 닿지 않게 띄우는 여유
+} as const;
+
+// 노드 크기를 인원수나 연결 수에 따라 바꾸지 않는다.
+// 크기와 굵기는 이후 로드맵(관계 가중치 · 노드 가중치)을 위해 아껴 둔 표현 수단이다.
+export const GRAPH_LAYOUT = {
+  narrowBreakpoint: 700, // stage 너비가 이보다 작으면 세로 스택
+
+  // 앵커 — 넓은 화면
+  twoGroupOffsetX: 238,
+  anchorRadiusX: 286,
+  anchorRadiusY: 142,
+  assignedShiftY: -130, // 그룹이 4개일 때 세 분야를 위로 올리는 양
+  unassignedOffsetY: 250, // 그룹이 4개일 때 미지정을 아래로 내리는 양
+
+  // 앵커 — 좁은 화면 세로 스택
+  narrowStackGap: 58,
+  narrowClusterThreshold: 7,
+  narrowClusterRadiusMax: 136,
+  narrowClusterRadiusBase: 62,
+  narrowClusterRadiusStep: 4.4,
+
+  // 그룹 안에서 크루를 링에 배치
+  ringLimitWide: 9, // 이보다 많으면 두 링으로 쪼갠다
+  ringLimitNarrow: 7,
+  ringSplitRatio: 0.42, // 앞 42% 가 안쪽 링
+  ringSpanWide: 4.9, // rad. 그룹이 하나거나 좁은 화면이면 2π
+  ringRadiusWideBase: 72,
+  ringRadiusWideStep: 5,
+  ringRadiusWideInner: 96,
+  ringRadiusWideOuter: 158,
+  ringRadiusNarrowInner: 82,
+  ringRadiusNarrowOuter: 136,
+
+  // 반발 완화 — 겹친 노드를 밀어내는 반복 루프
+  relaxIterations: 90,
+  minGapSingleGeneration: 66,
+  minGapMultiGeneration: 78, // 라벨에 기수를 병기하므로 더 벌린다
+  pillClearance: 26, // 알약이 끼어 있는 쌍의 추가 여유
+  labelBaseWidth: 26,
+  labelCharWidth: 13.5,
+  labelRowThreshold: 26, // y 차이가 이보다 작으면 같은 줄로 보고 라벨 폭까지 확보한다
+  labelPadding: 8,
+  pillRelaxWeight: 0.1, // 알약은 거의 밀리지 않는다
+  multiGenerationLabelPad: 2, // '8기' 병기 시 라벨 길이 보정
+
+  fitPadding: 22,
+} as const;
+
+// 배치 함수가 목표 좌표만 내고, 실제 이동은 렌더 루프의 스프링이 맡는다.
+export const GRAPH_MOTION = {
+  stiffness: 0.14,
+  damping: 0.76,
+  scaleLerp: 0.18, // 등장 스케일
+  viewBoxLerp: 0.14,
+  settleVelocity: 0.05, // 이 값들 아래로 떨어지면 루프를 멈춘다
+  settleScale: 0.995,
+  settleViewBox: 0.4,
+} as const;
+
+// 분야별 색 계약. B의 필터 칩도 같은 맵을 쓴다.
+// 클래스를 문자열로 박아 두는 이유: Tailwind JIT 는 `fill-${id}-300` 같은 동적 조합을 찾지 못한다.
+// dot 에 테두리를 함께 주는 이유: 300단계는 흰 배경 대비가 3:1 에 못 미쳐(틸 2.53 · 주황 2.76)
+// 채움만으로는 형태가 식별되지 않는다. 700단계 테두리가 그 몫을 한다.
+export const GRAPH_FIELD_STYLE = {
+  [FIELD_ID.Backend]: {
+    pill: 'fill-primary-700',
+    dot: 'fill-primary-300 stroke-primary-700',
+    label: 'fill-primary-800',
+  },
+  [FIELD_ID.Frontend]: {
+    pill: 'fill-secondary-700',
+    dot: 'fill-secondary-300 stroke-secondary-700',
+    label: 'fill-secondary-800',
+  },
+  [FIELD_ID.Android]: {
+    pill: 'fill-android-700',
+    dot: 'fill-android-300 stroke-android-700',
+    label: 'fill-android-800',
+  },
+  [FIELD_ID.Unassigned]: {
+    pill: 'fill-grayscale-600',
+    dot: 'fill-grayscale-300 stroke-grayscale-600',
+    label: 'fill-grayscale-700',
+  },
+} as const;
