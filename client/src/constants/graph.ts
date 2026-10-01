@@ -96,9 +96,19 @@ export const GRAPH_LAYOUT = {
   labelRowThreshold: 26, // y 차이가 이보다 작으면 같은 줄로 보고 라벨 폭까지 확보한다
   labelPadding: 8,
   pillRelaxWeight: 0.1, // 알약은 거의 밀리지 않는다
+  pillRelaxPushRatio: 0.5, // 겹친 거리의 절반씩 양쪽으로 민다
   multiGenerationLabelPad: 2, // '8기' 병기 시 라벨 길이 보정
 
+  // 뷰박스 맞춤 — 라벨이 노드 아래로 나가므로 크루의 세로 여백은 비대칭이다
   fitPadding: 22,
+  fitCrewBoundsX: 36,
+  fitCrewBoundsTop: 18,
+  fitCrewBoundsBottom: 42,
+  fitHeightNarrowMin: 360,
+  fitHeightNarrowMax: 1500,
+  fitHeightWideMin: 420,
+  fitHeightWideMax: 560,
+  fitHeightWideRatio: 0.55,
 } as const;
 
 // 배치 함수가 목표 좌표만 내고, 실제 이동은 렌더 루프의 스프링이 맡는다.
