@@ -4,6 +4,7 @@ export const ENDPOINT = {
   updateDocument: '/document',
   getDocuments: '/document',
   getDocumentTitles: '/document/titles',
+  getDocumentCrews: '/document/crews',
   getDocumentByTitle: (title: string) => `/document/title/${title}`,
   getDocumentByUUID: (uuid: string) => `/document/uuid/${uuid}`,
   getRandomDocument: '/document/random',
@@ -28,6 +29,9 @@ export const ENDPOINT = {
   postOrganizationEvent: '/organization-events',
   putOrganizationEvent: (uuid: string) => `/organization-events/${uuid}`,
   deleteOrganizationEvent: (uuid: string) => `/organization-events/${uuid}`,
+
+  // Graph
+  getGraph: '/graph',
 
   // Admin Auth
   postAdminLogin: '/auth/login',

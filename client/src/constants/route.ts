@@ -12,6 +12,7 @@ export const route = {
   goWikiGroupLog: (uuid: string, id: number) => `${URLS.wikiGroups}/${uuid}/log/${id}` as Route,
   goWikiWrite: () => `${URLS.wiki}${URLS.post}` as Route,
   goDaemoon: () => `${URLS.wiki}/${URLS.daemoon}` as Route,
+  goWikiGraph: () => URLS.wikiGraph as Route,
 
   goAdminLogin: () => URLS.login as Route,
   goAdminDocument: () => URLS.documents as Route,
