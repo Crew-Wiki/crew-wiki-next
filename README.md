@@ -104,6 +104,10 @@ H1, H2, H3 태그를 인식해서 목차가 자동으로 생성되며, 목차를
 
 <br/>
 
+## 배포
+
+EC2 서버 셋업과 배포는 [infra/README.md](infra/README.md)에 처음 설정하는 순서대로 정리되어 있습니다.
+
 ## Team
 
 ### Frontend

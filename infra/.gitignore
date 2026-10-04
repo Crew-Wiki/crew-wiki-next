@@ -1,0 +1,13 @@
+# 실제 값 (절대 커밋 금지)
+.env
+
+# 앱 런타임 시크릿 (절대 커밋 금지) — 예제만 커밋
+secrets/*
+!secrets/*.example
+
+# SSH 키 (절대 커밋 금지)
+*.pem
+*.key
+
+# OS
+.DS_Store
