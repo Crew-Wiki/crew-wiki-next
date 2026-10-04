@@ -35,6 +35,9 @@ export const GRAPH_FIELDS = [
 // generation=8 로 보내면 오류 없이 빈 배열이 오므로 리터럴 유니온으로 막는다.
 // 쿼리스트링 인코딩은 objectToQueryString 이 하므로 여기에 미리 인코딩한 값을 넣지 않는다.
 export const GENERATIONS = ['6기', '7기', '8기', '9기'] as const;
+
+// 우아한테크코스는 2019년에 1기가 시작해 해마다 한 기수씩 늘어난다 (2026년 기준 8기).
+// 새 기수가 시작하면 — 보통 2월이다 — 위 GENERATIONS 배열과 이 값을 함께 고친다.
 export const CURRENT_GENERATION = '8기';
 
 export const GRAPH_STAGE = {
