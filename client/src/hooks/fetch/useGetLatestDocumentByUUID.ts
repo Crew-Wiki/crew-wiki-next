@@ -14,7 +14,10 @@ export const useGetLatestDocumentByUUID = (uuid: string) => {
   const getData = useCallback(async () => {
     const [document, organizations] = await Promise.all([
       api.document.uuid(uuid).get(),
-      api.document(uuid).organizationDocuments.get(),
+      api
+        .document(uuid)
+        .organizationDocuments.get()
+        .catch(() => [] as OrganizationDocumentSearchResponse[]),
     ]);
 
     return {
