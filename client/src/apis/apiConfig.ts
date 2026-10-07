@@ -18,9 +18,17 @@ export type ServerRequestOptions = {
 };
 
 type OptionsResolver<K extends OperationKey> = (args: OperationArgsMap[K]) => ServerRequestOptions;
+type ReadOperationKey = Extract<OperationKey, `GET ${string}`>;
 
-/** 오퍼레이션별 캐시 정책. 여기 없으면 아래 기본값이 쓰인다 */
-const OPERATION_OPTIONS: {[K in OperationKey]?: OptionsResolver<K>} = {
+const READ_DEFAULT: ServerRequestOptions = {
+  next: {revalidate: CACHE.time.basicRevalidate},
+};
+
+/** GET은 캐시 정책을 반드시 등록하고, 뮤테이션은 필요할 때만 재정의한다. */
+const OPERATION_OPTIONS: {[K in ReadOperationKey]: OptionsResolver<K>} & {
+  [K in Exclude<OperationKey, ReadOperationKey>]?: OptionsResolver<K>;
+} = {
+  'GET /auth/login/check': () => ({cache: 'no-store'}),
   'GET /document': ({query}) => ({
     next: {
       revalidate: CACHE.time.basicRevalidate,
@@ -45,10 +53,17 @@ const OPERATION_OPTIONS: {[K in OperationKey]?: OptionsResolver<K>} = {
     next: {revalidate: CACHE.time.longRevalidate, tags: [CACHE.tag.getSpecificDocumentLog(logId)]},
   }),
   'GET /document/random': () => ({cache: 'no-store'}),
-};
-
-const READ_DEFAULT: ServerRequestOptions = {
-  next: {revalidate: CACHE.time.basicRevalidate},
+  'GET /document/{uuidText}/organization-documents': ({uuidText}) => ({
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getOrganizationsByDocumentUUID(uuidText)]},
+  }),
+  'GET /organization/uuid/{uuidText}': ({uuidText}) => ({
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getOrganizationDocumentByUUID(uuidText)]},
+  }),
+  // 별도 무효화 태그가 없는 조회는 기존 시간 기반 캐시 정책을 유지한다.
+  'GET /document/crews': () => READ_DEFAULT,
+  'GET /document/search': () => READ_DEFAULT,
+  'GET /document/title/{title}/uuid': () => READ_DEFAULT,
+  'GET /graph': () => READ_DEFAULT,
 };
 
 /** 뮤테이션은 캐시하지 않는다 */
@@ -62,7 +77,7 @@ export const resolveServerOptions = <K extends OperationKey>(
   override?: ServerRequestOptions,
 ): ServerRequestOptions => {
   const resolver = OPERATION_OPTIONS[operation] as OptionsResolver<K> | undefined;
-  const base = isRead(operation) ? READ_DEFAULT : MUTATION_DEFAULT;
+  const options = isRead(operation) ? resolver!(args) : {...MUTATION_DEFAULT, ...resolver?.(args)};
 
-  return {...base, ...resolver?.(args), ...override};
+  return {...options, ...override};
 };
