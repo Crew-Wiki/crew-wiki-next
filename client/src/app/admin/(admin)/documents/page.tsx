@@ -1,6 +1,6 @@
 'use client';
 
-import type {DocumentListResponse} from '@apis/generated/types';
+import type {DocumentTitleListResponse} from '@apis/generated/types';
 import {DOCUMENT_TYPE, DocumentType} from '@constants/document';
 import Button from '@components/common/Button';
 import {useState, useEffect, useMemo} from 'react';
@@ -8,18 +8,18 @@ import {useInput} from '@components/common/Input/useInput';
 import {useRouter} from 'next/navigation';
 import {route} from '@constants/route';
 import {api} from '@apis/generated/client';
-import {allDocumentsParams} from '@constants/params';
+import {getDocumentTitleListClient} from '@apis/client/document';
 
 export default function AdminDocumentsPage() {
   const {value, onChange} = useInput({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [documents, setDocuments] = useState<DocumentListResponse[]>([]);
+  const [documents, setDocuments] = useState<DocumentTitleListResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const PAGE_SIZE = 10;
 
-  const filterDocumentsByTitle = (docs: DocumentListResponse[], searchValue: string) => {
+  const filterDocumentsByTitle = (docs: DocumentTitleListResponse[], searchValue: string) => {
     return docs.filter(document => document.title.toLowerCase().includes(searchValue.toLowerCase()));
   };
 
@@ -81,8 +81,8 @@ export default function AdminDocumentsPage() {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const allDocs = await api.document.get(allDocumentsParams);
-        setDocuments(allDocs.data);
+        const allDocs = await getDocumentTitleListClient();
+        setDocuments(allDocs);
       } catch (error) {
         console.error('문서를 불러오는데 실패했습니다:', error);
       } finally {

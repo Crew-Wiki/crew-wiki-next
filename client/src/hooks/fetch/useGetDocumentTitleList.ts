@@ -1,9 +1,9 @@
 import {getDocumentTitleListClient} from '@apis/client/document';
-import {DocumentSearchResponse} from '@apis/generated/types';
+import {DocumentTitleListResponse} from '@apis/generated/types';
 import {useFetch} from '@hooks/useFetch';
 
 export const useGetDocumentTitleList = () => {
-  const {data} = useFetch<DocumentSearchResponse[]>(getDocumentTitleListClient);
+  const {data} = useFetch<DocumentTitleListResponse[]>(getDocumentTitleListClient);
 
   return {
     data: data ?? [],

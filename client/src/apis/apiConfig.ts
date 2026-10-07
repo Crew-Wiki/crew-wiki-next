@@ -29,6 +29,9 @@ const OPERATION_OPTIONS: {[K in OperationKey]?: OptionsResolver<K>} = {
       tags: [CACHE.tag.getDocuments({...query, sortDirection: query.sortDirection as 'ASC' | 'DESC'})],
     },
   }),
+  'GET /document/titles': () => ({
+    next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentTitles]},
+  }),
   'GET /document/uuid/{uuidText}': ({uuidText}) => ({
     next: {revalidate: CACHE.time.basicRevalidate, tags: [CACHE.tag.getDocumentByUUID(uuidText)]},
   }),

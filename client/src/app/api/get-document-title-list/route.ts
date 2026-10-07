@@ -1,20 +1,19 @@
 'use server';
 
 import {api} from '@apis/generated/server';
-import {DocumentSearchResponse} from '@apis/generated/types';
-import {allDocumentsParams} from '@constants/params';
+import {DocumentTitleListResponse} from '@apis/generated/types';
 import {ApiResponseType} from '@type/http.type';
 import {NextResponse} from 'next/server';
 
 export const GET = async () => {
-  const documents = await api.document.get(allDocumentsParams);
-
-  const response: ApiResponseType<DocumentSearchResponse[]> = {
-    data: documents.data.map(({title, uuid, documentType}) => ({title, uuid, documentType})),
-    code: 'SUCCESS',
-  };
-
   try {
+    const documents = await api.document.titles.get();
+
+    const response: ApiResponseType<DocumentTitleListResponse[]> = {
+      data: documents,
+      code: 'SUCCESS',
+    };
+
     return NextResponse.json(response, {status: 200});
   } catch (error) {
     const response: ApiResponseType<null> = {

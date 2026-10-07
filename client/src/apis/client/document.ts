@@ -3,7 +3,7 @@ import {requestDeleteClient, requestGetClient, requestPostClient, requestPutClie
 import {
   CrewDocumentCreateRequest,
   DocumentResponse,
-  DocumentSearchResponse,
+  DocumentTitleListResponse,
   DocumentUpdateRequest,
 } from '@apis/generated/types';
 
@@ -28,7 +28,7 @@ export const putDocumentClient = async (document: DocumentUpdateRequest) => {
 };
 
 export const getDocumentTitleListClient = async () => {
-  const response = await requestGetClient<DocumentSearchResponse[]>({
+  const response = await requestGetClient<DocumentTitleListResponse[]>({
     baseUrl: process.env.NEXT_PUBLIC_FRONTEND_SERVER_BASE_URL,
     endpoint: CLIENT_ENDPOINT.getDocumentTitleList,
   });

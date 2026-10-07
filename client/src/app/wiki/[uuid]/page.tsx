@@ -10,13 +10,12 @@ import {Metadata} from 'next';
 import {notFound} from 'next/navigation';
 import {IncrementViewCountByUUID} from './IncrementViewCountByUUID';
 import {api} from '@apis/generated/server';
-import {allDocumentsParams} from '@constants/params';
 
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
   try {
-    const documents = await api.document.get(allDocumentsParams);
+    const documents = await api.document.titles.get();
 
     if (!documents || !Array.isArray(documents)) return [];
 
