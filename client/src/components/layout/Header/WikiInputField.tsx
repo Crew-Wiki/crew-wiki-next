@@ -1,5 +1,6 @@
 'use client';
 
+import {DOCUMENT_TYPE} from '@constants/document';
 import {twMerge} from 'tailwind-merge';
 import {useState} from 'react';
 import {useInput} from '@components/common/Input/useInput';
@@ -9,7 +10,6 @@ import RelativeSearchTerms from '@components/common/SearchTerms/RelativeSearchTe
 import {useTrie} from '@store/trie';
 import useAmplitude from '@hooks/useAmplitude';
 import {route} from '@constants/route';
-import {DOCUMENT_TYPE} from '@type/Document.type';
 
 interface WikiInputProps {
   className?: string;

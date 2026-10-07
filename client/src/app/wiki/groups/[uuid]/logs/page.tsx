@@ -1,9 +1,10 @@
-import {DOCUMENT_TYPE} from '@type/Document.type';
+import {DOCUMENT_TYPE} from '@constants/document';
 import type {UUIDParams} from '@type/PageParams.type';
 import {Metadata} from 'next';
-import {getDocumentLogsByUUIDServer} from '@apis/server/document';
 import {LogList} from '@app/wiki/[uuid]/logs/LogList';
 import {generateLogsPageMetadata} from '@utils/generateDocumentMetadata';
+import {api} from '@apis/generated/server';
+import {documentLogsParams} from '@constants/params';
 
 export async function generateMetadata({params}: UUIDParams): Promise<Metadata> {
   const {uuid} = await params;
@@ -12,7 +13,7 @@ export async function generateMetadata({params}: UUIDParams): Promise<Metadata> 
 
 const GroupLogsPage = async ({params}: UUIDParams) => {
   const {uuid} = await params;
-  const response = await getDocumentLogsByUUIDServer(uuid);
+  const response = await api.document.uuid(uuid).log.get(documentLogsParams);
 
   return (
     <div className="flex w-full flex-col gap-4">

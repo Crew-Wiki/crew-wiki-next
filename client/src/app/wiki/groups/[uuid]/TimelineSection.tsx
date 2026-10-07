@@ -1,13 +1,17 @@
 'use client';
 
+import type {
+  OrganizationEventCreateRequest,
+  OrganizationEventResponse,
+  OrganizationEventUpdateRequest,
+} from '@apis/generated/types';
+import {EventInput} from '@components/group/type';
 import {useState} from 'react';
 import dynamic from 'next/dynamic';
 import Button from '@components/common/Button';
 import {useModal} from '@components/common/Modal/useModal';
 import EventAddModal from '@components/group/EventAddModal';
 import EventEditModal from '@components/group/EventEditModal';
-import {EventInput, EventFormData, OrganizationEventUpdateRequest} from '@type/Event.type';
-import {OrganizationEventResponse} from '@type/Group.type';
 import {useRouter} from 'next/navigation';
 import {formatDate} from '@utils/date';
 import {CLIENT_ENDPOINT} from '@constants/endpoint';
@@ -37,7 +41,7 @@ const TimelineSection = ({events, organizationDocumentUuid}: TimelineSectionProp
   const handleAddEvent = async (data: EventInput) => {
     const occurredAt = formatDate(data.date, '-');
 
-    const eventData: EventFormData = {
+    const eventData: OrganizationEventCreateRequest = {
       title: data.title,
       contents: data.contents,
       writer: data.writer,

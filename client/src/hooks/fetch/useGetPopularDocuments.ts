@@ -1,5 +1,5 @@
+import {PopularDocument, SortType} from '@constants/popular';
 import {useState} from 'react';
-import {PopularDocument, SortType} from '@type/Document.type';
 import {SORT_OPTIONS} from '@constants/popular';
 
 export const mockData: PopularDocument[] = [

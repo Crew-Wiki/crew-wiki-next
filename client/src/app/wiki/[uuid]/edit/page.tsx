@@ -1,5 +1,6 @@
 'use client';
 
+import type {OrganizationDocumentSearchResponse} from '@apis/generated/types';
 import PostHeader from '@components/document/Write/PostHeader';
 import TitleInputField from '@components/document/Write/TitleInputField';
 import TuiEditor from '@components/document/TuiEditor';
@@ -7,13 +8,11 @@ import OrganizationInputField from '@components/document/Write/OrganizationInput
 import {useParams} from 'next/navigation';
 import {useEffect} from 'react';
 import {useDocument} from '@store/document';
-import {LatestWikiDocument} from '@type/Document.type';
-import {useGetLatestDocumentByUUID} from '@hooks/fetch/useGetLatestDocumentByUUID';
-import {Organization} from '@type/Group.type';
+import {useGetLatestDocumentByUUID, type DocumentWithOrganizations} from '@hooks/fetch/useGetLatestDocumentByUUID';
 import {LoadingSpinner} from '@components/common/LoadingSpinner';
 
 type EditPageProps = {
-  document: LatestWikiDocument;
+  document: DocumentWithOrganizations;
 };
 
 const EditPage = ({document}: EditPageProps) => {
@@ -26,12 +25,12 @@ const EditPage = ({document}: EditPageProps) => {
   const addExistingOrganization = useDocument(action => action.addExistingOrganization);
   const removeOrganization = useDocument(action => action.removeOrganization);
 
-  const handleSelectOrganization = (organization: Organization) => {
+  const handleSelectOrganization = (organization: OrganizationDocumentSearchResponse) => {
     addExistingOrganization(organization);
   };
 
   const handleAddOrganization = (title: string) => {
-    const newOrganization: Organization = {
+    const newOrganization: OrganizationDocumentSearchResponse = {
       title,
       uuid: crypto.randomUUID(),
     };

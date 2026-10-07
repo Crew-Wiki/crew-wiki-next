@@ -1,5 +1,5 @@
 import type {ErrorEvent, EventHint} from '@sentry/nextjs';
-import type {ErrorClassification} from '@type/Sentry.type';
+import type {ErrorClassification} from './type';
 import {
   ERROR_CATEGORY,
   BROWSER_EXTENSION_PATTERNS,

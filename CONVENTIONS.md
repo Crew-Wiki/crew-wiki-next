@@ -77,6 +77,7 @@ client/src/
 │   ├── admin/               #   어드민 페이지
 │   └── api/                 #   Route Handlers (BFF 역할)
 ├── apis/                    # API 호출 함수
+│   ├── generated/           #   OpenAPI 자동 생성 (직접 수정 금지)
 │   ├── server/              #   서버 전용 ('use server')
 │   └── client/              #   클라이언트 전용 ('use client')
 ├── http/                    # fetch 래퍼 (axios 미사용)
@@ -93,12 +94,12 @@ client/src/
 │   └── mutation/            #   변경 훅 (usePost*, usePut*, useUpload*)
 ├── store/                   # Zustand 전역 상태
 ├── constants/               # 상수
-│   ├── endpoint.ts          #   백엔드 API 엔드포인트
+│   ├── endpoint.ts          #   OpenAPI 문서에 없는 엔드포인트만
 │   ├── urls.ts              #   프론트 URL 상수
 │   ├── route.ts             #   페이지 이동 함수
 │   ├── cache.ts             #   ISR 캐시 태그/시간
 │   └── colors.ts            #   Tailwind 커스텀 색상
-├── type/                    # TypeScript 타입 정의
+├── type/                    # 라이브러리·프레임워크 + http 타입만 (도메인 타입 추가 금지)
 └── utils/                   # 유틸리티 함수
 ```
 
@@ -122,7 +123,7 @@ client/src/
 ```ts
 import { ENDPOINT }           from '@constants/endpoint';
 import { requestGetServer }   from '@http/server';
-import { WikiDocument }       from '@type/Document.type';
+import type { DocumentResponse } from '@apis/generated/types';
 import { postDocumentServer } from '@apis/server/document';
 import Button                 from '@components/common/Button';
 ```
@@ -186,8 +187,8 @@ import Button                 from '@components/common/Button';
 ### 읽기 기능 (서버 컴포넌트)
 
 ```
-1. type/         → 도메인 타입 정의
-2. constants/    → endpoint.ts + cache.ts에 추가
+1. yarn api:generate → 생성 타입/호출 트리 확인 (타입 직접 선언 금지)
+2. constants/    → cache.ts에 캐시 태그 추가
 3. apis/server/  → Server API 함수 (캐시 설정 포함)
 4. app/          → page.tsx에서 호출 + 렌더링
 5. components/   → UI 컴포넌트 작성
@@ -196,8 +197,8 @@ import Button                 from '@components/common/Button';
 ### 쓰기 기능 (클라이언트 → BFF)
 
 ```
-1. type/            → Request/Response 타입
-2. constants/       → endpoint.ts에 추가
+1. yarn api:generate → 생성 Request/Response 타입 확인
+2. constants/       → cache.ts에 무효화 태그 추가
 3. apis/server/     → Server API 함수
 4. app/api/         → Route Handler (revalidateTag 포함)
 5. apis/client/     → Client API 함수 (BFF 호출)
@@ -208,8 +209,8 @@ import Button                 from '@components/common/Button';
 ### 조회 기능 (클라이언트)
 
 ```
-1. type/           → 응답 타입
-2. constants/      → endpoint.ts에 추가
+1. yarn api:generate → 생성 응답 타입 확인
+2. constants/      → 필요 시 상수 추가
 3. apis/client/    → Client API 함수
 4. hooks/fetch/    → 조회 훅 (useFetch 래핑)
 5. components/     → UI에서 훅 사용
@@ -1228,69 +1229,122 @@ useEffect(() => {
 
 ## 8. 타입 정의
 
-### 파일 네이밍
+### 대원칙: 백엔드 계약은 선언하지 않고 생성한다
 
-`{PascalCase도메인}.type.ts` — 복수형 없음
-
-```
-type/
-  Document.type.ts     # WikiDocument, PostDocumentContent
-  General.type.ts      # PaginationResponse, PaginationParams
-  http.type.ts         # ResponseType, ApiResponseType
-  PageParams.type.ts   # UUIDParams, TitleParams
-```
-
-### 선언 규칙
+**백엔드 API의 요청/응답 타입을 손으로 선언하지 마세요.** OpenAPI 문서에서 자동 생성된 타입을 import 합니다.
 
 ```ts
-// 도메인 모델 → interface
+// ❌ 금지 — 백엔드 응답을 프론트에서 다시 선언
 export interface WikiDocument {
   documentId: number;
   documentUUID: string;
   title: string;
-  contents: string;
-  writer: string;
-  generateTime: string;
 }
 
-// 상속 → extends
-export interface LatestWikiDocument extends WikiDocument {
-  latestVersion: number;
-}
-
-// 유틸리티 조합 → type + Omit
-export type WikiDocumentExpand = Omit<WikiDocument, 'documentUUID' | 'documentId'> & {
-  uuid: string;
-  id: number;
-  documentBytes: number;
-  viewCount: number;
-};
-
-// 단순 별칭/유니온/제네릭 → type
-export type ErrorMessage = string | null;
-export type PaginationResponse<T> = { page: number; totalPage: number; data: T };
-
-// 상수 파생 타입
-export type SortType = keyof typeof SortOptions;
-
-// Next.js 15 페이지 params (Promise 타입)
-export type UUIDParams = { params: Promise<{ uuid: string }> };
+// ✅ 자동 생성 타입을 그대로 사용
+import type {DocumentResponse} from '@apis/generated/types';
 ```
 
-### 타입 위치
+이렇게 하는 이유:
 
-| 용도 | 위치 |
+1. **드리프트가 컴파일 타임에 잡힌다.** 백엔드가 필드를 바꾸면 재생성 시 곧바로 타입 에러가 난다. 손으로 선언한 타입은 백엔드가 바뀌어도 조용히 통과하고 런타임에 `undefined`가 된다.
+2. **"이 타입 어디에 선언하죠?" 논의가 사라진다.** 백엔드 계약이면 선언 자체를 하지 않으므로 위치를 정할 일이 없다. 리뷰에서 다룰 필요도 없다.
+3. **이름이 백엔드와 일치한다.** `DocumentResponse`, `HistoryResponse`처럼 서버 DTO 이름을 그대로 쓰므로 API 문서와 코드를 대조하기 쉽다.
+
+### 타입 위치 결정 규칙
+
+새 타입이 필요할 때 이 순서로 판단하세요.
+
+| 질문 | 그렇다면 |
+|------|----------|
+| 백엔드가 주고받는 값인가? | **선언 금지.** `@apis/generated/types` 에서 import |
+| 라이브러리·프레임워크가 정하는 타입인가? | `type/{Lib}.type.ts` (ex. `Editor.type.ts`, `react-chrono.d.ts`, `PageParams.type.ts`) |
+| http 전송 계층 타입인가? | `type/http.type.ts` |
+| 컴포넌트 Props 인가? | 컴포넌트 파일 내 인라인 |
+| 특정 스토어의 상태/폼 값인가? | 그 스토어 파일 내에서 export |
+| Route Handler(`app/api/*`)의 응답인가? | 해당 Route Handler에서 export |
+| 그 외 한 모듈에서만 쓰는가? | 그 모듈 파일 내 인라인 |
+
+`type/` 디렉터리에는 **라이브러리·프레임워크 타입과 http 타입만** 남습니다. 도메인 모델을 `type/`에 새로 추가하지 마세요.
+
+```
+type/
+  Editor.type.ts       # Toast UI Editor 래핑
+  react-chrono.d.ts    # 타입 미제공 라이브러리 선언
+  PageParams.type.ts   # Next.js App Router params
+  http.type.ts         # fetch 래퍼 전송 타입
+```
+
+### 자동 생성 타입 사용법
+
+```bash
+# OpenAPI 문서를 scripts/api-module/api-docs/api-docs.json 에 갱신한 뒤
+yarn api:generate
+```
+
+생성물 (`src/apis/generated/` — **직접 수정 금지**, 매 실행마다 통째로 재생성됨):
+
+| 파일 | 내용 |
 |------|------|
-| 도메인 모델 (공유) | `type/*.type.ts` |
-| 컴포넌트 Props | 컴포넌트 파일 내 인라인 |
-| API 로컬 타입 | API 파일 내 인라인 |
-| Route Handler 응답 | Route Handler에서 export |
+| `types.ts` | 모든 요청/응답 타입. `SuccessBody*` 봉투는 벗겨진 상태 |
+| `operations.ts` | `'GET /document/uuid/{uuidText}'` → 인자 타입 맵 |
+| `server/`, `client/` | 경로를 그대로 옮긴 API 호출 트리 |
 
----
+### 자동 생성 타입 조합하기
 
-# 스타일링, 에러 처리, 캐시, 인증
+프론트에서만 필요한 필드가 붙는다면, **다시 선언하지 말고 생성 타입에서 파생**시키세요.
 
-> SKILL.md의 지원 파일입니다. 섹션 9-12의 상세 내용을 담고 있습니다.
+```ts
+// ✅ 두 API 응답을 합친 화면 전용 타입 — 사용하는 훅 안에 둔다
+type DocumentWithOrganizations = DocumentResponse & {
+  organizations: OrganizationDocumentSearchResponse[];
+};
+
+// ✅ 폼 집계 타입 — 전송 직전에 프론트 필드를 분리한다
+type PostDocumentContent = CrewDocumentCreateRequest & {
+  newOrganizations: OrganizationDocumentSearchResponse[];
+  existingOrganizations: OrganizationDocumentSearchResponse[];
+};
+
+// ✅ 생성 타입에서 필드 타입만 빌려오기
+type DocumentType = DocumentListResponse['documentType'];
+type ViewCountByUUID = ViewFlushRequest['views'];
+```
+
+### 여전히 손으로 선언하는 타입
+
+```ts
+// 라이브러리 래핑 — type/Editor.type.ts
+export type EditorRef = React.RefObject<Editor | null>;
+
+// http 전송 계층 — type/http.type.ts
+export type ServerHttpMethodArgs = Omit<ServerHttpArgs, 'method'>;
+
+// Next.js 15 페이지 params (프레임워크 규약) — type/PageParams.type.ts
+export type UUIDParams = {params: Promise<{uuid: string}>};
+
+// Route Handler 응답 — app/api/post-view-count/route.ts 에서 export
+export type PostViewCountResponse = {success: boolean; message: string};
+```
+
+### 선언 규칙
+
+손으로 선언하는 경우에 한해 적용합니다.
+
+```ts
+// 객체 형태 → interface
+export interface EditorProps {
+  initialValue: string;
+}
+
+// 별칭 / 유니온 / 제네릭 / 유틸리티 조합 → type
+export type ErrorMessage = string | null;
+export type EditorRef = React.RefObject<Editor | null>;
+```
+
+### 스웨거에 없는 엔드포인트
+
+OpenAPI 문서에 없는 API(ex. Presigned URL `/upload`)는 생성할 수 없으므로 호출하는 파일 안에 인라인으로 선언하고, **백엔드에 문서 등록을 요청**하세요. 이 타입들은 드리프트 감지 대상 밖입니다.
 
 ---
 

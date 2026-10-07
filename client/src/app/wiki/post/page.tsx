@@ -1,5 +1,6 @@
 'use client';
 
+import type {OrganizationDocumentSearchResponse} from '@apis/generated/types';
 import {useEffect} from 'react';
 import PostHeader from '@components/document/Write/PostHeader';
 import TitleInputField from '@components/document/Write/TitleInputField';
@@ -7,7 +8,6 @@ import OrganizationInputField from '@components/document/Write/OrganizationInput
 import TuiEditor from '@components/document/TuiEditor';
 import {usePostSaveMarkdown} from './usePostSaveMarkdown';
 import {useDocument} from '@store/document';
-import {Organization} from '@type/Group.type';
 
 const Page = () => {
   const {saveMarkdown, initialValue} = usePostSaveMarkdown();
@@ -20,12 +20,12 @@ const Page = () => {
   const addExistingOrganization = useDocument(action => action.addExistingOrganization);
   const removeOrganization = useDocument(action => action.removeOrganization);
 
-  const handleSelectOrganization = (organization: Organization) => {
+  const handleSelectOrganization = (organization: OrganizationDocumentSearchResponse) => {
     addExistingOrganization(organization);
   };
 
   const handleAddOrganization = (title: string) => {
-    const newOrganization: Organization = {
+    const newOrganization: OrganizationDocumentSearchResponse = {
       title,
       uuid: crypto.randomUUID(),
     };

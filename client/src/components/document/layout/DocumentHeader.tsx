@@ -1,8 +1,8 @@
+import {DOCUMENT_TYPE, DocumentType} from '@constants/document';
 import Button from '@components/common/Button';
 import Link from 'next/link';
 import DocumentTitle from './DocumentTitle';
 import {route} from '@constants/route';
-import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
 
 interface DocumentHeaderProps {
   title: string;

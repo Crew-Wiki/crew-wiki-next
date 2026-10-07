@@ -1,6 +1,6 @@
 'use client';
 
-import {getRandomDocumentClient} from '@apis/client/document';
+import {api} from '@apis/generated/client';
 import {route} from '@constants/route';
 import {useFetch} from '@hooks/useFetch';
 import {useRouter} from 'next/navigation';
@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react';
 
 export const useRandomButton = () => {
   const router = useRouter();
-  const {refetch: fetchRandom, isLoading} = useFetch(getRandomDocumentClient, {enabled: false});
+  const {refetch: fetchRandom, isLoading} = useFetch(api.document.random.get, {enabled: false});
 
   const goRandomDocument = async () => {
     const randomDocument = await fetchRandom();

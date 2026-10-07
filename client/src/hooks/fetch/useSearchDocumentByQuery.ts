@@ -3,14 +3,14 @@
 import {useCallback, useEffect} from 'react';
 import useDebounce from '../useDebounce';
 import {useFetch} from '@hooks/useFetch';
-import {getSearchDocumentClient} from '@apis/client/document';
+import {api} from '@apis/generated/client';
 
 type UseSearchDocumentByQueryOptions = {
   enabled?: boolean;
 };
 
 const useSearchDocumentByQuery = (query: string, options?: UseSearchDocumentByQueryOptions) => {
-  const searchDocumentByQuery = useCallback(() => getSearchDocumentClient(query), [query]);
+  const searchDocumentByQuery = useCallback(() => api.document.search.get({keyWord: query}), [query]);
   const {data, refetch} = useFetch(searchDocumentByQuery, {enabled: options?.enabled});
 
   const searchDocumentsIfValid = useCallback(() => {

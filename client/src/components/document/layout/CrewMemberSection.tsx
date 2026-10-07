@@ -1,7 +1,7 @@
 'use client';
 
+import type {LinkedCrewDocumentResponse} from '@apis/generated/types';
 import {useRouter} from 'next/navigation';
-import {LinkedCrewDocumentResponse} from '@type/Group.type';
 import {Chip} from '@components/common/Chip';
 import {route} from '@constants/route';
 

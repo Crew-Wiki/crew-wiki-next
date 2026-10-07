@@ -1,5 +1,6 @@
 'use client';
 
+import {PostDocumentContent} from '@store/document';
 import Button from '@components/common/Button';
 import DocumentTitle from '@components/document/layout/DocumentTitle';
 import {useRouter} from 'next/navigation';
@@ -7,7 +8,6 @@ import {Field, useDocument} from '@store/document';
 import {getBytes} from '@utils/getBytes';
 import {usePostDocument} from '@hooks/mutation/usePostDocument';
 import {usePutDocument} from '@hooks/mutation/usePutDocument';
-import {PostDocumentContent} from '@type/Document.type';
 import {useConflictModal} from './useConflictModal';
 import {ModeProps} from './type';
 

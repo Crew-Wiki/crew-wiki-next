@@ -1,12 +1,12 @@
 'use client';
 
+import type {OrganizationDocumentSearchResponse} from '@apis/generated/types';
 import {useRouter} from 'next/navigation';
-import {Organization} from '@type/Group.type';
 import {Chip} from '@components/common/Chip';
 import {route} from '@constants/route';
 
 interface OrganizationSectionProps {
-  organizations: Organization[];
+  organizations: OrganizationDocumentSearchResponse[];
 }
 
 const OrganizationSection = ({organizations}: OrganizationSectionProps) => {

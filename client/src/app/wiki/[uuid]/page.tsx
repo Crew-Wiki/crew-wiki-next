@@ -1,25 +1,21 @@
-import {
-  getDocumentByUUIDServer,
-  getDocumentTitlesServer,
-  getOrganizationDocumentsByDocumentUUIDServer,
-} from '@apis/server/document';
+import {DOCUMENT_TYPE} from '@constants/document';
 import DocumentContents from '@components/document/layout/DocumentContents';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
-import {DOCUMENT_TYPE} from '@type/Document.type';
 import type {UUIDParams} from '@type/PageParams.type';
 import {generateDocumentPageMetadata} from '@utils/generateDocumentMetadata';
 import markdownToHtml from '@utils/markdownToHtml';
 import {Metadata} from 'next';
 import {notFound} from 'next/navigation';
 import {IncrementViewCountByUUID} from './IncrementViewCountByUUID';
+import {api} from '@apis/generated/server';
 
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
   try {
-    const documents = await getDocumentTitlesServer();
+    const documents = await api.document.titles.get();
 
     if (!documents || !Array.isArray(documents)) return [];
 
@@ -39,15 +35,16 @@ export async function generateMetadata({params}: UUIDParams): Promise<Metadata> 
 // https://nextjs.org/docs/messages/sync-dynamic-apis
 const DocumentPage = async ({params}: UUIDParams) => {
   const {uuid} = await params;
-  const [document, organizations] = await Promise.all([
-    getDocumentByUUIDServer(uuid),
-    getOrganizationDocumentsByDocumentUUIDServer(uuid),
-  ]);
+  const document = await api.document
+    .uuid(uuid)
+    .get()
+    .catch(() => null);
 
   if (!document) {
     notFound();
   }
 
+  const organizations = await api.document(uuid).organizationDocuments.get();
   const contents = await markdownToHtml(document.contents);
 
   return (

@@ -1,14 +1,14 @@
 'use server';
 
+import type {CrewDocumentCreateRequest, DocumentResponse} from '@apis/generated/types';
 import {CACHE} from '@constants/cache';
-import {PostDocumentBody, WikiDocument} from '@type/Document.type';
 import {revalidateTag} from 'next/cache';
 import {NextRequest, NextResponse} from 'next/server';
-import {postDocumentServer} from '@apis/server/document';
 import {ApiResponseType} from '@type/http.type';
+import {api} from '@apis/generated/server';
 
-const postDocument = async (document: PostDocumentBody) => {
-  const response = await postDocumentServer(document);
+const postDocument = async (document: CrewDocumentCreateRequest) => {
+  const response = await api.document.post(document);
 
   revalidateTag(CACHE.tag.getRecentlyDocuments);
   revalidateTag(CACHE.tag.getDocumentTitles);
@@ -20,12 +20,12 @@ const postDocument = async (document: PostDocumentBody) => {
 };
 
 export const POST = async (request: NextRequest) => {
-  const document: PostDocumentBody = await request.json();
+  const document: CrewDocumentCreateRequest = await request.json();
 
   try {
     const createdDocument = await postDocument(document);
 
-    const response: ApiResponseType<WikiDocument> = {
+    const response: ApiResponseType<DocumentResponse> = {
       data: createdDocument,
       code: 'SUCCESS',
     };

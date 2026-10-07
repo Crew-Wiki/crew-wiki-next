@@ -1,8 +1,24 @@
+import type {OrganizationDocumentSearchResponse} from '@apis/generated/types';
+import type {CrewDocumentCreateRequest} from '@apis/generated/types';
 import {create} from 'zustand';
-import {ErrorInfo, ErrorMessage} from '@type/Document.type';
-import {Organization} from '@type/Group.type';
 import {validateTitleOnBlur, validateTitleOnChange} from '@utils/validation/title';
 import {validateWriterOnChange} from '@utils/validation/writer';
+
+export type ErrorMessage = string | null;
+
+export type ErrorInfo = {
+  errorMessage: ErrorMessage;
+  reset: ((value: string) => string) | null;
+};
+
+/**
+ * 문서 작성/수정 폼의 집계 값.
+ * 조직 필드는 전송 직전에 분리되어 별도 조직 API 로 나간다.
+ */
+export type PostDocumentContent = CrewDocumentCreateRequest & {
+  newOrganizations: OrganizationDocumentSearchResponse[];
+  existingOrganizations: OrganizationDocumentSearchResponse[];
+};
 
 export type Field = 'title' | 'writer' | 'contents';
 
@@ -18,9 +34,9 @@ type State = {
   uuid: string;
   isImageUploadPending: boolean;
   originalVersion: number;
-  newOrganizations: Organization[];
-  existingOrganizations: Organization[];
-  originalOrganizations: Organization[];
+  newOrganizations: OrganizationDocumentSearchResponse[];
+  existingOrganizations: OrganizationDocumentSearchResponse[];
+  originalOrganizations: OrganizationDocumentSearchResponse[];
 };
 
 type Validators = {
@@ -29,13 +45,18 @@ type Validators = {
 };
 
 type Action = {
-  setInit: (initial: FieldType, uuid: string | null, version?: number, organizations?: Organization[]) => void;
+  setInit: (
+    initial: FieldType,
+    uuid: string | null,
+    version?: number,
+    organizations?: OrganizationDocumentSearchResponse[],
+  ) => void;
   onChange: (value: string, field: Field) => void;
   onBlur: (value: string, field: Field, list?: string[]) => void;
   reset: () => void;
   updateImageUploadPending: (isPending: boolean) => void;
-  addNewOrganization: (organization: Organization) => void;
-  addExistingOrganization: (organization: Organization) => void;
+  addNewOrganization: (organization: OrganizationDocumentSearchResponse) => void;
+  addExistingOrganization: (organization: OrganizationDocumentSearchResponse) => void;
   removeOrganization: (uuid: string) => void;
 };
 
@@ -142,13 +163,13 @@ export const useDocument = create<State & Action>(set => ({
     set(() => initialValue);
   },
 
-  addNewOrganization: (organization: Organization) => {
+  addNewOrganization: (organization: OrganizationDocumentSearchResponse) => {
     set(state => ({
       newOrganizations: [...state.newOrganizations, organization],
     }));
   },
 
-  addExistingOrganization: (organization: Organization) => {
+  addExistingOrganization: (organization: OrganizationDocumentSearchResponse) => {
     set(state => ({
       existingOrganizations: [...state.existingOrganizations, organization],
     }));

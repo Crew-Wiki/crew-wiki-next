@@ -1,13 +1,14 @@
 'use client';
 
+import type {HistoryResponse} from '@apis/generated/types';
+import {DOCUMENT_TYPE, DocumentType} from '@constants/document';
 import {InfiniteScrollObserver} from '@components/common/InfinityScrollObserver';
 import {LogContent} from './LogContent';
-import {DOCUMENT_TYPE, DocumentType, WikiDocumentLogSummary} from '@type/Document.type';
 import {useGetDocumentLogs} from '@hooks/fetch/useGetDocumentLogs';
 
 type LogListParams = {
   uuid: string;
-  initialData: WikiDocumentLogSummary[];
+  initialData: HistoryResponse[];
   totalPage: number;
   documentType?: DocumentType;
 };

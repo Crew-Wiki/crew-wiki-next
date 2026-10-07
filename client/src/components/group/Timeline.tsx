@@ -1,8 +1,8 @@
 'use client';
 
+import type {OrganizationEventResponse} from '@apis/generated/types';
 import React from 'react';
 import {Chrono} from 'react-chrono';
-import {OrganizationEventResponse} from '@type/Group.type';
 import {colors} from '@constants/colors';
 import './Timeline.css';
 

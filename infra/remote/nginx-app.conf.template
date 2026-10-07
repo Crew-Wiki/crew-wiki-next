@@ -1,0 +1,19 @@
+# lib/load-env.sh 의 render_nginx_conf 가 도메인/포트를 치환한 뒤 서버에 배치한다.
+server {
+    listen 80;
+    server_name ${SERVER_NAMES};
+
+    # 이미지 업로드 라우트가 있어 기본값(1m)으로는 413 이 난다
+    client_max_body_size 20m;
+
+    location / {
+        proxy_pass http://127.0.0.1:${APP_PORT};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}

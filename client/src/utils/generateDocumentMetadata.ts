@@ -1,9 +1,9 @@
-import {getDocumentByUUIDServer} from '@apis/server/document';
+import {api} from '@apis/generated/server';
 import {Metadata} from 'next';
 
 export async function generateDocumentPageMetadata(uuid: string): Promise<Metadata> {
   try {
-    const document = await getDocumentByUUIDServer(uuid);
+    const document = await api.document.uuid(uuid).get();
     const documentTitle = document?.title;
 
     return {
@@ -30,7 +30,7 @@ export async function generateDocumentPageMetadata(uuid: string): Promise<Metada
 
 export async function generateLogsPageMetadata(uuid: string): Promise<Metadata> {
   try {
-    const document = await getDocumentByUUIDServer(uuid);
+    const document = await api.document.uuid(uuid).get();
     const documentTitle = document?.title;
 
     return {
@@ -56,7 +56,7 @@ export async function generateLogsPageMetadata(uuid: string): Promise<Metadata> 
 
 export async function generateLogPageMetadata(uuid: string): Promise<Metadata> {
   try {
-    const document = await getDocumentByUUIDServer(uuid);
+    const document = await api.document.uuid(uuid).get();
     const documentTitle = document?.title;
 
     return {

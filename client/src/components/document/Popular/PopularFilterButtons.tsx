@@ -1,7 +1,7 @@
 'use client';
 
+import {SortType} from '@constants/popular';
 import Button from '@components/common/Button';
-import {SortType} from '@type/Document.type';
 import {SORT_OPTIONS} from '@constants/popular';
 
 interface PopularFilterButtonsProps {
