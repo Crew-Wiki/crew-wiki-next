@@ -36,15 +36,16 @@ export async function generateMetadata({params}: UUIDParams): Promise<Metadata> 
 // https://nextjs.org/docs/messages/sync-dynamic-apis
 const DocumentPage = async ({params}: UUIDParams) => {
   const {uuid} = await params;
-  const [document, organizations] = await Promise.all([
-    api.document.uuid(uuid).get(),
-    api.document(uuid).organizationDocuments.get(),
-  ]);
+  const document = await api.document
+    .uuid(uuid)
+    .get()
+    .catch(() => null);
 
   if (!document) {
     notFound();
   }
 
+  const organizations = await api.document(uuid).organizationDocuments.get();
   const contents = await markdownToHtml(document.contents);
 
   return (

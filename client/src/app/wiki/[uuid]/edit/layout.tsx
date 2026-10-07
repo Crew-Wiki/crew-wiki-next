@@ -4,7 +4,10 @@ import {Metadata} from 'next';
 
 export async function generateMetadata({params}: UUIDParams): Promise<Metadata> {
   const {uuid} = await params;
-  const document = await api.document.uuid(uuid).get();
+  const document = await api.document
+    .uuid(uuid)
+    .get()
+    .catch(() => null);
 
   return {
     title: document ? `${document.title} 편집하기` : '편집하기',

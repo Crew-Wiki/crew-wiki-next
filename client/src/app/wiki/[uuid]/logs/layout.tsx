@@ -7,7 +7,10 @@ type Props = React.PropsWithChildren & UUIDParams;
 
 const Layout = async ({children, params}: Props) => {
   const {uuid} = await params;
-  const document = await api.document.uuid(uuid).get();
+  const document = await api.document
+    .uuid(uuid)
+    .get()
+    .catch(() => null);
 
   return (
     document && (
