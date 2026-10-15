@@ -12,7 +12,10 @@ export const CREW_EDGE_INSET = GRAPH_NODE.crewRadius + GRAPH_NODE.edgeGap;
 export const getEdgePath = (source: Point, sourceInset: number, target: Point, targetInset: number): string => {
   const dx = target.x - source.x;
   const dy = target.y - source.y;
-  const distance = Math.hypot(dx, dy) || 1;
+  const distance = Math.hypot(dx, dy);
+  // 두 노드가 겹칠 만큼 가까우면 — 새 크루가 알약 자리에서 태어나는 순간 — 잘라 내고 남을 선이 없다. 아무것도 그리지 않는다.
+  if (distance <= sourceInset + targetInset) return '';
+
   const unitX = dx / distance;
   const unitY = dy / distance;
 

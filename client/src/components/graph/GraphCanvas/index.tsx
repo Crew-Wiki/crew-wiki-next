@@ -15,6 +15,7 @@ import {useGraphMotion} from './useGraphMotion';
 //
 // 레이어는 세 겹이다: 분야 간선 → 참조 간선 → 노드. SVG 는 뒤에 그린 것이 위에 올라오므로 노드가 항상 선 위에 있다.
 // crews · fields 가 바뀌면 배치 함수가 새 목표 좌표를 내고, 노드는 스프링(useGraphMotion)으로 거기까지 이동한다.
+// 새로 들어온 크루는 소속 알약 자리에서 태어나 퍼져 나간다.
 // 좁은 화면 판정은 다음 단계에서 붙는다.
 const GraphCanvas = ({
   crews,
@@ -32,8 +33,14 @@ const GraphCanvas = ({
     () => calculateGraphLayout({crews, fields, isMultiGeneration, isNarrow}),
     [crews, fields, isMultiGeneration, isNarrow],
   );
+  // 새 크루 노드는 소속 알약 자리에서 태어나 제자리로 퍼져 나간다. 그 출발점을 키로 알려 준다.
+  const spawnAnchors = useMemo(
+    () => Object.fromEntries(crews.map(crew => [crewNodeKey(crew.documentUuid), fieldNodeKey(crew.field)])),
+    [crews],
+  );
   const {svgRef, viewBoxAttribute, getPosition, getNodeRef, getEdgeRef} = useGraphMotion({
     layout,
+    spawnAnchors,
     stageWidth,
     isNarrow,
   });

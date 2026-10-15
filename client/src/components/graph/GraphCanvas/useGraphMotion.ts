@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {GRAPH_MOTION} from '@constants/graph';
 import {GraphLayout, GraphViewBox} from '@type/Graph.type';
 import {fitGraphViewBox} from '@utils/calculateGraphLayout';
@@ -10,6 +10,7 @@ interface NodeMotion {
   y: number;
   vx: number;
   vy: number;
+  scale: number;
 }
 
 interface EdgeSpec {
@@ -21,6 +22,8 @@ interface EdgeSpec {
 
 interface UseGraphMotionParams {
   layout: GraphLayout;
+  // 새 노드가 태어나는 자리. 키 → 그 자리를 빌려줄 노드의 키(크루 → 소속 분야 알약). 없으면 제 목표 자리에서 태어난다.
+  spawnAnchors: Record<string, string>;
   stageWidth: number;
   isNarrow: boolean;
 }
@@ -36,7 +39,10 @@ const toViewBoxAttribute = ({x, y, width, height}: GraphViewBox) =>
 // 현재 좌표는 React 상태가 아니라 ref 에 두고, rAF 루프가 노드의 transform · 간선의 d · svg 의 viewBox 를 직접 고친다.
 // 매 프레임 노드 수십 개를 리렌더하면 그 비용이 애니메이션보다 크기 때문이다.
 // React 는 노드가 생기고 없어질 때만 렌더하고, 그때는 ref 의 현재 좌표를 읽어 그리므로 그림이 튀지 않는다.
-export const useGraphMotion = ({layout, stageWidth, isNarrow}: UseGraphMotionParams) => {
+//
+// 새로 나타나는 노드는 소속 알약이 지금 있는 자리에서 크기 0 으로 태어나 제자리로 퍼져 나간다.
+// 알약을 켤 때 크루들이 알약에서 쏟아져 나오는 연출이고, 처음 그릴 때만은 출발점이 없으니 다 자란 채로 목표에 바로 놓는다.
+export const useGraphMotion = ({layout, spawnAnchors, stageWidth, isNarrow}: UseGraphMotionParams) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const positionsRef = useRef(new Map<string, NodeMotion>());
   const targetsRef = useRef(layout);
@@ -52,38 +58,9 @@ export const useGraphMotion = ({layout, stageWidth, isNarrow}: UseGraphMotionPar
     viewBoxRef.current = {current: {...initial}, target: initial};
   }
 
-  const tick = useCallback(() => {
-    const {stiffness, damping, settleVelocity, viewBoxLerp, settleViewBox} = GRAPH_MOTION;
+  // 현재 좌표를 DOM 에 쓴다. 루프의 매 프레임과, 노드 집합이 바뀐 직후(브라우저가 그리기 전) 두 곳에서 부른다.
+  const paint = useCallback(() => {
     const positions = positionsRef.current;
-    const targets = targetsRef.current;
-    let isMoving = false;
-
-    positions.forEach((motion, key) => {
-      const target = targets[key];
-      if (!target) return;
-
-      motion.vx = (motion.vx + (target.x - motion.x) * stiffness) * damping;
-      motion.vy = (motion.vy + (target.y - motion.y) * stiffness) * damping;
-      motion.x += motion.vx;
-      motion.y += motion.vy;
-
-      if (Math.abs(motion.vx) > settleVelocity || Math.abs(motion.vy) > settleVelocity) {
-        isMoving = true;
-      }
-    });
-
-    // 멈출 때는 목표에 정확히 맞춘다. 남은 오차가 작아도 간선 끝이 미세하게 어긋난 채 끝나지 않게.
-    if (!isMoving) {
-      positions.forEach((motion, key) => {
-        const target = targets[key];
-        if (!target) return;
-
-        motion.x = target.x;
-        motion.y = target.y;
-        motion.vx = 0;
-        motion.vy = 0;
-      });
-    }
 
     positions.forEach((motion, key) => {
       nodeElementsRef.current.get(key)?.setAttribute('transform', toNodeTransform(motion));
@@ -99,6 +76,47 @@ export const useGraphMotion = ({layout, stageWidth, isNarrow}: UseGraphMotionPar
 
     const viewBox = viewBoxRef.current;
     if (viewBox) {
+      svgRef.current?.setAttribute('viewBox', toViewBoxAttribute(viewBox.current));
+    }
+  }, []);
+
+  const tick = useCallback(() => {
+    const {stiffness, damping, scaleLerp, settleVelocity, settleScale, viewBoxLerp, settleViewBox} = GRAPH_MOTION;
+    const positions = positionsRef.current;
+    const targets = targetsRef.current;
+    let isMoving = false;
+
+    positions.forEach((motion, key) => {
+      const target = targets[key];
+      if (!target) return;
+
+      motion.vx = (motion.vx + (target.x - motion.x) * stiffness) * damping;
+      motion.vy = (motion.vy + (target.y - motion.y) * stiffness) * damping;
+      motion.x += motion.vx;
+      motion.y += motion.vy;
+      motion.scale += (1 - motion.scale) * scaleLerp;
+
+      if (Math.abs(motion.vx) > settleVelocity || Math.abs(motion.vy) > settleVelocity || motion.scale < settleScale) {
+        isMoving = true;
+      }
+    });
+
+    // 멈출 때는 목표에 정확히 맞춘다. 남은 오차가 작아도 간선 끝이 미세하게 어긋난 채 끝나지 않게.
+    if (!isMoving) {
+      positions.forEach((motion, key) => {
+        const target = targets[key];
+        if (!target) return;
+
+        motion.x = target.x;
+        motion.y = target.y;
+        motion.vx = 0;
+        motion.vy = 0;
+        motion.scale = 1;
+      });
+    }
+
+    const viewBox = viewBoxRef.current;
+    if (viewBox) {
       (['x', 'y', 'width', 'height'] as const).forEach(axis => {
         const delta = viewBox.target[axis] - viewBox.current[axis];
 
@@ -109,13 +127,15 @@ export const useGraphMotion = ({layout, stageWidth, isNarrow}: UseGraphMotionPar
           viewBox.current[axis] = viewBox.target[axis];
         }
       });
-      svgRef.current?.setAttribute('viewBox', toViewBoxAttribute(viewBox.current));
     }
 
+    paint();
     frameRef.current = isMoving ? requestAnimationFrame(tick) : 0;
-  }, []);
+  }, [paint]);
 
-  useEffect(() => {
+  // 레이아웃 effect 인 이유: React 는 새 노드를 목표 자리에 다 자란 크기로 그려 놓는다.
+  // 그 프레임이 화면에 나가기 전에 태어날 자리와 크기 0 으로 바꿔 두어야 한 프레임 번쩍임이 없다.
+  useLayoutEffect(() => {
     targetsRef.current = layout;
 
     const viewBox = viewBoxRef.current;
@@ -131,17 +151,26 @@ export const useGraphMotion = ({layout, stageWidth, isNarrow}: UseGraphMotionPar
       if (!layout[key]) positions.delete(key);
     });
     Object.entries(layout).forEach(([key, target]) => {
-      if (!positions.has(key)) positions.set(key, {x: target.x, y: target.y, vx: 0, vy: 0});
+      if (positions.has(key)) return;
+
+      // 알약이 이미 있으면 지금 있는 자리에서, 알약도 새로 생기면 알약이 태어날 자리에서 함께 태어난다.
+      const anchorKey = spawnAnchors[key];
+      const anchor = anchorKey ? (positions.get(anchorKey) ?? layout[anchorKey]) : undefined;
+      const origin = isFirstLayout ? target : (anchor ?? target);
+
+      positions.set(key, {x: origin.x, y: origin.y, vx: 0, vy: 0, scale: isFirstLayout ? 1 : 0});
     });
 
     if (isFirstLayout && viewBox) {
       viewBox.current = {...viewBox.target};
     }
 
+    paint();
+
     if (!frameRef.current) {
       frameRef.current = requestAnimationFrame(tick);
     }
-  }, [layout, stageWidth, isNarrow, tick]);
+  }, [layout, spawnAnchors, stageWidth, isNarrow, paint, tick]);
 
   useEffect(
     () => () => {
