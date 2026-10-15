@@ -1,8 +1,11 @@
+import {Ref} from 'react';
 import {twMerge} from 'tailwind-merge';
 import {CURRENT_GENERATION, GRAPH_CREW_LABEL_CLASS, GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {GraphCrew} from '@type/Graph.type';
+import {toNodeTransform} from './toNodeTransform';
 
 interface CrewNodeProps {
+  ref: Ref<SVGGElement>;
   crew: GraphCrew;
   x: number;
   y: number;
@@ -19,12 +22,12 @@ const GENERATION_TAG = {
 // 크루 노드는 여러 겹이다 — 후광 → 투명한 히트 영역 → 점 → 라벨. 비율은 기획안 데모를 따랐다.
 // 점은 기수에 따라 둘로 나뉜다. 지금 기수는 분야색으로 꽉 채우고, 지난 기수는 연하게 채우고 테두리로 형태만 세운다.
 // 라벨은 분야와 무관하게 한 가지 색이다. 점이 이미 분야를 말하고 있어서 글자까지 물들이면 화면이 시끄럽다.
-const CrewNode = ({crew, x, y, isMultiGeneration, onActivate}: CrewNodeProps) => {
+const CrewNode = ({ref, crew, x, y, isMultiGeneration, onActivate}: CrewNodeProps) => {
   const style = GRAPH_FIELD_STYLE[crew.field];
   const isCurrentGeneration = crew.generation === CURRENT_GENERATION;
 
   return (
-    <g transform={`translate(${x} ${y})`} className="group cursor-pointer" onClick={() => onActivate(crew)}>
+    <g ref={ref} transform={toNodeTransform({x, y})} className="group cursor-pointer" onClick={() => onActivate(crew)}>
       <circle
         r={GRAPH_NODE.crewHaloRadius}
         strokeWidth={GRAPH_NODE.crewHaloWidth}

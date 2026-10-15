@@ -1,8 +1,10 @@
+import {Ref} from 'react';
 import {getEdgePath} from './getEdgePath';
 
 type Point = {x: number; y: number};
 
 interface GraphEdgeProps {
+  ref: Ref<SVGPathElement>;
   source: Point;
   sourceInset: number;
   target: Point;
@@ -19,8 +21,9 @@ const EDGE_CLASS = {
   reference: 'fill-none stroke-grayscale-700 opacity-50',
 } as const;
 
-const GraphEdge = ({source, sourceInset, target, targetInset, isReference = false}: GraphEdgeProps) => (
+const GraphEdge = ({ref, source, sourceInset, target, targetInset, isReference = false}: GraphEdgeProps) => (
   <path
+    ref={ref}
     d={getEdgePath(source, sourceInset, target, targetInset)}
     strokeWidth={EDGE_STROKE_WIDTH}
     strokeDasharray={isReference ? '5 5' : undefined}
