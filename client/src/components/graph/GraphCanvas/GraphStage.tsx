@@ -160,6 +160,7 @@ const GraphStage = ({
               field={field}
               x={position.x}
               y={position.y}
+              scale={position.scale}
               isDimmed={isHovering && !litNodeKeys.has(key)}
               onToggle={onFieldToggle}
               onHoverChange={isNodeHovered => handleHoverChange(key, isNodeHovered)}
@@ -178,6 +179,7 @@ const GraphStage = ({
               crew={crew}
               x={position.x}
               y={position.y}
+              scale={position.scale}
               isMultiGeneration={isMultiGeneration}
               isDimmed={isHovering && !litNodeKeys.has(key)}
               onActivate={handleCrewActivate}

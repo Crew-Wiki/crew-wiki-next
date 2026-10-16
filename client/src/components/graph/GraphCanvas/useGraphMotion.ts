@@ -180,13 +180,17 @@ export const useGraphMotion = ({layout, spawnAnchors, stageWidth, isNarrow}: Use
     [],
   );
 
-  // 렌더 시점의 좌표. 이미 움직이고 있는 노드는 현재 좌표, 처음 나타나는 노드는 목표 좌표에서 시작한다.
+  // 렌더 시점의 좌표와 크기. 이미 움직이고 있는 노드는 현재 값, 처음 나타나는 노드는 목표 좌표에서 시작한다(출발 자리는 layout effect 가 바로 고쳐 쓴다).
+  // 크기까지 돌려주는 이유: 등장 중에 React 가 리렌더하면(호버 등) 노드 transform 을 props 로 다시 쓰는데, 그때 크기가 빠지면
+  // 다음 rAF 까지 DOM 이 루프와 어긋난다. 화면에 찍히진 않지만 DOM 을 읽는 검증이 흔들린다.
   // 새 배치에 없는 노드는 지난 좌표가 ref 에 남아 있어도 그리지 않는다 — ref 정리는 렌더 뒤 effect 에서 하기 때문이다.
-  const getPosition = (key: string): {x: number; y: number} | undefined => {
+  const getPosition = (key: string): {x: number; y: number; scale: number} | undefined => {
     const target = layout[key];
     if (!target) return undefined;
 
-    return positionsRef.current.get(key) ?? target;
+    const motion = positionsRef.current.get(key);
+
+    return motion ? {x: motion.x, y: motion.y, scale: motion.scale} : {x: target.x, y: target.y, scale: 1};
   };
 
   // 콜백 ref 는 키별로 한 번만 만들어 재사용한다. 렌더마다 새로 만들면 React 가 매번 ref 를 떼었다 다시 붙인다.

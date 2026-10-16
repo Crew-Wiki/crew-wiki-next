@@ -10,6 +10,8 @@ interface FieldPillProps {
   field: GraphField;
   x: number;
   y: number;
+  // 등장 중이면 1 보다 작다
+  scale: number;
   // 다른 노드를 호버 중이라 이 알약은 연결이 없어 흐려진 상태
   isDimmed: boolean;
   onToggle: (fieldId: FieldId) => void;
@@ -18,13 +20,13 @@ interface FieldPillProps {
 
 // 분야 알약. 그룹의 중심이면서 필터 스위치다 — 누르면 onFieldToggle 로 데이터·조작 쪽에 넘어간다.
 // 크기는 인원수·이름 길이와 무관하게 고정이다. 크기를 가중치로 쓰는 것은 이후 로드맵을 위해 아껴 둔 표현 수단이다.
-const FieldPill = ({ref, field, x, y, isDimmed, onToggle, onHoverChange}: FieldPillProps) => {
+const FieldPill = ({ref, field, x, y, scale, isDimmed, onToggle, onHoverChange}: FieldPillProps) => {
   const style = GRAPH_FIELD_STYLE[field.id];
 
   return (
     <g
       ref={ref}
-      transform={toNodeTransform({x, y})}
+      transform={toNodeTransform({x, y, scale})}
       className={twMerge('cursor-pointer transition-opacity duration-150', isDimmed && DIMMED_NODE_CLASS)}
       onClick={() => onToggle(field.id)}
       {...toHoverHandlers(onHoverChange)}
