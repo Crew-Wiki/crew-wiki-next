@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
+import {fn} from 'storybook/test';
 import GraphCanvas from '@components/graph/GraphCanvas';
 import {
   crewListFixture,
@@ -149,12 +150,13 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+// 두 콜백은 fn() 이라 Actions 패널에 호출이 찍힌다. 크루 클릭·알약 클릭이 어떤 인자로 올라오는지 거기서 본다.
 const baseArgs = {
   references: [],
   showReferences: false,
   isMultiGeneration: false,
-  onCrewActivate: () => {},
-  onFieldToggle: () => {},
+  onCrewActivate: fn(),
+  onFieldToggle: fn(),
 };
 
 // 2026-10-01 실측 그대로. 34명 중 25명이 미지정이다.

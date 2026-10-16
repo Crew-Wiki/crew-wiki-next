@@ -2,7 +2,8 @@
 
 import {useMemo, useState} from 'react';
 import {GRAPH_STAGE} from '@constants/graph';
-import {GraphCanvasProps} from '@type/Graph.type';
+import useAmplitude from '@hooks/useAmplitude';
+import {GraphCanvasProps, GraphCrew} from '@type/Graph.type';
 import {calculateGraphLayout, crewNodeKey, fieldNodeKey} from '@utils/calculateGraphLayout';
 import CrewNode from './CrewNode';
 import FieldPill from './FieldPill';
@@ -18,6 +19,7 @@ import {useGraphMotion} from './useGraphMotion';
 // crews · fields 가 바뀌면 배치 함수가 새 목표 좌표를 내고, 노드는 스프링(useGraphMotion)으로 거기까지 이동한다.
 // 새로 들어온 크루는 소속 알약 자리에서 태어나 퍼져 나간다.
 // 노드를 호버하면 그 노드와 이웃만 남기고 나머지를 흐린다(graphHover).
+// 크루를 누르면 계측 이벤트를 남기고 onCrewActivate 로 넘긴다. 문서로 이동하는 일은 데이터·조작 쪽 몫이다.
 // 좁은 화면 판정은 다음 단계에서 붙는다.
 const GraphCanvas = ({
   crews,
@@ -30,6 +32,13 @@ const GraphCanvas = ({
 }: GraphCanvasProps) => {
   const isNarrow = false;
   const stageWidth = GRAPH_STAGE.width;
+
+  const {trackGraphCrewClick} = useAmplitude();
+  // 계측은 여기서 한 번만 남긴다. 호출자가 onCrewActivate 안에서 무엇을 하든(이동, 미리보기) 클릭 자체는 한 건이다.
+  const handleCrewActivate = (crew: GraphCrew) => {
+    trackGraphCrewClick(crew.title, crew.documentUuid, crew.field);
+    onCrewActivate(crew);
+  };
 
   const layout = useMemo(
     () => calculateGraphLayout({crews, fields, isMultiGeneration, isNarrow}),
@@ -168,7 +177,7 @@ const GraphCanvas = ({
               y={position.y}
               isMultiGeneration={isMultiGeneration}
               isDimmed={isHovering && !litNodeKeys.has(key)}
-              onActivate={onCrewActivate}
+              onActivate={handleCrewActivate}
               onHoverChange={isNodeHovered => handleHoverChange(key, isNodeHovered)}
             />
           );
