@@ -1,5 +1,7 @@
 import {Ref} from 'react';
+import {twMerge} from 'tailwind-merge';
 import {getEdgePath} from './getEdgePath';
+import {DIMMED_EDGE_CLASS, LIT_EDGE_CLASS} from './graphHover';
 
 type Point = {x: number; y: number};
 
@@ -10,6 +12,9 @@ interface GraphEdgeProps {
   target: Point;
   targetInset: number;
   isReference?: boolean;
+  // 호버 중 한쪽 끝이 호버된 노드면 켜지고, 아니면 흐려진다. 둘 다 아니면 평소 모습.
+  isLit?: boolean;
+  isDimmed?: boolean;
 }
 
 // 모든 간선은 굵기가 같다. 굵기는 이후 로드맵(관계 가중치)을 위해 아껴 둔 표현 수단이다.
@@ -23,13 +28,27 @@ const EDGE_CLASS = {
   reference: 'fill-none stroke-grayscale-700 opacity-50',
 } as const;
 
-const GraphEdge = ({ref, source, sourceInset, target, targetInset, isReference = false}: GraphEdgeProps) => (
+const GraphEdge = ({
+  ref,
+  source,
+  sourceInset,
+  target,
+  targetInset,
+  isReference = false,
+  isLit = false,
+  isDimmed = false,
+}: GraphEdgeProps) => (
   <path
     ref={ref}
     d={getEdgePath(source, sourceInset, target, targetInset)}
     strokeWidth={EDGE_STROKE_WIDTH}
     strokeDasharray={isReference ? '5 5' : undefined}
-    className={isReference ? EDGE_CLASS.reference : EDGE_CLASS.field}
+    className={twMerge(
+      isReference ? EDGE_CLASS.reference : EDGE_CLASS.field,
+      'transition-[stroke,opacity] duration-150',
+      isLit && LIT_EDGE_CLASS,
+      isDimmed && DIMMED_EDGE_CLASS,
+    )}
   />
 );
 

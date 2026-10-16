@@ -2,6 +2,7 @@ import {Ref} from 'react';
 import {twMerge} from 'tailwind-merge';
 import {CURRENT_GENERATION, GRAPH_CREW_LABEL_CLASS, GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {GraphCrew} from '@type/Graph.type';
+import {DIMMED_NODE_CLASS, toHoverHandlers} from './graphHover';
 import {toNodeTransform} from './toNodeTransform';
 
 interface CrewNodeProps {
@@ -10,7 +11,10 @@ interface CrewNodeProps {
   x: number;
   y: number;
   isMultiGeneration: boolean;
+  // 다른 노드를 호버 중이라 이 노드는 연결이 없어 흐려진 상태
+  isDimmed: boolean;
   onActivate: (crew: GraphCrew) => void;
+  onHoverChange: (isHovering: boolean) => void;
 }
 
 // 여러 기수를 함께 볼 때 이름 뒤에 붙는 기수 꼬리표. 이름보다 작고 흐리게 둬 읽는 순서를 이름 → 기수로 만든다.
@@ -26,12 +30,18 @@ const LABEL_HALO_WIDTH = 3;
 // 점은 기수에 따라 둘로 나뉜다. 지금 기수는 분야색으로 꽉 채우고, 지난 기수는 연하게 채우고 테두리로 형태만 세운다.
 // 라벨은 분야와 무관하게 한 가지 색이다. 점이 이미 분야를 말하고 있어서 글자까지 물들이면 화면이 시끄럽다.
 // 라벨 글자에는 바탕색 테두리를 두른다(paint-order 로 테두리를 글자 밑에 깐다). 간선이 글자를 지나갈 때 글자 둘레만큼 선이 끊겨 보여 이름이 읽힌다.
-const CrewNode = ({ref, crew, x, y, isMultiGeneration, onActivate}: CrewNodeProps) => {
+const CrewNode = ({ref, crew, x, y, isMultiGeneration, isDimmed, onActivate, onHoverChange}: CrewNodeProps) => {
   const style = GRAPH_FIELD_STYLE[crew.field];
   const isCurrentGeneration = crew.generation === CURRENT_GENERATION;
 
   return (
-    <g ref={ref} transform={toNodeTransform({x, y})} className="group cursor-pointer" onClick={() => onActivate(crew)}>
+    <g
+      ref={ref}
+      transform={toNodeTransform({x, y})}
+      className={twMerge('group cursor-pointer transition-opacity duration-150', isDimmed && DIMMED_NODE_CLASS)}
+      onClick={() => onActivate(crew)}
+      {...toHoverHandlers(onHoverChange)}
+    >
       <circle
         r={GRAPH_NODE.crewHaloRadius}
         strokeWidth={GRAPH_NODE.crewHaloWidth}

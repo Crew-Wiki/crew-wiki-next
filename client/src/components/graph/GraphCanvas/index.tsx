@@ -1,6 +1,6 @@
 'use client';
 
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import {GRAPH_STAGE} from '@constants/graph';
 import {GraphCanvasProps} from '@type/Graph.type';
 import {calculateGraphLayout, crewNodeKey, fieldNodeKey} from '@utils/calculateGraphLayout';
@@ -8,6 +8,7 @@ import CrewNode from './CrewNode';
 import FieldPill from './FieldPill';
 import GraphEdge from './GraphEdge';
 import {CREW_EDGE_INSET, FIELD_PILL_EDGE_INSET} from './getEdgePath';
+import {fieldEdgeKey, getGraphHighlight, referenceEdgeKey} from './graphHover';
 import {useGraphMotion} from './useGraphMotion';
 
 // 배치 함수가 낸 좌표를 SVG 로 그린다. 데이터를 스스로 불러오지 않는다 —
@@ -16,6 +17,7 @@ import {useGraphMotion} from './useGraphMotion';
 // 레이어는 세 겹이다: 분야 간선 → 참조 간선 → 노드. SVG 는 뒤에 그린 것이 위에 올라오므로 노드가 항상 선 위에 있다.
 // crews · fields 가 바뀌면 배치 함수가 새 목표 좌표를 내고, 노드는 스프링(useGraphMotion)으로 거기까지 이동한다.
 // 새로 들어온 크루는 소속 알약 자리에서 태어나 퍼져 나간다.
+// 노드를 호버하면 그 노드와 이웃만 남기고 나머지를 흐린다(graphHover).
 // 좁은 화면 판정은 다음 단계에서 붙는다.
 const GraphCanvas = ({
   crews,
@@ -46,7 +48,27 @@ const GraphCanvas = ({
   });
 
   // 참조 간선은 크루 id 로 양 끝을 가리키므로, 그걸 배치 키로 바꾸는 표가 필요하다.
-  const crewKeyById = new Map(crews.map(crew => [crew.id, crewNodeKey(crew.documentUuid)]));
+  const crewKeyById = useMemo(() => new Map(crews.map(crew => [crew.id, crewNodeKey(crew.documentUuid)])), [crews]);
+
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+  // 호버하던 노드가 배치에서 사라지면(알약을 눌러 분야를 끄는 등) pointerleave 가 오지 않는다. 렌더 중에 바로 지운다.
+  if (hoveredKey !== null && !layout[hoveredKey]) {
+    setHoveredKey(null);
+  }
+  const handleHoverChange = (key: string, isHovering: boolean) => {
+    if (isHovering) {
+      setHoveredKey(key);
+    } else {
+      setHoveredKey(current => (current === key ? null : current));
+    }
+  };
+  const {isHovering, litNodeKeys, litEdgeKeys} = getGraphHighlight({
+    hoveredKey: hoveredKey !== null && layout[hoveredKey] ? hoveredKey : null,
+    crews,
+    references,
+    showReferences,
+    crewKeyById,
+  });
 
   return (
     <svg ref={svgRef} viewBox={viewBoxAttribute} className="block h-auto w-full">
@@ -59,10 +81,12 @@ const GraphCanvas = ({
           // 배치 결과에 없는 노드(크루가 0명이라 레이아웃이 비었을 때 등)는 그리지 않는다.
           if (!source || !target) return null;
 
+          const edgeKey = fieldEdgeKey(targetKey);
+
           return (
             <GraphEdge
-              key={targetKey}
-              ref={getEdgeRef(targetKey, {
+              key={edgeKey}
+              ref={getEdgeRef(edgeKey, {
                 sourceKey,
                 targetKey,
                 sourceInset: FIELD_PILL_EDGE_INSET,
@@ -72,6 +96,8 @@ const GraphCanvas = ({
               sourceInset={FIELD_PILL_EDGE_INSET}
               target={target}
               targetInset={CREW_EDGE_INSET}
+              isLit={litEdgeKeys.has(edgeKey)}
+              isDimmed={isHovering && !litEdgeKeys.has(edgeKey)}
             />
           );
         })}
@@ -86,7 +112,7 @@ const GraphCanvas = ({
             const target = targetKey && getPosition(targetKey);
             if (!sourceKey || !targetKey || !source || !target) return null;
 
-            const edgeKey = `reference:${sourceKey}:${targetKey}`;
+            const edgeKey = referenceEdgeKey(sourceKey, targetKey);
 
             return (
               <GraphEdge
@@ -102,6 +128,8 @@ const GraphCanvas = ({
                 target={target}
                 targetInset={CREW_EDGE_INSET}
                 isReference
+                isLit={litEdgeKeys.has(edgeKey)}
+                isDimmed={isHovering && !litEdgeKeys.has(edgeKey)}
               />
             );
           })}
@@ -120,7 +148,9 @@ const GraphCanvas = ({
               field={field}
               x={position.x}
               y={position.y}
+              isDimmed={isHovering && !litNodeKeys.has(key)}
               onToggle={onFieldToggle}
+              onHoverChange={isNodeHovered => handleHoverChange(key, isNodeHovered)}
             />
           );
         })}
@@ -137,7 +167,9 @@ const GraphCanvas = ({
               x={position.x}
               y={position.y}
               isMultiGeneration={isMultiGeneration}
+              isDimmed={isHovering && !litNodeKeys.has(key)}
               onActivate={onCrewActivate}
+              onHoverChange={isNodeHovered => handleHoverChange(key, isNodeHovered)}
             />
           );
         })}

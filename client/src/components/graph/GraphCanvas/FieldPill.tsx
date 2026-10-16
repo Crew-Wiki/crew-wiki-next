@@ -1,6 +1,8 @@
 import {Ref} from 'react';
+import {twMerge} from 'tailwind-merge';
 import {GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {FieldId, GraphField} from '@type/Graph.type';
+import {DIMMED_NODE_CLASS, toHoverHandlers} from './graphHover';
 import {toNodeTransform} from './toNodeTransform';
 
 interface FieldPillProps {
@@ -8,16 +10,25 @@ interface FieldPillProps {
   field: GraphField;
   x: number;
   y: number;
+  // 다른 노드를 호버 중이라 이 알약은 연결이 없어 흐려진 상태
+  isDimmed: boolean;
   onToggle: (fieldId: FieldId) => void;
+  onHoverChange: (isHovering: boolean) => void;
 }
 
 // 분야 알약. 그룹의 중심이면서 필터 스위치다 — 누르면 onFieldToggle 로 데이터·조작 쪽에 넘어간다.
 // 크기는 인원수·이름 길이와 무관하게 고정이다. 크기를 가중치로 쓰는 것은 이후 로드맵을 위해 아껴 둔 표현 수단이다.
-const FieldPill = ({ref, field, x, y, onToggle}: FieldPillProps) => {
+const FieldPill = ({ref, field, x, y, isDimmed, onToggle, onHoverChange}: FieldPillProps) => {
   const style = GRAPH_FIELD_STYLE[field.id];
 
   return (
-    <g ref={ref} transform={toNodeTransform({x, y})} className="cursor-pointer" onClick={() => onToggle(field.id)}>
+    <g
+      ref={ref}
+      transform={toNodeTransform({x, y})}
+      className={twMerge('cursor-pointer transition-opacity duration-150', isDimmed && DIMMED_NODE_CLASS)}
+      onClick={() => onToggle(field.id)}
+      {...toHoverHandlers(onHoverChange)}
+    >
       <rect
         x={-GRAPH_NODE.fieldPillWidth / 2}
         y={-GRAPH_NODE.fieldPillHeight / 2}
