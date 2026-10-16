@@ -79,9 +79,12 @@ export const getGraphHighlight = ({
 };
 
 // 노드 <g> 에 붙이는 호버 핸들러. 터치에는 호버가 없다 — 탭한 뒤 흐림이 풀리지 않고 남는 것을 막는다.
+// 키보드 포커스도 호버와 같이 다룬다. Tab 으로 노드에 서면 그 노드와 이웃만 남고 나머지가 흐려진다(이식 원본 focusin → setHover).
 export const toHoverHandlers = (onHoverChange: (isHovering: boolean) => void) => ({
   onPointerEnter: (event: PointerEvent<SVGGElement>) => {
     if (event.pointerType !== 'touch') onHoverChange(true);
   },
   onPointerLeave: () => onHoverChange(false),
+  onFocus: () => onHoverChange(true),
+  onBlur: () => onHoverChange(false),
 });

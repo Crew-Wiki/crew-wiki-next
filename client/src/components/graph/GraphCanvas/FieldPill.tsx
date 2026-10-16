@@ -3,7 +3,7 @@ import {twMerge} from 'tailwind-merge';
 import {GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {FieldId, GraphField} from '@type/Graph.type';
 import {DIMMED_NODE_CLASS, toHoverHandlers} from './graphHover';
-import {toKeyboardButtonProps} from './graphKeyboard';
+import {FOCUSABLE_GROUP_CLASS, FOCUS_RING_CLASS, toKeyboardButtonProps} from './graphKeyboard';
 import {toNodeTransform} from './toNodeTransform';
 
 interface FieldPillProps {
@@ -29,6 +29,7 @@ const FieldPill = ({ref, field, x, y, scale, isDimmed, onToggle, onHoverChange}:
       ref={ref}
       transform={toNodeTransform({x, y, scale})}
       className={twMerge(
+        FOCUSABLE_GROUP_CLASS,
         'cursor-pointer transition-opacity duration-150 motion-reduce:transition-none',
         isDimmed && DIMMED_NODE_CLASS,
       )}
@@ -42,7 +43,7 @@ const FieldPill = ({ref, field, x, y, scale, isDimmed, onToggle, onHoverChange}:
         width={GRAPH_NODE.fieldPillWidth}
         height={GRAPH_NODE.fieldPillHeight}
         rx={GRAPH_NODE.fieldPillRadius}
-        className={style.pill}
+        className={twMerge(style.pill, FOCUS_RING_CLASS)}
       />
       {/* 이름과 인원수를 한 text 안에서 나눈다. 인원수는 작고 흐리게 붙어 따라간다. */}
       <text

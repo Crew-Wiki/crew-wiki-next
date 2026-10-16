@@ -3,7 +3,7 @@ import {twMerge} from 'tailwind-merge';
 import {CURRENT_GENERATION, GRAPH_CREW_LABEL_CLASS, GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {GraphCrew} from '@type/Graph.type';
 import {DIMMED_NODE_CLASS, toHoverHandlers} from './graphHover';
-import {toKeyboardButtonProps} from './graphKeyboard';
+import {FOCUSABLE_GROUP_CLASS, FOCUS_RING_CLASS, toKeyboardButtonProps} from './graphKeyboard';
 import {toNodeTransform} from './toNodeTransform';
 
 interface CrewNodeProps {
@@ -42,7 +42,8 @@ const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActiva
       ref={ref}
       transform={toNodeTransform({x, y, scale})}
       className={twMerge(
-        'group cursor-pointer transition-opacity duration-150 motion-reduce:transition-none',
+        FOCUSABLE_GROUP_CLASS,
+        'cursor-pointer transition-opacity duration-150 motion-reduce:transition-none',
         isDimmed && DIMMED_NODE_CLASS,
       )}
       onClick={() => onActivate(crew)}
@@ -61,7 +62,7 @@ const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActiva
       <circle
         r={GRAPH_NODE.crewRadius}
         strokeWidth={isCurrentGeneration ? 0 : GRAPH_NODE.pastGenerationStrokeWidth}
-        className={isCurrentGeneration ? style.dot : style.pastDot}
+        className={twMerge(isCurrentGeneration ? style.dot : style.pastDot, FOCUS_RING_CLASS)}
       />
       <text
         y={GRAPH_NODE.crewLabelOffsetY}
