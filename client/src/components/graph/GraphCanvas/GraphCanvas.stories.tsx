@@ -147,24 +147,25 @@ export const Empty: Story = {
   args: {...baseArgs, crews: toCrews(emptyCrewListFixture), fields: toFields([])},
 };
 
-// 알약을 눌러 그 분야의 크루를 껐다 켤 수 있다. 움직임을 보기 위한 스토리 전용 동작이고,
-// 실제로 알약 클릭이 무엇을 거르는지는 데이터·조작 쪽이 정한다.
+// 알약을 누르면 그 분야가 필터로 켜지고(aria-pressed, 바깥 테두리), 켜진 분야가 하나라도 있으면 그 분야들의 크루만 남는다.
+// 다시 누르면 꺼진다. 기획안 데모의 분야 필터 동작을 스토리 안에서 흉내 낸 것이고, 실제 필터는 데이터·조작 쪽이 만든다.
 // 켤 때 크루들이 알약에서 퍼져 나오고, 남은 그룹은 새 자리로 스프링 이동한다.
 const PlaygroundGraph = ({crews: allCrews, fields: allFields, onFieldToggle, ...args}: GraphCanvasProps) => {
-  const [hiddenFieldIds, setHiddenFieldIds] = useState<FieldId[]>([]);
+  const [selectedFieldIds, setSelectedFieldIds] = useState<FieldId[]>([]);
 
   const handleFieldToggle = (fieldId: FieldId) => {
-    setHiddenFieldIds(current =>
+    setSelectedFieldIds(current =>
       current.includes(fieldId) ? current.filter(id => id !== fieldId) : [...current, fieldId],
     );
     onFieldToggle(fieldId);
   };
+  const isShown = (fieldId: FieldId) => selectedFieldIds.length === 0 || selectedFieldIds.includes(fieldId);
 
   return (
     <GraphCanvas
       {...args}
-      crews={allCrews.filter(crew => !hiddenFieldIds.includes(crew.field))}
-      fields={allFields.map(field => ({...field, isSelected: !hiddenFieldIds.includes(field.id)}))}
+      crews={allCrews.filter(crew => isShown(crew.field))}
+      fields={allFields.map(field => ({...field, isSelected: selectedFieldIds.includes(field.id)}))}
       onFieldToggle={handleFieldToggle}
     />
   );

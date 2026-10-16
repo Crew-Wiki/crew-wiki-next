@@ -3,6 +3,7 @@ import {twMerge} from 'tailwind-merge';
 import {CURRENT_GENERATION, GRAPH_CREW_LABEL_CLASS, GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {GraphCrew} from '@type/Graph.type';
 import {DIMMED_NODE_CLASS, toHoverHandlers} from './graphHover';
+import {toCrewNodeLabel} from './graphAria';
 import {FOCUSABLE_GROUP_CLASS, FOCUS_RING_CLASS, toKeyboardButtonProps} from './graphKeyboard';
 import {toNodeTransform} from './toNodeTransform';
 
@@ -46,6 +47,7 @@ const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActiva
         'cursor-pointer transition-opacity duration-150 motion-reduce:transition-none',
         isDimmed && DIMMED_NODE_CLASS,
       )}
+      aria-label={toCrewNodeLabel(crew)}
       onClick={() => onActivate(crew)}
       {...toHoverHandlers(onHoverChange)}
       {...toKeyboardButtonProps(() => onActivate(crew))}
@@ -65,6 +67,7 @@ const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActiva
         className={twMerge(isCurrentGeneration ? style.dot : style.pastDot, FOCUS_RING_CLASS)}
       />
       <text
+        aria-hidden
         y={GRAPH_NODE.crewLabelOffsetY}
         textAnchor="middle"
         fontSize={GRAPH_NODE.crewLabelFontSize}
