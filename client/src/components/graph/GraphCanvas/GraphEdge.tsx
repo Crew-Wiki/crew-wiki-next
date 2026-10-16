@@ -45,7 +45,7 @@ const GraphEdge = ({
     strokeDasharray={isReference ? '5 5' : undefined}
     className={twMerge(
       isReference ? EDGE_CLASS.reference : EDGE_CLASS.field,
-      'transition-[stroke,opacity] duration-150',
+      'transition-[stroke,opacity] duration-150 motion-reduce:transition-none',
       isLit && LIT_EDGE_CLASS,
       isDimmed && DIMMED_EDGE_CLASS,
     )}

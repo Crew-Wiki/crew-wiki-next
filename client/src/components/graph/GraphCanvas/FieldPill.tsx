@@ -27,7 +27,10 @@ const FieldPill = ({ref, field, x, y, scale, isDimmed, onToggle, onHoverChange}:
     <g
       ref={ref}
       transform={toNodeTransform({x, y, scale})}
-      className={twMerge('cursor-pointer transition-opacity duration-150', isDimmed && DIMMED_NODE_CLASS)}
+      className={twMerge(
+        'cursor-pointer transition-opacity duration-150 motion-reduce:transition-none',
+        isDimmed && DIMMED_NODE_CLASS,
+      )}
       onClick={() => onToggle(field.id)}
       {...toHoverHandlers(onHoverChange)}
     >

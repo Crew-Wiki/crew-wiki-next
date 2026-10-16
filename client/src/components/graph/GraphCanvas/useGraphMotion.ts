@@ -3,6 +3,7 @@ import {GRAPH_MOTION} from '@constants/graph';
 import {GraphLayout, GraphViewBox} from '@type/Graph.type';
 import {fitGraphViewBox} from '@utils/calculateGraphLayout';
 import {getEdgePath} from './getEdgePath';
+import {prefersReducedMotion} from './prefersReducedMotion';
 import {toNodeTransform} from './toNodeTransform';
 
 interface NodeMotion {
@@ -58,6 +59,29 @@ export const useGraphMotion = ({layout, spawnAnchors, stageWidth, isNarrow}: Use
     viewBoxRef.current = {current: {...initial}, target: initial};
   }
 
+  // 모든 노드를 목표에 정확히 놓고 속도를 0 으로, 크기를 1 로 둔다. 처음 그릴 때, 멈출 때, 동작 줄이기 설정일 때 쓴다.
+  const snapNodesToTargets = useCallback(() => {
+    const targets = targetsRef.current;
+
+    positionsRef.current.forEach((motion, key) => {
+      const target = targets[key];
+      if (!target) return;
+
+      motion.x = target.x;
+      motion.y = target.y;
+      motion.vx = 0;
+      motion.vy = 0;
+      motion.scale = 1;
+    });
+  }, []);
+
+  const snapViewBoxToTarget = useCallback(() => {
+    const viewBox = viewBoxRef.current;
+    if (viewBox) {
+      viewBox.current = {...viewBox.target};
+    }
+  }, []);
+
   // 현재 좌표를 DOM 에 쓴다. 루프의 매 프레임과, 노드 집합이 바뀐 직후(브라우저가 그리기 전) 두 곳에서 부른다.
   const paint = useCallback(() => {
     const positions = positionsRef.current;
@@ -81,6 +105,15 @@ export const useGraphMotion = ({layout, spawnAnchors, stageWidth, isNarrow}: Use
   }, []);
 
   const tick = useCallback(() => {
+    // 동작 줄이기: 움직임 없이 한 번에 제자리로. 설정이 애니메이션 도중에 바뀌어도 다음 프레임부터 따른다.
+    if (prefersReducedMotion()) {
+      snapNodesToTargets();
+      snapViewBoxToTarget();
+      paint();
+      frameRef.current = 0;
+      return;
+    }
+
     const {stiffness, damping, scaleLerp, settleVelocity, settleScale, viewBoxLerp, settleViewBox} = GRAPH_MOTION;
     const positions = positionsRef.current;
     const targets = targetsRef.current;
@@ -103,16 +136,7 @@ export const useGraphMotion = ({layout, spawnAnchors, stageWidth, isNarrow}: Use
 
     // 멈출 때는 목표에 정확히 맞춘다. 남은 오차가 작아도 간선 끝이 미세하게 어긋난 채 끝나지 않게.
     if (!isMoving) {
-      positions.forEach((motion, key) => {
-        const target = targets[key];
-        if (!target) return;
-
-        motion.x = target.x;
-        motion.y = target.y;
-        motion.vx = 0;
-        motion.vy = 0;
-        motion.scale = 1;
-      });
+      snapNodesToTargets();
     }
 
     const viewBox = viewBoxRef.current;
@@ -131,7 +155,7 @@ export const useGraphMotion = ({layout, spawnAnchors, stageWidth, isNarrow}: Use
 
     paint();
     frameRef.current = isMoving ? requestAnimationFrame(tick) : 0;
-  }, [paint]);
+  }, [paint, snapNodesToTargets, snapViewBoxToTarget]);
 
   // 레이아웃 effect 인 이유: React 는 새 노드를 목표 자리에 다 자란 크기로 그려 놓는다.
   // 그 프레임이 화면에 나가기 전에 태어날 자리와 크기 0 으로 바꿔 두어야 한 프레임 번쩍임이 없다.
@@ -161,8 +185,10 @@ export const useGraphMotion = ({layout, spawnAnchors, stageWidth, isNarrow}: Use
       positions.set(key, {x: origin.x, y: origin.y, vx: 0, vy: 0, scale: isFirstLayout ? 1 : 0});
     });
 
-    if (isFirstLayout && viewBox) {
-      viewBox.current = {...viewBox.target};
+    // 처음 그릴 때와 동작 줄이기 설정일 때는 새 노드도 태어나는 연출 없이 제자리에 다 자란 채로 놓는다.
+    if (isFirstLayout || prefersReducedMotion()) {
+      snapNodesToTargets();
+      snapViewBoxToTarget();
     }
 
     paint();
@@ -170,7 +196,7 @@ export const useGraphMotion = ({layout, spawnAnchors, stageWidth, isNarrow}: Use
     if (!frameRef.current) {
       frameRef.current = requestAnimationFrame(tick);
     }
-  }, [layout, spawnAnchors, stageWidth, isNarrow, paint, tick]);
+  }, [layout, spawnAnchors, stageWidth, isNarrow, paint, tick, snapNodesToTargets, snapViewBoxToTarget]);
 
   useEffect(
     () => () => {

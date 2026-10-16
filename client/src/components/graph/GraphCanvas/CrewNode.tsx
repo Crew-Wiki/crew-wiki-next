@@ -40,7 +40,10 @@ const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActiva
     <g
       ref={ref}
       transform={toNodeTransform({x, y, scale})}
-      className={twMerge('group cursor-pointer transition-opacity duration-150', isDimmed && DIMMED_NODE_CLASS)}
+      className={twMerge(
+        'group cursor-pointer transition-opacity duration-150 motion-reduce:transition-none',
+        isDimmed && DIMMED_NODE_CLASS,
+      )}
       onClick={() => onActivate(crew)}
       {...toHoverHandlers(onHoverChange)}
     >
@@ -48,7 +51,7 @@ const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActiva
         r={GRAPH_NODE.crewHaloRadius}
         strokeWidth={GRAPH_NODE.crewHaloWidth}
         className={twMerge(
-          'fill-none opacity-0 transition-opacity duration-150 group-hover:opacity-[0.16]',
+          'fill-none opacity-0 transition-opacity duration-150 group-hover:opacity-[0.16] motion-reduce:transition-none',
           style.halo,
         )}
       />
