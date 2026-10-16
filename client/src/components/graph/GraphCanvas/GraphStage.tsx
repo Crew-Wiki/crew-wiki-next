@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {Fragment, useMemo, useState} from 'react';
 import {GRAPH_LAYOUT} from '@constants/graph';
 import useAmplitude from '@hooks/useAmplitude';
 import {GraphCanvasProps, GraphCrew} from '@type/Graph.type';
@@ -8,6 +8,7 @@ import FieldPill from './FieldPill';
 import GraphEdge from './GraphEdge';
 import {CREW_EDGE_INSET, FIELD_PILL_EDGE_INSET} from './getEdgePath';
 import {fieldEdgeKey, getGraphHighlight, referenceEdgeKey} from './graphHover';
+import {sortClockwise} from './graphKeyboard';
 import {useGraphMotion} from './useGraphMotion';
 
 interface GraphStageProps extends GraphCanvasProps {
@@ -24,6 +25,7 @@ interface GraphStageProps extends GraphCanvasProps {
 // 노드를 호버하면 그 노드와 이웃만 남기고 나머지를 흐린다(graphHover).
 // 크루를 누르면 계측 이벤트를 남기고 onCrewActivate 로 넘긴다. 문서로 이동하는 일은 데이터·조작 쪽 몫이다.
 // 자리가 좁으면(stageWidth < narrowBreakpoint) 네 그룹을 세로로 쌓는다. 창을 늘였다 줄이면 두 배치 사이를 스프링으로 오간다.
+// 노드는 Tab 으로 닿고 Enter·Space 로 누를 수 있다(graphKeyboard). 키보드 순서는 분야별로 알약 → 소속 크루 시계 방향.
 const GraphStage = ({
   crews,
   fields,
@@ -147,44 +149,52 @@ const GraphStage = ({
           })}
       </g>
 
+      {/* 노드 레이어의 DOM 순서가 곧 Tab 순서다. 분야마다 알약 다음에 그 분야 크루를 12시부터 시계 방향으로 둔다. */}
       <g>
         {fields.map(field => {
-          const key = fieldNodeKey(field.id);
-          const position = getPosition(key);
-          if (!position) return null;
+          const fieldKey = fieldNodeKey(field.id);
+          const pillPosition = getPosition(fieldKey);
+          if (!pillPosition) return null;
 
-          return (
-            <FieldPill
-              key={key}
-              ref={getNodeRef(key)}
-              field={field}
-              x={position.x}
-              y={position.y}
-              scale={position.scale}
-              isDimmed={isHovering && !litNodeKeys.has(key)}
-              onToggle={onFieldToggle}
-              onHoverChange={isNodeHovered => handleHoverChange(key, isNodeHovered)}
-            />
+          const members = sortClockwise(
+            crews.filter(crew => crew.field === field.id),
+            layout[fieldKey],
+            layout,
           );
-        })}
-        {crews.map(crew => {
-          const key = crewNodeKey(crew.documentUuid);
-          const position = getPosition(key);
-          if (!position) return null;
 
           return (
-            <CrewNode
-              key={key}
-              ref={getNodeRef(key)}
-              crew={crew}
-              x={position.x}
-              y={position.y}
-              scale={position.scale}
-              isMultiGeneration={isMultiGeneration}
-              isDimmed={isHovering && !litNodeKeys.has(key)}
-              onActivate={handleCrewActivate}
-              onHoverChange={isNodeHovered => handleHoverChange(key, isNodeHovered)}
-            />
+            <Fragment key={fieldKey}>
+              <FieldPill
+                ref={getNodeRef(fieldKey)}
+                field={field}
+                x={pillPosition.x}
+                y={pillPosition.y}
+                scale={pillPosition.scale}
+                isDimmed={isHovering && !litNodeKeys.has(fieldKey)}
+                onToggle={onFieldToggle}
+                onHoverChange={isNodeHovered => handleHoverChange(fieldKey, isNodeHovered)}
+              />
+              {members.map(crew => {
+                const key = crewNodeKey(crew.documentUuid);
+                const position = getPosition(key);
+                if (!position) return null;
+
+                return (
+                  <CrewNode
+                    key={key}
+                    ref={getNodeRef(key)}
+                    crew={crew}
+                    x={position.x}
+                    y={position.y}
+                    scale={position.scale}
+                    isMultiGeneration={isMultiGeneration}
+                    isDimmed={isHovering && !litNodeKeys.has(key)}
+                    onActivate={handleCrewActivate}
+                    onHoverChange={isNodeHovered => handleHoverChange(key, isNodeHovered)}
+                  />
+                );
+              })}
+            </Fragment>
           );
         })}
       </g>

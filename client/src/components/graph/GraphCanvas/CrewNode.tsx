@@ -3,6 +3,7 @@ import {twMerge} from 'tailwind-merge';
 import {CURRENT_GENERATION, GRAPH_CREW_LABEL_CLASS, GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {GraphCrew} from '@type/Graph.type';
 import {DIMMED_NODE_CLASS, toHoverHandlers} from './graphHover';
+import {toKeyboardButtonProps} from './graphKeyboard';
 import {toNodeTransform} from './toNodeTransform';
 
 interface CrewNodeProps {
@@ -46,6 +47,7 @@ const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActiva
       )}
       onClick={() => onActivate(crew)}
       {...toHoverHandlers(onHoverChange)}
+      {...toKeyboardButtonProps(() => onActivate(crew))}
     >
       <circle
         r={GRAPH_NODE.crewHaloRadius}

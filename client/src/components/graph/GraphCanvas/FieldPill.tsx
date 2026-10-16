@@ -3,6 +3,7 @@ import {twMerge} from 'tailwind-merge';
 import {GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {FieldId, GraphField} from '@type/Graph.type';
 import {DIMMED_NODE_CLASS, toHoverHandlers} from './graphHover';
+import {toKeyboardButtonProps} from './graphKeyboard';
 import {toNodeTransform} from './toNodeTransform';
 
 interface FieldPillProps {
@@ -33,6 +34,7 @@ const FieldPill = ({ref, field, x, y, scale, isDimmed, onToggle, onHoverChange}:
       )}
       onClick={() => onToggle(field.id)}
       {...toHoverHandlers(onHoverChange)}
+      {...toKeyboardButtonProps(() => onToggle(field.id))}
     >
       <rect
         x={-GRAPH_NODE.fieldPillWidth / 2}
