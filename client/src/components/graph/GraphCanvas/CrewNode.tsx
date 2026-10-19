@@ -2,7 +2,7 @@ import {Ref} from 'react';
 import {twMerge} from 'tailwind-merge';
 import {CURRENT_GENERATION, GRAPH_CREW_LABEL_CLASS, GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';
 import {GraphCrew} from '@type/Graph.type';
-import {DIMMED_NODE_CLASS, toHoverHandlers} from './graphHover';
+import {DIMMED_NODE_CLASS, LIT_CREW_HALO_CLASS, toHoverHandlers} from './graphHover';
 import {toCrewNodeLabel} from './graphAria';
 import {FOCUSABLE_GROUP_CLASS, FOCUS_RING_CLASS, toKeyboardButtonProps} from './graphKeyboard';
 import {toNodeTransform} from './toNodeTransform';
@@ -15,6 +15,8 @@ interface CrewNodeProps {
   // 등장 중이면 1 보다 작다
   scale: number;
   isMultiGeneration: boolean;
+  // 호버·포커스로 밝혀진 상태(자신이거나 이웃). 후광이 뜬다.
+  isLit: boolean;
   // 다른 노드를 호버 중이라 이 노드는 연결이 없어 흐려진 상태
   isDimmed: boolean;
   onActivate: (crew: GraphCrew) => void;
@@ -34,7 +36,18 @@ const LABEL_HALO_WIDTH = 3;
 // 점은 기수에 따라 둘로 나뉜다. 지금 기수는 분야색으로 꽉 채우고, 지난 기수는 연하게 채우고 테두리로 형태만 세운다.
 // 라벨은 분야와 무관하게 한 가지 색이다. 점이 이미 분야를 말하고 있어서 글자까지 물들이면 화면이 시끄럽다.
 // 라벨 글자에는 바탕색 테두리를 두른다(paint-order 로 테두리를 글자 밑에 깐다). 간선이 글자를 지나갈 때 글자 둘레만큼 선이 끊겨 보여 이름이 읽힌다.
-const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActivate, onHoverChange}: CrewNodeProps) => {
+const CrewNode = ({
+  ref,
+  crew,
+  x,
+  y,
+  scale,
+  isMultiGeneration,
+  isLit,
+  isDimmed,
+  onActivate,
+  onHoverChange,
+}: CrewNodeProps) => {
   const style = GRAPH_FIELD_STYLE[crew.field];
   const isCurrentGeneration = crew.generation === CURRENT_GENERATION;
 
@@ -56,8 +69,9 @@ const CrewNode = ({ref, crew, x, y, scale, isMultiGeneration, isDimmed, onActiva
         r={GRAPH_NODE.crewHaloRadius}
         strokeWidth={GRAPH_NODE.crewHaloWidth}
         className={twMerge(
-          'fill-none opacity-0 transition-opacity duration-150 group-hover:opacity-[0.16] motion-reduce:transition-none',
+          'fill-none opacity-0 transition-opacity duration-150 motion-reduce:transition-none',
           style.halo,
+          isLit && LIT_CREW_HALO_CLASS,
         )}
       />
       <circle r={GRAPH_NODE.crewHitRadius} className="fill-transparent" />

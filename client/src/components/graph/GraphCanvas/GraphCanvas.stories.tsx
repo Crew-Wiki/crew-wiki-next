@@ -120,6 +120,8 @@ export const MixedGenerations: Story = {
 };
 
 // 참조 간선을 켰을 때. 점선이 노드 아래 겹으로 깔리고, 크루를 호버하면 참조로 이어진 크루도 함께 밝아진다.
+// 운영 화면에서는 보이지 않는다 — MVP 는 참조 간선을 꺼 두기로 했다(GraphStage 의 참조 간선 레이어 주석 참고).
+// 이 스토리는 로드맵 1단계에서 켤 때 그래프 쪽이 그대로 동작하는지 미리 보는 용도다. 데이터는 1번 PR 때 담아 둔 /graph 실측 응답이다.
 export const WithReferences: Story = {
   args: {
     ...baseArgs,

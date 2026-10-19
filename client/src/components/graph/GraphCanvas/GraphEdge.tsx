@@ -1,7 +1,13 @@
 import {Ref} from 'react';
 import {twMerge} from 'tailwind-merge';
 import {getEdgePath} from './getEdgePath';
-import {DIMMED_EDGE_CLASS, LIT_EDGE_CLASS} from './graphHover';
+import {FieldId} from '@type/Graph.type';
+import {
+  DIMMED_EDGE_CLASS,
+  LIT_EDGE_CLASS,
+  LIT_FIELD_EDGE_STROKE_CLASS,
+  LIT_REFERENCE_EDGE_STROKE_CLASS,
+} from './graphHover';
 
 type Point = {x: number; y: number};
 
@@ -12,6 +18,8 @@ interface GraphEdgeProps {
   target: Point;
   targetInset: number;
   isReference?: boolean;
+  // 분야 간선이 켜질 때 쓸 색. 참조 간선은 분야가 둘이라 받지 않는다.
+  fieldId?: FieldId;
   // 호버 중 한쪽 끝이 호버된 노드면 켜지고, 아니면 흐려진다. 둘 다 아니면 평소 모습.
   isLit?: boolean;
   isDimmed?: boolean;
@@ -35,6 +43,7 @@ const GraphEdge = ({
   target,
   targetInset,
   isReference = false,
+  fieldId,
   isLit = false,
   isDimmed = false,
 }: GraphEdgeProps) => (
@@ -47,6 +56,7 @@ const GraphEdge = ({
       isReference ? EDGE_CLASS.reference : EDGE_CLASS.field,
       'transition-[stroke,opacity] duration-150 motion-reduce:transition-none',
       isLit && LIT_EDGE_CLASS,
+      isLit && (isReference || !fieldId ? LIT_REFERENCE_EDGE_STROKE_CLASS : LIT_FIELD_EDGE_STROKE_CLASS[fieldId]),
       isDimmed && DIMMED_EDGE_CLASS,
     )}
   />

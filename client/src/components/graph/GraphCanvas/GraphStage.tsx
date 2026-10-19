@@ -110,6 +110,7 @@ const GraphStage = ({
               sourceInset={FIELD_PILL_EDGE_INSET}
               target={target}
               targetInset={CREW_EDGE_INSET}
+              fieldId={crew.field}
               isLit={litEdgeKeys.has(edgeKey)}
               isDimmed={isHovering && !litEdgeKeys.has(edgeKey)}
             />
@@ -117,6 +118,11 @@ const GraphStage = ({
         })}
       </g>
 
+      {/* 참조 간선(문서가 문서를 언급) 레이어. 그리는 쪽은 다 되어 있지만 MVP 에서는 꺼 둔다 —
+          기획안 결정: 간선 34개 중 30개가 '8기 크루' 조직 문서 한 곳을 향하는 별 모양이라 기본 노출하면 관계를 오해시킨다.
+          페이지는 references=[] · showReferences=false 로 호출하고, /graph 응답도 MVP 에서는 부르지 않는다.
+          켜는 일은 로드맵 1단계 몫: 데이터·조작 쪽이 /graph 의 간선을 크루 id 쌍으로 넘기고 토글을 붙이면 여기는 손댈 것이 없다.
+          켜졌을 때의 모습은 스토리 WithReferences 에서 본다. */}
       <g>
         {showReferences &&
           references.map(reference => {
@@ -188,6 +194,7 @@ const GraphStage = ({
                     y={position.y}
                     scale={position.scale}
                     isMultiGeneration={isMultiGeneration}
+                    isLit={isHovering && litNodeKeys.has(key)}
                     isDimmed={isHovering && !litNodeKeys.has(key)}
                     onActivate={handleCrewActivate}
                     onHoverChange={isNodeHovered => handleHoverChange(key, isNodeHovered)}
