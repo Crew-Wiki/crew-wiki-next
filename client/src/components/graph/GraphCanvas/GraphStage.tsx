@@ -1,3 +1,5 @@
+'use client';
+
 import {Fragment, useMemo, useState} from 'react';
 import {GRAPH_LAYOUT} from '@constants/graph';
 import useAmplitude from '@hooks/useAmplitude';

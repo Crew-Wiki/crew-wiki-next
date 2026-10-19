@@ -1,3 +1,5 @@
+'use client';
+
 import {Ref} from 'react';
 import {twMerge} from 'tailwind-merge';
 import {GRAPH_FIELD_STYLE, GRAPH_NODE} from '@constants/graph';

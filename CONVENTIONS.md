@@ -569,6 +569,7 @@ export const Modal = ({ children, className }: ModalProps) => {
 | 메인 컴포넌트 파일 | `index.tsx` | `Button/index.tsx` |
 | 서브 컴포넌트 파일 | PascalCase.tsx | `CalendarGrid.tsx` |
 | 훅 파일 | camelCase.ts | `useModal.tsx` |
+| 컴포넌트 전용 유틸·상수 모듈 | camelCase.ts | `getEdgePath.ts`, `graphHover.ts` |
 
 ```
 common/Button/
@@ -629,6 +630,13 @@ export const Text: Story = {
     ),
   ],
 };
+
+// 콜백 props는 fn()으로 — Actions 패널에 호출 인자가 찍히고, 브라우저 검증에서 mock.calls로 읽을 수 있다
+import {fn} from 'storybook/test';
+
+export const Clickable: Story = {
+  args: { style: 'primary', size: 'm', children: '버튼', onClick: fn() },
+};
 ```
 
 ### 'use client' 기준
@@ -684,6 +692,21 @@ const MyComponent = ({ ...props }: Props) => {
 
 export default MyComponent;
 ```
+
+### 접근성
+
+클릭할 수 있는 요소는 키보드로도 닿고 누를 수 있어야 합니다. `<button>`이 아닌 요소(SVG 노드 등)를 버튼으로 쓰면 아래를 붙입니다.
+
+| 항목 | 규칙 | 예시 |
+|------|------|------|
+| 역할·초점 | `role="button"` + `tabIndex={0}` | `graph/GraphCanvas/graphKeyboard.ts` |
+| 키보드 활성화 | Enter·Space에서 클릭과 같은 핸들러 호출, Space는 `preventDefault()`로 스크롤 방지 | 〃 |
+| 읽을 이름 | `aria-label`은 "무엇, 무슨 동작" 꼴의 한국어 문장. 보이는 글자와 중복되면 글자 쪽을 `aria-hidden` | `"크루 아론 8기 Backend, 문서로 이동"` |
+| 눌림 상태 | 켜고 끄는 버튼은 `aria-pressed` | 분야 알약 |
+| 포커스 표시 | `focus-visible:` 변형으로 키보드 포커스에만 표시. 기본 outline을 끄면 대신할 표시를 반드시 둔다 | `group-focus-visible:stroke-[3px]` |
+| 움직임 줄이기 | CSS 전환에는 `motion-reduce:transition-none`, JS 애니메이션은 `matchMedia('(prefers-reduced-motion: reduce)')`일 때 건너뛴다 | `graph/GraphCanvas/prefersReducedMotion.ts` |
+
+> `focus-visible:`, `motion-reduce:`, `group-*`는 Tailwind 코어 변형이라 설정 추가가 필요 없습니다.
 
 ---
 
@@ -1333,8 +1356,11 @@ const BUTTON_STYLE: Record<ButtonStyle, string> = {
 primary:   { 50~900, primary, container, onContainer }
 grayscale: { 50~900, container, border, lightText, text }
 error:     { error, container }
+backend / frontend / android: { 50~900, container }   // 관계 그래프의 분야 색
 
 // 사용 예: bg-primary-primary, text-grayscale-text, border-error-error
+// SVG에서는 fill-* / stroke-*: fill-backend-500, stroke-grayscale-200
+// 분야별 클래스 조합은 constants/graph.ts의 GRAPH_FIELD_STYLE에서 가져온다 (Tailwind JIT는 `fill-${id}-500` 같은 동적 조합을 찾지 못한다)
 ```
 
 ### 반응형 (Desktop-first)
@@ -1675,6 +1701,7 @@ const Layout = ({children}: React.PropsWithChildren) => (
 
 import {track} from '@amplitude/analytics-browser';
 import {useCallback} from 'react';
+import {FieldId, Generation} from '@type/Graph.type';
 
 const useAmplitude = () => {
   const trackEvent = useCallback((eventName: string, eventProps: Record<string, unknown> = {}) => {
@@ -1699,7 +1726,19 @@ const useAmplitude = () => {
     [trackEvent],
   );
 
-  return {trackDocumentCreate, trackDocumentUpdate, trackDocumentSearch};
+  // 관계 그래프 이벤트. 이벤트가 이 파일 하나에 모여 있어 각자 추가하면 충돌하므로 한 번에 넣는다.
+  const trackGraphView = useCallback(
+    (generations: Generation[]) => trackEvent('관계 그래프 조회', {generations}),
+    [trackEvent],
+  );
+
+  const trackGraphCrewClick = useCallback(
+    (title: string, documentUUID: string, field: FieldId) =>
+      trackEvent('관계 그래프 크루 클릭', {title, documentUUID, field}),
+    [trackEvent],
+  );
+
+  return {trackDocumentCreate, trackDocumentUpdate, trackDocumentSearch, trackGraphView, trackGraphCrewClick};
 };
 
 export default useAmplitude;
@@ -1712,6 +1751,21 @@ export default useAmplitude;
 | `문서 작성` | `usePostDocument` → `onSuccess` | 문서 생성 성공 시 |
 | `문서 수정` | `usePutDocument` → `onSuccess` | 문서 수정 성공 시 |
 | `문서 검색` | 검색 UI 컴포넌트 | 검색 결과 클릭 시 |
+| `관계 그래프 조회` | 그래프 페이지 (배선 예정) | 그래프 화면 진입 시 |
+| `관계 그래프 크루 클릭` | `graph/GraphCanvas/GraphStage` → `handleCrewActivate` | 크루 노드 클릭·Enter·Space 시 |
+
+### 컴포넌트에서 사용
+
+```ts
+// components/graph/GraphCanvas/GraphStage.tsx
+const {trackGraphCrewClick} = useAmplitude();
+
+// 계측은 컴포넌트 안에서 한 번만 남긴다. 호출자가 onCrewActivate로 무엇을 하든(이동, 미리보기) 클릭 자체는 한 건이다.
+const handleCrewActivate = (crew: GraphCrew) => {
+  trackGraphCrewClick(crew.title, crew.documentUuid, crew.field);
+  onCrewActivate(crew);
+};
+```
 
 ### 뮤테이션 훅에서 사용
 
