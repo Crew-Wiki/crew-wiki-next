@@ -1,6 +1,6 @@
 'use client';
 
-import GraphCanvas from '@components/graph/GraphCanvas';
+import GraphResults from '@components/graph/GraphResults';
 import GraphToolbar from '@components/graph/GraphToolbar';
 import {route} from '@constants/route';
 import {useGetCrewGraph} from '@hooks/fetch/useGetCrewGraph';
@@ -12,7 +12,7 @@ import {Suspense} from 'react';
 const GraphContents = () => {
   const router = useRouter();
   const {selectedGenerations, selectedFields, toggleGeneration, toggleField, resetFilters} = useGraphFilters();
-  const {data} = useGetCrewGraph(selectedGenerations);
+  const {data, isLoading, errorMessage, refetch} = useGetCrewGraph(selectedGenerations);
   const {crews, fields} = filterCrewGraph(data, {selectedGenerations, selectedFields});
 
   return (
@@ -26,7 +26,12 @@ const GraphContents = () => {
           onFieldToggle={toggleField}
           onReset={resetFilters}
         />
-        <GraphCanvas
+        <GraphResults
+          hasSelectedGeneration={selectedGenerations.length > 0}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          onRetry={() => void refetch()}
+          onReset={resetFilters}
           crews={crews}
           fields={fields}
           references={[]}
