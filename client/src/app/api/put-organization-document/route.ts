@@ -1,11 +1,11 @@
 'use server';
 
+import type {OrganizationDocumentResponse, OrganizationDocumentUpdateRequest} from '@apis/generated/types';
 import {CACHE} from '@constants/cache';
 import {NextRequest, NextResponse} from 'next/server';
 import {revalidateTag} from 'next/cache';
-import {putOrganizationDocumentServer} from '@apis/server/organizationDocument';
 import {ApiResponseType} from '@type/http.type';
-import {GroupDocumentResponse, OrganizationDocumentUpdateRequest} from '@type/Group.type';
+import {api} from '@apis/generated/server';
 
 export const PUT = async (request: NextRequest) => {
   const documentData: OrganizationDocumentUpdateRequest = await request.json();
@@ -20,12 +20,12 @@ export const PUT = async (request: NextRequest) => {
   }
 
   try {
-    const updatedDocument = await putOrganizationDocumentServer(documentData);
+    const updatedDocument = await api.organization.put(documentData);
 
     revalidateTag(CACHE.tag.getOrganizationDocumentByUUID(documentData.uuid));
     revalidateTag(CACHE.tag.getRecentlyDocuments);
 
-    const response: ApiResponseType<GroupDocumentResponse> = {
+    const response: ApiResponseType<OrganizationDocumentResponse> = {
       data: updatedDocument,
       code: 'SUCCESS',
     };

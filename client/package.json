@@ -3,18 +3,26 @@
   "version": "3.5.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "api:generate": "node scripts/api-module/cli.ts",
     "build": "next build",
     "build:release": "cross-env NEXT_PUBLIC_APP_VERSION=$npm_package_version next build",
-    "start": "next start",
+    "build-storybook": "storybook build",
+    "dev": "next dev --turbopack",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
-    "prettier:write": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "prettier:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "prepare:release": "node scripts/prepare-release.mjs",
     "prepare": "cd .. && husky client/.husky",
+    "prepare:release": "node scripts/prepare-release.mjs",
+    "prettier:check": "prettier --check \"src/**/*.{ts,tsx}\"",
+    "prettier:write": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "start": "next start",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "typecheck": "tsc --noEmit"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint"
+    ]
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.11",
@@ -35,6 +43,7 @@
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.1",
+    "tailwind-merge": "^2.6.0",
     "unified": "^11.0.5",
     "zustand": "^5.0.5"
   },
@@ -52,18 +61,12 @@
     "lint-staged": "^16.2.7",
     "postcss": "^8",
     "prettier": "^3.5.3",
+    "prettier-plugin-packagejson": "^3.0.2",
     "prettier-plugin-tailwindcss": "^0.6.12",
     "storybook": "^10.2.6",
-    "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "vite": "^7.3.1"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "prettier --write",
-      "eslint"
-    ]
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

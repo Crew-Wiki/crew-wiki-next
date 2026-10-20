@@ -1,18 +1,19 @@
-import {DocumentType, TitleAndUUID} from '@type/Document.type';
+import {DocumentType} from '@constants/document';
 import {Trie} from '@utils/trie';
 import {create} from 'zustand';
+import {DocumentSearchResponse} from '@apis/generated/types';
 
 type State = {
   trie: Trie;
-  titles: TitleAndUUID[];
+  titles: DocumentSearchResponse[];
 };
 
 type Action = {
-  setInit: (titles: TitleAndUUID[]) => void;
+  setInit: (titles: DocumentSearchResponse[]) => void;
   addTitle: (title: string, uuid: string, documentType: DocumentType) => void;
   updateTitle: (oldTitle: string, newTitle: string, uuid: string, documentType: DocumentType) => void;
   deleteTitle: (title: string, uuid: string) => void;
-  searchTitle: (title: string) => TitleAndUUID[];
+  searchTitle: (title: string) => DocumentSearchResponse[];
 };
 
 export const useTrie = create<State & Action>((set, get) => ({

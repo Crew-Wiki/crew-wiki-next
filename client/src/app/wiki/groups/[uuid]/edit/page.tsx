@@ -1,27 +1,27 @@
 'use client';
 
+import type {OrganizationDocumentAndEventResponse} from '@apis/generated/types';
 import {useParams, useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 import Button from '@components/common/Button';
 import DocumentTitle from '@components/document/layout/DocumentTitle';
 import TuiEditor from '@components/document/TuiEditor';
 import Input from '@components/common/Input';
-import {getOrganizationDocumentByUUIDClient} from '@apis/client/organization';
 import {usePutOrganizationDocument} from '@hooks/mutation/usePutOrganizationDocument';
-import {OrganizationDocumentWithEventsResponse} from '@type/Group.type';
 import {getBytes} from '@utils/getBytes';
+import {api} from '@apis/generated/client';
 
 const OrganizationEditPage = () => {
   const {uuid} = useParams();
   const router = useRouter();
-  const [document, setDocument] = useState<OrganizationDocumentWithEventsResponse | null>(null);
+  const [document, setDocument] = useState<OrganizationDocumentAndEventResponse | null>(null);
   const [contents, setContents] = useState('');
   const [writer, setWriter] = useState('');
   const {putOrganizationDocument, isPutPending} = usePutOrganizationDocument();
 
   useEffect(() => {
     const fetchDocument = async () => {
-      const doc = await getOrganizationDocumentByUUIDClient(uuid as string);
+      const doc = await api.organization.uuid(uuid as string).get();
       setDocument(doc);
       setContents(doc.contents);
       setWriter(doc.writer);

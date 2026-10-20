@@ -1,8 +1,8 @@
-import {IncrementResult, ViewCountByUUID, ViewData} from '@type/viewCount.type';
+import {IncrementResult, ViewCountByUUID, ViewData} from '@utils/viewCount';
 import {withLock} from '@utils/fileLock';
 import {writeFile} from 'fs/promises';
-import {postViewsFlush} from './document';
 import {readDataFile} from '@utils/readDataFile';
+import {api} from '@apis/generated/server';
 
 export async function flushViewCountIfNecessary(incrementResult: IncrementResult, filePath: string): Promise<void> {
   if (!incrementResult.shouldFlush || incrementResult.total_views_to_flush === undefined) {
@@ -22,7 +22,7 @@ export async function flushViewCountIfNecessary(incrementResult: IncrementResult
   });
 
   try {
-    await postViewsFlush(dataToFlush);
+    await api.document.views.flush.post({views: dataToFlush});
   } catch (error) {
     console.error('백엔드 API 전송 중 오류:', error);
 

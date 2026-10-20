@@ -1,14 +1,14 @@
-import {getDocumentLogsByUUIDClient} from '@apis/client/document';
-import {WikiDocumentLogSummary} from '@type/Document.type';
+import type {HistoryResponse} from '@apis/generated/types';
 import {useEffect, useState} from 'react';
+import {api} from '@apis/generated/client';
 
-export const useGetDocumentLogs = (uuid: string, initialData: WikiDocumentLogSummary[], totalPage: number) => {
+export const useGetDocumentLogs = (uuid: string, initialData: HistoryResponse[], totalPage: number) => {
   const [page, setPage] = useState(0);
-  const [data, setData] = useState<WikiDocumentLogSummary[]>(initialData);
+  const [data, setData] = useState<HistoryResponse[]>(initialData);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getDocumentLogsByUUIDClient(uuid, {
+      const response = await api.document.uuid(uuid).log.get({
         pageNumber: page,
         pageSize: 10,
         sort: 'ID',

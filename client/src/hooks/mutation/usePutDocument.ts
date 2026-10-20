@@ -1,21 +1,18 @@
 'use client';
 
+import type {DocumentResponse, OrganizationDocumentResponse} from '@apis/generated/types';
+import {DOCUMENT_TYPE} from '@constants/document';
+import {PostDocumentContent} from '@store/document';
 import * as Sentry from '@sentry/nextjs';
 import useMutation from '@hooks/useMutation';
-import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import useAmplitude from '@hooks/useAmplitude';
 import {putDocumentClient} from '@apis/client/document';
-import {
-  deleteOrganizationFromDocumentClient,
-  linkOrganizationDocumentClient,
-  postOrganizationDocumentClient,
-  revalidateOrganizationDocumentClient,
-} from '@apis/client/organization';
+import {revalidateOrganizationDocumentClient} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {useDocument} from '@store/document';
 import {route} from '@constants/route';
-import {GroupDocumentResponse} from '@type/Group.type';
 import {EDITOR} from '@constants/editor';
+import {api} from '@apis/generated/client';
 
 export const usePutDocument = () => {
   const updateTitle = useTrie(state => state.updateTitle);
@@ -37,7 +34,7 @@ export const usePutDocument = () => {
 
     const createdOrganizations = await Promise.all(
       newOrganizations.map(org =>
-        postOrganizationDocumentClient({
+        api.organization.post({
           title: org.title,
           contents: EDITOR.organizationInitialValue,
           writer: document.writer,
@@ -50,15 +47,16 @@ export const usePutDocument = () => {
 
     const linkedOrganizations = await Promise.all(
       newlyLinkedOrganizations.map(org =>
-        linkOrganizationDocumentClient({
+        api.organization.link.post({
           crewDocumentUuid: savedDocument.documentUUID,
           organizationDocumentUuid: org.uuid,
         }),
       ),
     );
-
     await Promise.all(
-      deletedOrganizations.map(org => deleteOrganizationFromDocumentClient(savedDocument.documentUUID, org.uuid)),
+      deletedOrganizations.map(org =>
+        api.document(savedDocument.documentUUID).organizationDocuments(org.uuid).delete(),
+      ),
     );
 
     const organizationUuidsToRevalidate = [
@@ -82,7 +80,7 @@ export const usePutDocument = () => {
 
   const {mutate, isPending} = useMutation<
     PostDocumentContent,
-    {savedDocument: WikiDocument; createdOrganizations: GroupDocumentResponse[]}
+    {savedDocument: DocumentResponse; createdOrganizations: OrganizationDocumentResponse[]}
   >({
     mutationFn: putDocumentWithOrganizations,
     onSuccess: ({savedDocument, createdOrganizations}) => {

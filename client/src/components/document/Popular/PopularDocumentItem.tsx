@@ -1,7 +1,7 @@
 'use client';
 
+import {PopularDocument, SortType} from '@constants/popular';
 import Link from 'next/link';
-import {PopularDocument, SortType} from '@type/Document.type';
 
 interface PopularDocumentItemProps {
   document: PopularDocument;

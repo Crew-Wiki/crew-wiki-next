@@ -1,4 +1,4 @@
-import {IncrementResult, ViewData} from '@type/viewCount.type';
+import {IncrementResult, ViewData} from '@utils/viewCount';
 import {withLock} from '@utils/fileLock';
 import {readDataFile} from '@utils/readDataFile';
 import {writeFile} from 'fs/promises';

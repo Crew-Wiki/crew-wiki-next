@@ -1,7 +1,7 @@
 'use client';
 
+import {ErrorInfo} from '@store/document';
 import {VALIDATION_ERROR_PATTERNS} from '@constants/validation';
-import {ErrorInfo} from '@type/Document.type';
 
 export const validateTitleOnChange = (title: string) => {
   const errorInfo: ErrorInfo = {

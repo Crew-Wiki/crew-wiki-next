@@ -1,13 +1,13 @@
-import {PaginationParams} from '@type/General.type';
+import type {PagingRequest} from '@apis/generated/types';
 
-export const recentlyParams: PaginationParams = {
+export const recentlyParams: PagingRequest = {
   pageNumber: 0,
   pageSize: 20,
   sort: 'generateTime',
   sortDirection: 'DESC',
 };
 
-export const documentLogsParams: PaginationParams = {
+export const documentLogsParams: PagingRequest = {
   pageNumber: 0,
   pageSize: 10,
   sort: 'id',

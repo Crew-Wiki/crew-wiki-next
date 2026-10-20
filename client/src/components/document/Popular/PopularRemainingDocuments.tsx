@@ -1,7 +1,7 @@
 'use client';
 
+import {PopularDocument, SortType} from '@constants/popular';
 import PopularDocumentItem from './PopularDocumentItem';
-import {PopularDocument, SortType} from '@type/Document.type';
 
 interface PopularDocumentListProps {
   documents: PopularDocument[];

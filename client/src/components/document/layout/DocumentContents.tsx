@@ -1,5 +1,5 @@
+import type {OrganizationDocumentSearchResponse} from '@apis/generated/types';
 import {processHtmlContent} from '@utils/processHtmlContent';
-import {Organization} from '@type/Group.type';
 import TOC from '../TOC/TOC';
 import OrganizationSection from './OrganizationSection';
 
@@ -7,7 +7,7 @@ import './toastui-editor-viewer.css';
 
 interface DocumentContentsProps {
   contents: string;
-  organizations?: Organization[];
+  organizations?: OrganizationDocumentSearchResponse[];
 }
 
 const DocumentContents = ({contents, organizations = []}: DocumentContentsProps) => {

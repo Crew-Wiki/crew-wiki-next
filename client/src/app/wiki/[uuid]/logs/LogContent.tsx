@@ -1,11 +1,12 @@
+import type {HistoryResponse} from '@apis/generated/types';
+import {DOCUMENT_TYPE, DocumentType} from '@constants/document';
 import {route} from '@constants/route';
-import {DOCUMENT_TYPE, DocumentType, WikiDocumentLogSummary} from '@type/Document.type';
 import timeConverter from '@utils/TimeConverter';
 import Link from 'next/link';
 
 type LogContentProps = {
   uuid: string;
-  summary: WikiDocumentLogSummary;
+  summary: HistoryResponse;
   documentType?: DocumentType;
 };
 

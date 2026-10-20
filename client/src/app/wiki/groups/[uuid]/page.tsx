@@ -1,4 +1,4 @@
-import {DOCUMENT_TYPE} from '@type/Document.type';
+import {DOCUMENT_TYPE} from '@constants/document';
 import DocumentHeader from '@components/document/layout/DocumentHeader';
 import DocumentFooter from '@components/document/layout/DocumentFooter';
 import MobileDocumentHeader from '@components/document/layout/MobileDocumentHeader';
@@ -7,13 +7,13 @@ import markdownToHtml from '@utils/markdownToHtml';
 import {processHtmlContent} from '@utils/processHtmlContent';
 import TOC from '@components/document/TOC/TOC';
 import '@components/document/layout/toastui-editor-viewer.css';
-import {getOrganizationDocumentByUUIDServer} from '@apis/server/organizationDocument';
 import CrewMemberSection from '@components/document/layout/CrewMemberSection';
+import {api} from '@apis/generated/server';
 
 const GroupPage = async ({params}: {params: Promise<{uuid: string}>}) => {
   const {uuid} = await params;
 
-  const groupDocument = await getOrganizationDocumentByUUIDServer(uuid);
+  const groupDocument = await api.organization.uuid(uuid).get();
 
   const html = await markdownToHtml(groupDocument.contents);
   const htmlContents = processHtmlContent(html);

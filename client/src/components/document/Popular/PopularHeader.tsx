@@ -1,6 +1,6 @@
+import {SortType} from '@constants/popular';
 import DocumentTitle from '@components/document/layout/DocumentTitle';
 import PopularFilterButtons from './PopularFilterButtons';
-import {SortType} from '@type/Document.type';
 
 interface PopularHeaderProps {
   sortType: SortType;

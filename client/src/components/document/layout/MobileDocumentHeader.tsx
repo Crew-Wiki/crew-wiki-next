@@ -1,6 +1,6 @@
+import {DOCUMENT_TYPE, DocumentType} from '@constants/document';
 import Button from '@components/common/Button';
 import {route} from '@constants/route';
-import {DOCUMENT_TYPE, DocumentType} from '@type/Document.type';
 import Link from 'next/link';
 
 interface MobileDocumentHeaderProps {

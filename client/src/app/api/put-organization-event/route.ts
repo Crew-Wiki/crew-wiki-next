@@ -1,11 +1,11 @@
 'use server';
 
+import type {OrganizationEventUpdateRequest, OrganizationEventUpdateResponse} from '@apis/generated/types';
 import {CACHE} from '@constants/cache';
-import {OrganizationEventUpdateRequest, OrganizationEvent} from '@type/Event.type';
 import {NextRequest, NextResponse} from 'next/server';
 import {revalidateTag} from 'next/cache';
-import {putOrganizationEventServer} from '@apis/server/organizationEvent';
 import {ApiResponseType} from '@type/http.type';
+import {api} from '@apis/generated/server';
 
 export const PUT = async (request: NextRequest) => {
   const {searchParams} = new URL(request.url);
@@ -23,13 +23,13 @@ export const PUT = async (request: NextRequest) => {
 
   try {
     const eventData: OrganizationEventUpdateRequest = await request.json();
-    const updatedEvent = await putOrganizationEventServer(organizationEventUuid, eventData);
+    const updatedEvent = await api.organizationEvents(organizationEventUuid).put(eventData);
 
     if (organizationDocumentUuid) {
       revalidateTag(CACHE.tag.getOrganizationDocumentByUUID(organizationDocumentUuid));
     }
 
-    const response: ApiResponseType<OrganizationEvent> = {
+    const response: ApiResponseType<OrganizationEventUpdateResponse> = {
       data: updatedEvent,
       code: 'SUCCESS',
     };

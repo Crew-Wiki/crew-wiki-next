@@ -1,19 +1,17 @@
 'use client';
 
+import type {DocumentResponse, OrganizationDocumentResponse} from '@apis/generated/types';
+import {DOCUMENT_TYPE} from '@constants/document';
+import {PostDocumentContent} from '@store/document';
 import * as Sentry from '@sentry/nextjs';
 import useMutation from '@hooks/useMutation';
-import {DOCUMENT_TYPE, PostDocumentContent, WikiDocument} from '@type/Document.type';
 import useAmplitude from '@hooks/useAmplitude';
 import {postDocumentClient} from '@apis/client/document';
-import {
-  postOrganizationDocumentClient,
-  linkOrganizationDocumentClient,
-  revalidateOrganizationDocumentClient,
-} from '@apis/client/organization';
+import {revalidateOrganizationDocumentClient} from '@apis/client/organization';
 import {useTrie} from '@store/trie';
 import {route} from '@constants/route';
-import {GroupDocumentResponse} from '@type/Group.type';
 import {EDITOR} from '@constants/editor';
+import {api} from '@apis/generated/client';
 
 const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
   const {newOrganizations, existingOrganizations, ...documentBody} = document;
@@ -21,7 +19,7 @@ const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
 
   const createdOrganizations = await Promise.all(
     newOrganizations.map(org =>
-      postOrganizationDocumentClient({
+      api.organization.post({
         title: org.title,
         contents: EDITOR.organizationInitialValue,
         writer: document.writer,
@@ -34,7 +32,7 @@ const postDocumentWithOrganizations = async (document: PostDocumentContent) => {
 
   const linkedOrganizations = await Promise.all(
     existingOrganizations.map(org =>
-      linkOrganizationDocumentClient({
+      api.organization.link.post({
         crewDocumentUuid: savedDocument.documentUUID,
         organizationDocumentUuid: org.uuid,
       }),
@@ -64,7 +62,7 @@ export const usePostDocument = () => {
 
   const {mutate, isPending} = useMutation<
     PostDocumentContent,
-    {savedDocument: WikiDocument; createdOrganizations: GroupDocumentResponse[]}
+    {savedDocument: DocumentResponse; createdOrganizations: OrganizationDocumentResponse[]}
   >({
     mutationFn: postDocumentWithOrganizations,
     onSuccess: ({savedDocument, createdOrganizations}) => {

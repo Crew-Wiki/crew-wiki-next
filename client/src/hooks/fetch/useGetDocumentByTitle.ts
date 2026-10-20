@@ -1,13 +1,13 @@
 'use client';
 
+import type {DocumentResponse} from '@apis/generated/types';
 import {useFetch} from '@hooks/useFetch';
-import {WikiDocument} from '@type/Document.type';
 import {useCallback} from 'react';
-import {getDocumentByTitleClient} from '@apis/client/document';
+import {api} from '@apis/generated/client';
 
 export const useGetDocumentByTitle = (title: string) => {
-  const getData = useCallback(() => getDocumentByTitleClient(title), [title]);
-  const {data} = useFetch<WikiDocument>(getData);
+  const getData = useCallback(() => api.document.title(title).get(), [title]);
+  const {data} = useFetch<DocumentResponse>(getData);
 
   return {
     document: data,

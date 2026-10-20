@@ -1,4 +1,4 @@
-import {ErrorInfo} from '@type/Document.type';
+import {ErrorInfo} from '@store/document';
 
 export const validateWriterOnChange = (writer: string) => {
   const errorInfo: ErrorInfo = {

@@ -1,11 +1,11 @@
 'use client';
 
+import type {OrganizationEventResponse} from '@apis/generated/types';
+import {EventInput} from '@components/group/type';
 import {useState} from 'react';
 import {Modal} from '@components/common/Modal/Modal';
 import Button from '@components/common/Button';
 import CustomCalendar from '@components/common/CustomCalendar';
-import {EventInput} from '@type/Event.type';
-import {OrganizationEventResponse} from '@type/Group.type';
 import {EVENT_VALIDATION_LIMITS} from '@constants/validation';
 
 interface EventEditModalProps {
