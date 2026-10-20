@@ -44,7 +44,7 @@ const DocumentPage = async ({params}: UUIDParams) => {
     notFound();
   }
 
-  const organizations = await api.document(uuid).organizationDocuments.get();
+  const organizations = await api.document(uuid).organizationDocuments.get().catch(() => [])
   const contents = await markdownToHtml(document.contents);
 
   return (
