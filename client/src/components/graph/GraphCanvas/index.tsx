@@ -1,45 +1,22 @@
+'use client';
+
 import {GraphCanvasProps} from '@type/Graph.type';
+import GraphStage from './GraphStage';
+import {useStageWidth} from './useStageWidth';
 
-// 1번 PR 의 빈 껍데기다. 받은 props 를 숫자로 찍고 콜백을 눌러 볼 수 있게만 해 둔다.
-// 데이터·조작 담당이 그래프 완성을 기다리지 않고 첫날부터 필터·툴바 배선을 검증하는 용도이고,
-// SVG 3계층·배치·스프링 애니메이션은 그래프 담당의 다음 PR 에서 이 자리에 들어온다.
-const GraphCanvas = ({
-  crews,
-  fields,
-  references,
-  showReferences,
-  isMultiGeneration,
-  onCrewActivate,
-  onFieldToggle,
-}: GraphCanvasProps) => (
-  <div className="flex flex-col gap-4 rounded-xl border border-solid border-primary-100 p-6">
-    <p className="text-grayscale-600">
-      크루 {crews.length}명 · 분야 {fields.length}개 · 참조 {references.length}개{showReferences ? '' : ' (숨김)'}
-      {isMultiGeneration ? ' · 여러 기수' : ''}
-    </p>
+// 그래프가 놓인 자리의 너비를 재서 GraphStage 에 넘긴다. 그리는 일은 전부 GraphStage 가 한다.
+//
+// 너비를 알기 전에는 아무것도 그리지 않는다. 첫 배치는 제자리에 바로 놓이고 그 뒤의 변화만 스프링으로 움직이는데,
+// 너비를 모른 채 넓은 배치로 먼저 그리면 좁은 화면에서는 그 그림이 세로 스택으로 접히는 움직임이 첫인상이 된다.
+// 재는 일은 레이아웃 effect 에서 하므로 빈 프레임이 화면에 나가지는 않는다. 서버 렌더 결과에는 그래프가 없다.
+const GraphCanvas = (props: GraphCanvasProps) => {
+  const {containerRef, stageWidth} = useStageWidth();
 
-    <div className="flex flex-wrap gap-2">
-      {fields.map(field => (
-        <button
-          key={field.id}
-          type="button"
-          aria-pressed={field.isSelected}
-          onClick={() => onFieldToggle(field.id)}
-          className="rounded-full border border-solid border-grayscale-200 px-3 py-1 aria-pressed:border-primary-700"
-        >
-          {field.name} {field.crewCount}
-        </button>
-      ))}
+  return (
+    <div ref={containerRef} className="w-full">
+      {stageWidth !== null && <GraphStage {...props} stageWidth={stageWidth} />}
     </div>
-
-    <div className="flex flex-wrap gap-2">
-      {crews.map(crew => (
-        <button key={crew.id} type="button" onClick={() => onCrewActivate(crew)} className="text-primary-700 underline">
-          {crew.label}
-        </button>
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 export default GraphCanvas;
