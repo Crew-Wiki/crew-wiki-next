@@ -5,15 +5,24 @@ import GraphToolbar from '@components/graph/GraphToolbar';
 import {route} from '@constants/route';
 import {useGetCrewGraph} from '@hooks/fetch/useGetCrewGraph';
 import {useGraphFilters} from '@hooks/useGraphFilters';
+import useAmplitude from '@hooks/useAmplitude';
 import {filterCrewGraph} from '@utils/filterCrewGraph';
 import {useRouter} from 'next/navigation';
-import {Suspense} from 'react';
+import {Suspense, useEffect, useRef} from 'react';
 
 const GraphContents = () => {
   const router = useRouter();
+  const {trackGraphView, trackGraphCrewClick} = useAmplitude();
+  const hasTrackedView = useRef(false);
   const {selectedGenerations, selectedFields, toggleGeneration, toggleField, resetFilters} = useGraphFilters();
   const {data, isLoading, errorMessage, refetch} = useGetCrewGraph(selectedGenerations);
   const {crews, fields} = filterCrewGraph(data, {selectedGenerations, selectedFields});
+
+  useEffect(() => {
+    if (hasTrackedView.current) return;
+    hasTrackedView.current = true;
+    trackGraphView(selectedGenerations);
+  }, [selectedGenerations, trackGraphView]);
 
   return (
     <section className="flex w-full flex-col items-center gap-6">
@@ -37,7 +46,10 @@ const GraphContents = () => {
           references={[]}
           showReferences={false}
           isMultiGeneration={selectedGenerations.length > 1}
-          onCrewActivate={crew => router.push(route.goWiki(crew.documentUuid))}
+          onCrewActivate={crew => {
+            trackGraphCrewClick(crew.title, crew.documentUuid, crew.field);
+            router.push(route.goWiki(crew.documentUuid));
+          }}
           onFieldToggle={toggleField}
         />
       </div>

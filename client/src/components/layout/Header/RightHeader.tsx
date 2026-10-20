@@ -1,6 +1,9 @@
 import RandomButton from '@components/common/RandomButton';
 import WikiInputField from './WikiInputField';
 import Image from 'next/image';
+import Link from 'next/link';
+import {route} from '@constants/route';
+import {usePathname} from 'next/navigation';
 
 type RightHeaderProps = {
   onSubmit: () => void;
@@ -8,8 +11,17 @@ type RightHeaderProps = {
 };
 
 const RightHeader = ({onSubmit, toggleVisibility}: RightHeaderProps) => {
+  const pathname = usePathname();
+
   return (
     <div className="flex items-center">
+      <Link
+        href={route.goWikiGraph()}
+        aria-current={pathname === route.goWikiGraph() ? 'page' : undefined}
+        className="mr-2 flex min-h-11 items-center whitespace-nowrap rounded-lg px-2 text-sm text-white hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+      >
+        관계 그래프
+      </Link>
       <RandomButton />
       <WikiInputField className="hidden w-80 md:flex" onSubmit={onSubmit} />
       <Image
