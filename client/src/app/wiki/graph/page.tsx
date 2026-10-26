@@ -1,27 +1,66 @@
 'use client';
 
-import GraphCanvas from '@components/graph/GraphCanvas';
+import GraphResults from '@components/graph/GraphResults';
+import GraphToolbar from '@components/graph/GraphToolbar';
+import {route} from '@constants/route';
+import {useGetCrewGraph} from '@hooks/fetch/useGetCrewGraph';
+import {useGraphFilters} from '@hooks/useGraphFilters';
+import useAmplitude from '@hooks/useAmplitude';
+import {filterCrewGraph} from '@utils/filterCrewGraph';
+import {useRouter} from 'next/navigation';
+import {Suspense, useEffect, useRef} from 'react';
 
-// 1번 PR 의 페이지 스텁. 주소가 열리고 클라이언트 경계가 잡히는 것까지만 한다.
-// 데이터 페치 · 필터 상태 · 툴바 · 로딩 / 빈 상태 / 오류와 재시도 · 텍스트 대체 목록은
-// 데이터·조작 담당의 다음 PR 에서 이 자리에 들어온다. 머지 뒤 이 파일은 그쪽 단독 소유다.
-const GraphPage = () => {
+const GraphContents = () => {
+  const router = useRouter();
+  const {trackGraphView, trackGraphCrewClick} = useAmplitude();
+  const hasTrackedView = useRef(false);
+  const {selectedGenerations, selectedFields, toggleGeneration, toggleField, resetFilters} = useGraphFilters();
+  const {data, isLoading, errorMessage, refetch} = useGetCrewGraph(selectedGenerations);
+  const {crews, fields} = filterCrewGraph(data, {selectedGenerations, selectedFields});
+
+  useEffect(() => {
+    if (hasTrackedView.current) return;
+    hasTrackedView.current = true;
+    trackGraphView(selectedGenerations);
+  }, [selectedGenerations, trackGraphView]);
+
   return (
     <section className="flex w-full flex-col items-center gap-6">
       <div className="flex h-fit min-h-[864px] w-full flex-col gap-6 rounded-xl border border-solid border-primary-100 bg-white p-8 max-md:gap-2 max-md:p-4">
         <h1 className="font-bm text-2xl text-grayscale-800">크루 관계 그래프</h1>
-        <GraphCanvas
-          crews={[]}
-          fields={[]}
+        <GraphToolbar
+          selectedGenerations={selectedGenerations}
+          selectedFields={selectedFields}
+          onGenerationToggle={toggleGeneration}
+          onFieldToggle={toggleField}
+          onReset={resetFilters}
+        />
+        <GraphResults
+          hasSelectedGeneration={selectedGenerations.length > 0}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          onRetry={() => void refetch()}
+          onReset={resetFilters}
+          crews={crews}
+          fields={fields}
           references={[]}
           showReferences={false}
-          isMultiGeneration={false}
-          onCrewActivate={() => {}}
-          onFieldToggle={() => {}}
+          isMultiGeneration={selectedGenerations.length > 1}
+          onCrewActivate={crew => {
+            trackGraphCrewClick(crew.title, crew.documentUuid, crew.field);
+            router.push(route.goWiki(crew.documentUuid));
+          }}
+          onFieldToggle={toggleField}
         />
       </div>
     </section>
   );
 };
+
+const GraphPage = () => (
+  <Suspense fallback={<p role="status">그래프 필터를 불러오는 중입니다.</p>}>
+    <GraphContents />
+  </Suspense>
+);
 
 export default GraphPage;
