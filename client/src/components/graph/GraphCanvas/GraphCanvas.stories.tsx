@@ -1,4 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
+import {fn} from 'storybook/test';
+import {useState} from 'react';
 import GraphCanvas from '@components/graph/GraphCanvas';
 import {
   crewListFixture,
@@ -7,22 +9,19 @@ import {
   graphFixture,
   unassignedCrewListFixture,
 } from '@components/graph/graphFixture';
-import {
-  CREW_FIELD_TO_FIELD_ID,
-  CURRENT_GENERATION,
-  FIELD_ID,
-  GRAPH_CREW_LABEL_CLASS,
-  GRAPH_FIELDS,
-  GRAPH_FIELD_STYLE,
-  GRAPH_NODE,
-  GRAPH_STAGE,
-} from '@constants/graph';
-import {calculateGraphLayout, fieldNodeKey, fitGraphViewBox} from '@utils/calculateGraphLayout';
+import {CREW_FIELD_TO_FIELD_ID, FIELD_ID, GRAPH_FIELDS} from '@constants/graph';
 import {toGraphLabel} from '@utils/toGraphLabel';
-import type {GenerationCrewResponse, GraphCrew, GraphField} from '@type/Graph.type';
+import type {
+  FieldId,
+  GenerationCrewResponse,
+  GraphCanvasProps,
+  GraphCrew,
+  GraphField,
+  GraphReference,
+} from '@type/Graph.type';
 
 // 스토리에서만 쓰는 최소 변환이다. 실제 정제 — 조직 문서 걸러내기, 소속으로 기수 판별하기 등 —
-// 은 데이터·조작 담당의 다음 PR 에서 만든다. 여기서는 배치와 껍데기를 눈으로 보는 것이 목적이다.
+// 은 데이터·조작 담당의 다음 PR 에서 만든다. 여기서는 그래프가 그리는 모습을 눈으로 보는 것이 목적이다.
 const toCrews = (list: GenerationCrewResponse[]): GraphCrew[] =>
   list.map(crew => {
     const node = graphFixture.nodes.find(graphNode => graphNode.documentUuid === crew.documentUuid);
@@ -47,98 +46,21 @@ const toFields = (crews: GraphCrew[]): GraphField[] =>
     isSelected: false,
   }));
 
-// 배치 함수가 낸 좌표를 그대로 그린다. 이 레포에는 테스트 러너가 없어서,
-// 네 그룹이 겹치지 않고 미지정이 아래에 오는지는 이 그림으로 확인한다.
-const LayoutPreview = ({crews, isNarrow = false}: {crews: GraphCrew[]; isNarrow?: boolean}) => {
-  const fields = toFields(crews);
-  const layout = calculateGraphLayout({crews, fields, isMultiGeneration: false, isNarrow});
-  const stageWidth = isNarrow ? 420 : GRAPH_STAGE.width;
-  const viewBox = fitGraphViewBox(layout, stageWidth, isNarrow);
+// 실측 그래프 응답의 참조 간선을 크루 id 쌍으로 바꾼다. 양 끝이 모두 크루 목록에 있는 것만 남긴다.
+const toReferences = (crews: GraphCrew[]): GraphReference[] => {
+  const crewIds = new Set(crews.map(crew => crew.id));
 
-  return (
-    <svg
-      viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-      width={stageWidth}
-      className="max-w-full rounded-xl border border-solid border-grayscale-200 bg-white"
-    >
-      {crews.map(crew => {
-        const position = layout[crew.id];
-        const style = GRAPH_FIELD_STYLE[crew.field];
-        const isCurrentGeneration = crew.generation === CURRENT_GENERATION;
-
-        return (
-          // 겹 순서는 기획안 데모와 같다: 후광 → 투명한 히트 영역 → 점 → 라벨.
-          <g key={crew.id} className="group">
-            <circle
-              cx={position.x}
-              cy={position.y}
-              r={GRAPH_NODE.crewHaloRadius}
-              strokeWidth={GRAPH_NODE.crewHaloWidth}
-              className={`fill-none opacity-0 transition-opacity duration-150 group-hover:opacity-[0.16] ${style.halo}`}
-            />
-            <circle cx={position.x} cy={position.y} r={GRAPH_NODE.crewHitRadius} className="fill-transparent" />
-            <circle
-              cx={position.x}
-              cy={position.y}
-              r={GRAPH_NODE.crewRadius}
-              strokeWidth={isCurrentGeneration ? 0 : GRAPH_NODE.pastGenerationStrokeWidth}
-              className={isCurrentGeneration ? style.dot : style.pastDot}
-            />
-            <text
-              x={position.x}
-              y={position.y + GRAPH_NODE.crewLabelOffsetY}
-              textAnchor="middle"
-              fontSize={GRAPH_NODE.crewLabelFontSize}
-              fontWeight={600}
-              letterSpacing="-0.01em"
-              className={GRAPH_CREW_LABEL_CLASS}
-            >
-              {crew.label}
-            </text>
-          </g>
-        );
-      })}
-
-      {fields.map(field => {
-        const position = layout[fieldNodeKey(field.id)];
-        const style = GRAPH_FIELD_STYLE[field.id];
-
-        return (
-          <g key={field.id}>
-            <rect
-              x={position.x - GRAPH_NODE.fieldPillWidth / 2}
-              y={position.y - GRAPH_NODE.fieldPillHeight / 2}
-              width={GRAPH_NODE.fieldPillWidth}
-              height={GRAPH_NODE.fieldPillHeight}
-              rx={GRAPH_NODE.fieldPillRadius}
-              className={style.pill}
-            />
-            {/* 이름과 인원수를 한 text 안에서 나눈다. 인원수는 작고 흐리게 붙어 따라간다. */}
-            <text
-              x={position.x}
-              y={position.y}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={GRAPH_NODE.fieldPillFontSize}
-              fontWeight={700}
-              className="fill-white"
-            >
-              {field.name}
-              <tspan
-                dx={GRAPH_NODE.fieldPillCountGap}
-                fontSize={GRAPH_NODE.fieldPillCountFontSize}
-                fontWeight={500}
-                fillOpacity={0.75}
-              >
-                {field.crewCount}
-              </tspan>
-            </text>
-          </g>
-        );
-      })}
-    </svg>
-  );
+  return graphFixture.edges
+    .map(edge => ({
+      sourceCrewId: `crew:${edge.sourceDocumentUuid}`,
+      targetCrewId: `crew:${edge.targetDocumentUuid}`,
+    }))
+    .filter(reference => crewIds.has(reference.sourceCrewId) && crewIds.has(reference.targetCrewId));
 };
+
+// 픽스처가 전부 8기라 세 명 중 한 명을 7기로 돌려 두 스타일을 나란히 본다.
+const withMixedGenerations = (crews: GraphCrew[]): GraphCrew[] =>
+  crews.map((crew, index) => (index % 3 === 0 ? {...crew, generation: '7기' as const} : crew));
 
 const meta: Meta<typeof GraphCanvas> = {
   title: 'Graph/GraphCanvas',
@@ -149,22 +71,37 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+// 두 콜백은 fn() 이라 Actions 패널에 호출이 찍힌다. 크루 클릭·알약 클릭이 어떤 인자로 올라오는지 거기서 본다.
 const baseArgs = {
   references: [],
   showReferences: false,
   isMultiGeneration: false,
-  onCrewActivate: () => {},
-  onFieldToggle: () => {},
+  onCrewActivate: fn(),
+  onFieldToggle: fn(),
 };
+
+const defaultCrews = toCrews(crewListFixture);
+const filledCrews = toCrews(filledCrewListFixture);
 
 // 2026-10-01 실측 그대로. 34명 중 25명이 미지정이다.
 export const Default: Story = {
-  args: {...baseArgs, crews: toCrews(crewListFixture), fields: toFields(toCrews(crewListFixture))},
+  args: {...baseArgs, crews: defaultCrews, fields: toFields(defaultCrews)},
 };
 
 // 분야가 전부 채워졌을 때
 export const FieldsFilled: Story = {
-  args: {...baseArgs, crews: toCrews(filledCrewListFixture), fields: toFields(toCrews(filledCrewListFixture))},
+  args: {...baseArgs, crews: filledCrews, fields: toFields(filledCrews)},
+};
+
+// 분야 하나만 골라 봤을 때. 그룹이 하나면 크루가 알약을 빙 둘러싼다.
+export const SingleField: Story = {
+  args: {
+    ...baseArgs,
+    crews: filledCrews.filter(crew => crew.field === FIELD_ID.Backend),
+    fields: toFields(filledCrews)
+      .filter(field => field.id === FIELD_ID.Backend)
+      .map(field => ({...field, isSelected: true})),
+  },
 };
 
 // 분야 개념이 없던 기수를 켰을 때
@@ -172,34 +109,71 @@ export const AllUnassigned: Story = {
   args: {...baseArgs, crews: toCrews(unassignedCrewListFixture), fields: toFields(toCrews(unassignedCrewListFixture))},
 };
 
+// 여러 기수를 함께 볼 때. 지금 기수는 꽉 찬 점, 지난 기수는 연한 점에 테두리만 남고 이름 뒤에 기수가 붙는다.
+export const MixedGenerations: Story = {
+  args: {
+    ...baseArgs,
+    crews: withMixedGenerations(filledCrews),
+    fields: toFields(filledCrews),
+    isMultiGeneration: true,
+  },
+};
+
+// 참조 간선을 켰을 때. 점선이 노드 아래 겹으로 깔리고, 크루를 호버하면 참조로 이어진 크루도 함께 밝아진다.
+// 운영 화면에서는 보이지 않는다 — MVP 는 참조 간선을 꺼 두기로 했다(GraphStage 의 참조 간선 레이어 주석 참고).
+// 이 스토리는 로드맵 1단계에서 켤 때 그래프 쪽이 그대로 동작하는지 미리 보는 용도다. 데이터는 1번 PR 때 담아 둔 /graph 실측 응답이다.
+export const WithReferences: Story = {
+  args: {
+    ...baseArgs,
+    crews: defaultCrews,
+    fields: toFields(defaultCrews),
+    references: toReferences(defaultCrews),
+    showReferences: true,
+  },
+};
+
+// 좁은 화면. 자리 너비가 700 미만이면 네 그룹이 세로로 쌓이고 미지정이 맨 아래 단이다.
+export const Narrow: Story = {
+  args: {...baseArgs, crews: defaultCrews, fields: toFields(defaultCrews)},
+  decorators: [
+    Story => (
+      <div style={{width: 420}}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
 // 6기·7기는 실제로 0건이다
 export const Empty: Story = {
   args: {...baseArgs, crews: toCrews(emptyCrewListFixture), fields: toFields([])},
 };
 
-// 네 그룹의 좌표. 미지정이 세 분야 아래에 오는지 여기서 확인한다.
-export const Layout: Story = {
-  render: () => <LayoutPreview crews={toCrews(crewListFixture)} />,
-};
+// 알약을 누르면 그 분야가 필터로 켜지고(aria-pressed, 바깥 테두리), 켜진 분야가 하나라도 있으면 그 분야들의 크루만 남는다.
+// 다시 누르면 꺼진다. 기획안 데모의 분야 필터 동작을 스토리 안에서 흉내 낸 것이고, 실제 필터는 데이터·조작 쪽이 만든다.
+// 켤 때 크루들이 알약에서 퍼져 나오고, 남은 그룹은 새 자리로 스프링 이동한다.
+const PlaygroundGraph = ({crews: allCrews, fields: allFields, onFieldToggle, ...args}: GraphCanvasProps) => {
+  const [selectedFieldIds, setSelectedFieldIds] = useState<FieldId[]>([]);
 
-// 분야가 다 찼을 때의 배치
-export const LayoutFieldsFilled: Story = {
-  render: () => <LayoutPreview crews={toCrews(filledCrewListFixture)} />,
-};
+  const handleFieldToggle = (fieldId: FieldId) => {
+    setSelectedFieldIds(current =>
+      current.includes(fieldId) ? current.filter(id => id !== fieldId) : [...current, fieldId],
+    );
+    onFieldToggle(fieldId);
+  };
+  const isShown = (fieldId: FieldId) => selectedFieldIds.length === 0 || selectedFieldIds.includes(fieldId);
 
-// 좁은 화면에서는 네 그룹이 세로로 쌓인다. 미지정이 맨 아래 단이다.
-export const LayoutNarrow: Story = {
-  render: () => <LayoutPreview crews={toCrews(crewListFixture)} isNarrow />,
-};
-
-// 지난 기수가 섞였을 때. 지금 기수는 꽉 찬 점, 지난 기수는 연한 점에 테두리만 남는다.
-// 픽스처가 전부 8기라 세 명 중 한 명을 7기로 돌려 두 스타일을 나란히 본다.
-export const LayoutMixedGenerations: Story = {
-  render: () => (
-    <LayoutPreview
-      crews={toCrews(crewListFixture).map((crew, index) =>
-        index % 3 === 0 ? {...crew, generation: '7기' as const} : crew,
-      )}
+  return (
+    <GraphCanvas
+      {...args}
+      crews={allCrews.filter(crew => isShown(crew.field))}
+      fields={allFields.map(field => ({...field, isSelected: selectedFieldIds.includes(field.id)}))}
+      onFieldToggle={handleFieldToggle}
     />
-  ),
+  );
+};
+
+export const Playground: Story = {
+  args: {...baseArgs, crews: filledCrews, fields: toFields(filledCrews)},
+  render: args => <PlaygroundGraph {...args} />,
 };
