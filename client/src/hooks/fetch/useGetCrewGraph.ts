@@ -24,12 +24,12 @@ export const useGetCrewGraph = (generations: readonly Generation[]) => {
   }, [generationKey]);
 
   const {data, isLoading, errorMessage, refetch} = useFetch(getData, {enabled: Boolean(generationKey)});
-  const isCurrentGeneration = data?.generationKey === generationKey;
 
   return {
-    data: generationKey && isCurrentGeneration && !isLoading && !errorMessage ? data.crews : [],
-    isLoading: Boolean(generationKey) && isLoading,
-    errorMessage: generationKey ? errorMessage : null,
+    data: data?.crews ?? [],
+    dataGenerations: GENERATIONS.filter(generation => data?.generationKey.split(',').includes(generation)),
+    isInitialLoading: Boolean(generationKey) && data === null && (isLoading || !errorMessage),
+    errorMessage: generationKey && !isLoading ? errorMessage : null,
     refetch,
   };
 };

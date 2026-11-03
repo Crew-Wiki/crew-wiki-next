@@ -15,8 +15,8 @@ const GraphContents = () => {
   const {trackGraphView} = useAmplitude();
   const hasTrackedView = useRef(false);
   const {selectedGenerations, selectedFields, toggleGeneration, toggleField, resetFilters} = useGraphFilters();
-  const {data, isLoading, errorMessage, refetch} = useGetCrewGraph(selectedGenerations);
-  const {crews, fields} = filterCrewGraph(data, {selectedGenerations, selectedFields});
+  const {data, dataGenerations, isInitialLoading, errorMessage, refetch} = useGetCrewGraph(selectedGenerations);
+  const {crews, fields} = filterCrewGraph(data, {selectedGenerations: dataGenerations, selectedFields});
 
   useEffect(() => {
     if (hasTrackedView.current) return;
@@ -37,7 +37,7 @@ const GraphContents = () => {
         />
         <GraphResults
           hasSelectedGeneration={selectedGenerations.length > 0}
-          isLoading={isLoading}
+          isLoading={isInitialLoading}
           errorMessage={errorMessage}
           onRetry={() => void refetch()}
           onReset={resetFilters}
@@ -45,7 +45,7 @@ const GraphContents = () => {
           fields={fields}
           references={[]}
           showReferences={false}
-          isMultiGeneration={selectedGenerations.length > 1}
+          isMultiGeneration={dataGenerations.length > 1}
           onCrewActivate={crew => {
             router.push(route.goWiki(crew.documentUuid));
           }}
