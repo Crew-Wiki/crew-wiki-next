@@ -12,7 +12,7 @@ import {Suspense, useEffect, useRef} from 'react';
 
 const GraphContents = () => {
   const router = useRouter();
-  const {trackGraphView, trackGraphCrewClick} = useAmplitude();
+  const {trackGraphView} = useAmplitude();
   const hasTrackedView = useRef(false);
   const {selectedGenerations, selectedFields, toggleGeneration, toggleField, resetFilters} = useGraphFilters();
   const {data, isLoading, errorMessage, refetch} = useGetCrewGraph(selectedGenerations);
@@ -47,7 +47,6 @@ const GraphContents = () => {
           showReferences={false}
           isMultiGeneration={selectedGenerations.length > 1}
           onCrewActivate={crew => {
-            trackGraphCrewClick(crew.title, crew.documentUuid, crew.field);
             router.push(route.goWiki(crew.documentUuid));
           }}
           onFieldToggle={toggleField}
