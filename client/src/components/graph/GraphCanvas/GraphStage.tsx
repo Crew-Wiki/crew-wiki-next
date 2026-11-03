@@ -39,6 +39,7 @@ const GraphStage = ({
   stageWidth,
 }: GraphStageProps) => {
   const isNarrow = stageWidth < GRAPH_LAYOUT.narrowBreakpoint;
+  const hasSelectedField = fields.some(field => field.isSelected);
 
   const {trackGraphCrewClick} = useAmplitude();
   // 계측은 여기서 한 번만 남긴다. 호출자가 onCrewActivate 안에서 무엇을 하든(이동, 미리보기) 클릭 자체는 한 건이다.
@@ -178,7 +179,7 @@ const GraphStage = ({
                 x={pillPosition.x}
                 y={pillPosition.y}
                 scale={pillPosition.scale}
-                isDimmed={isHovering && !litNodeKeys.has(fieldKey)}
+                isDimmed={(hasSelectedField && !field.isSelected) || (isHovering && !litNodeKeys.has(fieldKey))}
                 onToggle={onFieldToggle}
                 onHoverChange={isNodeHovered => handleHoverChange(fieldKey, isNodeHovered)}
               />

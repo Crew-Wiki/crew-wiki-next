@@ -16,7 +16,7 @@ interface FieldPillProps {
   y: number;
   // 등장 중이면 1 보다 작다
   scale: number;
-  // 다른 노드를 호버 중이라 이 알약은 연결이 없어 흐려진 상태
+  // 분야 필터에서 선택되지 않았거나, 호버 중인 노드와 연결이 없어 흐려진 상태
   isDimmed: boolean;
   onToggle: (fieldId: FieldId) => void;
   onHoverChange: (isHovering: boolean) => void;

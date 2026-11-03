@@ -1,5 +1,5 @@
 import {CREW_FIELD, FIELD_ID, GENERATIONS} from '@constants/graph';
-import {DocumentType} from './Document.type';
+import type {DocumentType} from '@constants/document';
 
 export type FieldId = (typeof FIELD_ID)[keyof typeof FIELD_ID];
 export type CrewField = (typeof CREW_FIELD)[keyof typeof CREW_FIELD];
