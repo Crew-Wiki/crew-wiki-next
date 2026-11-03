@@ -305,6 +305,7 @@ export const Modal = ({ children, className }: ModalProps) => {
 | 메인 컴포넌트 파일 | `index.tsx` | `Button/index.tsx` |
 | 서브 컴포넌트 파일 | PascalCase.tsx | `CalendarGrid.tsx` |
 | 훅 파일 | camelCase.ts | `useModal.tsx` |
+| 컴포넌트 전용 유틸·상수 모듈 | camelCase.ts | `getEdgePath.ts`, `graphHover.ts` |
 
 ```
 common/Button/
@@ -365,6 +366,13 @@ export const Text: Story = {
     ),
   ],
 };
+
+// 콜백 props는 fn()으로 — Actions 패널에 호출 인자가 찍히고, 브라우저 검증에서 mock.calls로 읽을 수 있다
+import {fn} from 'storybook/test';
+
+export const Clickable: Story = {
+  args: { style: 'primary', size: 'm', children: '버튼', onClick: fn() },
+};
 ```
 
 ### 'use client' 기준
@@ -420,3 +428,18 @@ const MyComponent = ({ ...props }: Props) => {
 
 export default MyComponent;
 ```
+
+### 접근성
+
+클릭할 수 있는 요소는 키보드로도 닿고 누를 수 있어야 합니다. `<button>`이 아닌 요소(SVG 노드 등)를 버튼으로 쓰면 아래를 붙입니다.
+
+| 항목 | 규칙 | 예시 |
+|------|------|------|
+| 역할·초점 | `role="button"` + `tabIndex={0}` | `graph/GraphCanvas/graphKeyboard.ts` |
+| 키보드 활성화 | Enter·Space에서 클릭과 같은 핸들러 호출, Space는 `preventDefault()`로 스크롤 방지 | 〃 |
+| 읽을 이름 | `aria-label`은 "무엇, 무슨 동작" 꼴의 한국어 문장. 보이는 글자와 중복되면 글자 쪽을 `aria-hidden` | `"크루 아론 8기 Backend, 문서로 이동"` |
+| 눌림 상태 | 켜고 끄는 버튼은 `aria-pressed` | 분야 알약 |
+| 포커스 표시 | `focus-visible:` 변형으로 키보드 포커스에만 표시. 기본 outline을 끄면 대신할 표시를 반드시 둔다 | `group-focus-visible:stroke-[3px]` |
+| 움직임 줄이기 | CSS 전환에는 `motion-reduce:transition-none`, JS 애니메이션은 `matchMedia('(prefers-reduced-motion: reduce)')`일 때 건너뛴다 | `graph/GraphCanvas/prefersReducedMotion.ts` |
+
+> `focus-visible:`, `motion-reduce:`, `group-*`는 Tailwind 코어 변형이라 설정 추가가 필요 없습니다.

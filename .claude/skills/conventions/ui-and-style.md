@@ -43,8 +43,11 @@ const BUTTON_STYLE: Record<ButtonStyle, string> = {
 primary:   { 50~900, primary, container, onContainer }
 grayscale: { 50~900, container, border, lightText, text }
 error:     { error, container }
+backend / frontend / android: { 50~900, container }   // 관계 그래프의 분야 색
 
 // 사용 예: bg-primary-primary, text-grayscale-text, border-error-error
+// SVG에서는 fill-* / stroke-*: fill-backend-500, stroke-grayscale-200
+// 분야별 클래스 조합은 constants/graph.ts의 GRAPH_FIELD_STYLE에서 가져온다 (Tailwind JIT는 `fill-${id}-500` 같은 동적 조합을 찾지 못한다)
 ```
 
 ### 반응형 (Desktop-first)

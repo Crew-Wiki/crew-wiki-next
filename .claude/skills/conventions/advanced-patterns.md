@@ -197,6 +197,7 @@ const Layout = ({children}: React.PropsWithChildren) => (
 
 import {track} from '@amplitude/analytics-browser';
 import {useCallback} from 'react';
+import {FieldId, Generation} from '@type/Graph.type';
 
 const useAmplitude = () => {
   const trackEvent = useCallback((eventName: string, eventProps: Record<string, unknown> = {}) => {
@@ -221,7 +222,19 @@ const useAmplitude = () => {
     [trackEvent],
   );
 
-  return {trackDocumentCreate, trackDocumentUpdate, trackDocumentSearch};
+  // 관계 그래프 이벤트. 이벤트가 이 파일 하나에 모여 있어 각자 추가하면 충돌하므로 한 번에 넣는다.
+  const trackGraphView = useCallback(
+    (generations: Generation[]) => trackEvent('관계 그래프 조회', {generations}),
+    [trackEvent],
+  );
+
+  const trackGraphCrewClick = useCallback(
+    (title: string, documentUUID: string, field: FieldId) =>
+      trackEvent('관계 그래프 크루 클릭', {title, documentUUID, field}),
+    [trackEvent],
+  );
+
+  return {trackDocumentCreate, trackDocumentUpdate, trackDocumentSearch, trackGraphView, trackGraphCrewClick};
 };
 
 export default useAmplitude;
@@ -234,6 +247,21 @@ export default useAmplitude;
 | `문서 작성` | `usePostDocument` → `onSuccess` | 문서 생성 성공 시 |
 | `문서 수정` | `usePutDocument` → `onSuccess` | 문서 수정 성공 시 |
 | `문서 검색` | 검색 UI 컴포넌트 | 검색 결과 클릭 시 |
+| `관계 그래프 조회` | 그래프 페이지 (배선 예정) | 그래프 화면 진입 시 |
+| `관계 그래프 크루 클릭` | `graph/GraphCanvas/GraphStage` → `handleCrewActivate` | 크루 노드 클릭·Enter·Space 시 |
+
+### 컴포넌트에서 사용
+
+```ts
+// components/graph/GraphCanvas/GraphStage.tsx
+const {trackGraphCrewClick} = useAmplitude();
+
+// 계측은 컴포넌트 안에서 한 번만 남긴다. 호출자가 onCrewActivate로 무엇을 하든(이동, 미리보기) 클릭 자체는 한 건이다.
+const handleCrewActivate = (crew: GraphCrew) => {
+  trackGraphCrewClick(crew.title, crew.documentUuid, crew.field);
+  onCrewActivate(crew);
+};
+```
 
 ### 뮤테이션 훅에서 사용
 
