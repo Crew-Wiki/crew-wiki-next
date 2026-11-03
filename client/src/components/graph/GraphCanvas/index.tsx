@@ -24,8 +24,9 @@ const GraphCanvas = ({
           key={field.id}
           type="button"
           aria-pressed={field.isSelected}
+          data-dimmed={fields.some(field => field.isSelected) && !field.isSelected}
           onClick={() => onFieldToggle(field.id)}
-          className="rounded-full border border-solid border-grayscale-200 px-3 py-1 aria-pressed:border-primary-700"
+          className="rounded-full border border-solid border-grayscale-200 px-3 py-1 aria-pressed:border-primary-700 data-[dimmed=true]:opacity-50"
         >
           {field.name} {field.crewCount}
         </button>
